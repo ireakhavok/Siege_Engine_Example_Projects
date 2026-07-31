@@ -1,0 +1,63 @@
+{
+  "Name": "chess",
+  "Type": "2D",
+  "Mode": "Single Player",
+  "AllowMods": true,
+  "Scenes": {
+    "ChessMain": {
+      "name": "ChessMain",
+      "sceneType": "Gameplay",
+      "terrain": {
+        "heightmapPath": null,
+        "colorTexturePath": null,
+        "normalTexturePath": null,
+        "splatMapPath": null,
+        "materials": [],
+        "worldScaleX": 1,
+        "worldScaleZ": 1,
+        "verticalExaggeration": 1,
+        "embeddedHeightmapWidth": 0,
+        "embeddedHeightmapHeight": 0,
+        "embeddedHeightmapData": null
+      },
+      "entities": [],
+      "environment": {
+        "timeOfDay": 12,
+        "weather": "Clear",
+        "ambientColor": {
+          "X": 0.8,
+          "Y": 0.8,
+          "Z": 0.95
+        },
+        "fogDensity": 0.01
+      },
+      "skybox": {
+        "enabled": false,
+        "type": "Cubemap",
+        "cubemapPath": "",
+        "faces": [],
+        "rotationSpeed": 0.05,
+        "intensity": 1
+      },
+      "customData": {
+        "chessMode": "VsAi",
+        "humanColor": "White"
+      },
+      "settings": {
+        "avatarPackKey": null,
+        "animationPackKey": null,
+        "controllerTypeName": null,
+        "preferredSpawnPointIds": [],
+        "cameraMode": "Ortho"
+      }
+    }
+  },
+  "Version": "1.0",
+  "LastOpenedScene": "ChessMain",
+  "CameraType": "AngledOrtho",
+  "LastContext": "Scene Editor",
+  "PanelStates": {},
+  "CustomAssemblies": [],
+  "ScriptsEnabled": true,
+  "ScriptsDir": "Scripts"
+}

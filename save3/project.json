@@ -1,0 +1,555 @@
+{
+  "Name": "boxsave",
+  "Type": "2D",
+  "Mode": "Single Player",
+  "AllowMods": true,
+  "Scenes": {
+    "NewTerrain": {
+      "name": "NewTerrain",
+      "sceneType": "TerrainTest",
+      "terrain": {
+        "heightmapPath": "Assets/Terrain/NewTerrain.tif",
+        "colorTexturePath": "Assets\\Terrain\\NewTerrain.png",
+        "normalTexturePath": null,
+        "splatMapPath": null,
+        "materials": [],
+        "worldScaleX": 1,
+        "worldScaleZ": 1,
+        "verticalExaggeration": 1,
+        "embeddedHeightmapWidth": 0,
+        "embeddedHeightmapHeight": 0,
+        "embeddedHeightmapData": null
+      },
+      "entities": [
+        {
+          "type": "FBX",
+          "position": {
+            "X": 103.151245,
+            "Y": 93.60099,
+            "Z": 13.148671
+          },
+          "rotation": {
+            "IsIdentity": false,
+            "X": 0,
+            "Y": 0,
+            "Z": -0.6217925,
+            "W": 0.7831821
+          },
+          "scale": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "assetPackKey": "man_mesh_pack",
+          "textureId": 0,
+          "height": 0,
+          "material": null,
+          "id": 1,
+          "components": [
+            {
+              "type": "SiegeEngine.Core.Definitions.TransformComponent",
+              "data": {
+                "Position": {
+                  "X": 103.151245,
+                  "Y": 93.60099,
+                  "Z": 13.148671
+                },
+                "Rotation": {
+                  "IsIdentity": false,
+                  "X": 0,
+                  "Y": 0,
+                  "Z": -0.6217925,
+                  "W": 0.7831821
+                },
+                "Scale": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                }
+              }
+            },
+            {
+              "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
+              "data": {
+                "Position": {
+                  "X": 103.151245,
+                  "Y": 93.60099,
+                  "Z": 13.148671
+                },
+                "Rotation": {
+                  "IsIdentity": false,
+                  "X": 0,
+                  "Y": 0,
+                  "Z": -0.6217925,
+                  "W": 0.7831821
+                },
+                "Scale": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                },
+                "Size": {
+                  "X": 1.3876218,
+                  "Y": 0.38755378,
+                  "Z": 1.8639052
+                },
+                "Mass": 1,
+                "Health": 100,
+                "IsBreakable": false,
+                "IsBroken": false,
+                "LocalBoundsMinCm": {
+                  "X": -69.35311,
+                  "Y": -21.214579,
+                  "Z": -0.9013186
+                },
+                "LocalBoundsMaxCm": {
+                  "X": 69.40906,
+                  "Y": 17.540802,
+                  "Z": 185.4892
+                },
+                "Velocity": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                }
+              }
+            },
+            {
+              "type": "SiegeEngine.Core.Definitions.ModelComponent",
+              "data": {
+                "Key": "man_mesh_pack",
+                "MaterialData": null
+              }
+            },
+            {
+              "type": "SiegeEngine.Core.Definitions.IComponent",
+              "data": {
+                "Key": null,
+                "MaterialData": null
+              }
+            }
+          ]
+        },
+        {
+          "type": "FBX",
+          "position": {
+            "X": 110.126434,
+            "Y": 88.055145,
+            "Z": 14.577425
+          },
+          "rotation": {
+            "IsIdentity": false,
+            "X": 0,
+            "Y": 0,
+            "Z": 0,
+            "W": 0
+          },
+          "scale": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "assetPackKey": "man_mesh_pack",
+          "textureId": 0,
+          "height": 0,
+          "material": null,
+          "id": 2,
+          "components": [
+            {
+              "type": "SiegeEngine.Core.Definitions.TransformComponent",
+              "data": {
+                "Position": {
+                  "X": 110.126434,
+                  "Y": 88.055145,
+                  "Z": 14.577425
+                },
+                "Rotation": {
+                  "IsIdentity": false,
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0,
+                  "W": 0
+                },
+                "Scale": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                }
+              }
+            },
+            {
+              "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
+              "data": {
+                "Position": {
+                  "X": 110.126434,
+                  "Y": 88.055145,
+                  "Z": 14.577425
+                },
+                "Rotation": {
+                  "IsIdentity": false,
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0,
+                  "W": 0
+                },
+                "Scale": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                },
+                "Size": {
+                  "X": 1.3876218,
+                  "Y": 0.38755378,
+                  "Z": 1.8639052
+                },
+                "Mass": 1,
+                "Health": 100,
+                "IsBreakable": false,
+                "IsBroken": false,
+                "LocalBoundsMinCm": {
+                  "X": -69.35311,
+                  "Y": -21.214579,
+                  "Z": -0.9013186
+                },
+                "LocalBoundsMaxCm": {
+                  "X": 69.40906,
+                  "Y": 17.540802,
+                  "Z": 185.4892
+                },
+                "Velocity": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                }
+              }
+            },
+            {
+              "type": "SiegeEngine.Core.Definitions.ModelComponent",
+              "data": {
+                "Key": "man_mesh_pack",
+                "MaterialData": null
+              }
+            },
+            {
+              "type": "SiegeEngine.Core.Definitions.IComponent",
+              "data": {
+                "Key": null,
+                "MaterialData": null
+              }
+            }
+          ]
+        },
+        {
+          "type": "FBX",
+          "position": {
+            "X": 107.97174,
+            "Y": 95.892525,
+            "Z": 14.135239
+          },
+          "rotation": {
+            "IsIdentity": false,
+            "X": 0,
+            "Y": 0,
+            "Z": 0.68330485,
+            "W": 0.7301333
+          },
+          "scale": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "assetPackKey": "sm_wall_pack",
+          "textureId": 0,
+          "height": 0,
+          "material": null,
+          "id": 3,
+          "components": [
+            {
+              "type": "SiegeEngine.Core.Definitions.TransformComponent",
+              "data": {
+                "Position": {
+                  "X": 107.97174,
+                  "Y": 95.892525,
+                  "Z": 14.135239
+                },
+                "Rotation": {
+                  "IsIdentity": false,
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0.68330485,
+                  "W": 0.7301333
+                },
+                "Scale": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                }
+              }
+            },
+            {
+              "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
+              "data": {
+                "Position": {
+                  "X": 107.97174,
+                  "Y": 95.892525,
+                  "Z": 14.135239
+                },
+                "Rotation": {
+                  "IsIdentity": false,
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0.68330485,
+                  "W": 0.7301333
+                },
+                "Scale": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                },
+                "Size": {
+                  "X": 0.2761035,
+                  "Y": 7.0302587,
+                  "Z": 4.3722944
+                },
+                "Mass": 1,
+                "Health": 100,
+                "IsBreakable": false,
+                "IsBroken": false,
+                "LocalBoundsMinCm": {
+                  "X": -13.805176,
+                  "Y": -351.51294,
+                  "Z": 4.5242767
+                },
+                "LocalBoundsMaxCm": {
+                  "X": 13.805176,
+                  "Y": 351.51294,
+                  "Z": 441.75372
+                },
+                "Velocity": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                }
+              }
+            },
+            {
+              "type": "SiegeEngine.Core.Definitions.ModelComponent",
+              "data": {
+                "Key": "sm_wall_pack",
+                "MaterialData": null
+              }
+            },
+            {
+              "type": "SiegeEngine.Core.Definitions.IComponent",
+              "data": {
+                "Key": null,
+                "MaterialData": null
+              }
+            }
+          ]
+        }
+      ],
+      "environment": {
+        "timeOfDay": 12,
+        "weather": "Clear",
+        "ambientColor": {
+          "X": 0.8,
+          "Y": 0.8,
+          "Z": 0.95
+        },
+        "fogDensity": 0.01
+      },
+      "skybox": {
+        "enabled": true,
+        "type": "Cubemap",
+        "cubemapPath": "",
+        "faces": [
+          "Assets/Skyboxes/NewTerrain/xpos.png",
+          "Assets/Skyboxes/NewTerrain/xneg.png",
+          "Assets/Skyboxes/NewTerrain/ypos.png",
+          "Assets/Skyboxes/NewTerrain/yneg.png",
+          "Assets/Skyboxes/NewTerrain/zpos.png",
+          "Assets/Skyboxes/NewTerrain/zneg.png"
+        ],
+        "rotationSpeed": 0.05,
+        "intensity": 1
+      },
+      "customData": {},
+      "settings": {
+        "avatarPackKey": "man_mesh_pack",
+        "animationPackKey": "blend_pack_all",
+        "controllerTypeName": "PlayerController",
+        "preferredSpawnPointIds": [
+          2
+        ],
+        "cameraMode": "ThirdPerson"
+      }
+    },
+    "idk": {
+      "name": "idk",
+      "sceneType": "TerrainTest",
+      "terrain": {
+        "heightmapPath": null,
+        "colorTexturePath": null,
+        "normalTexturePath": null,
+        "splatMapPath": null,
+        "materials": [],
+        "worldScaleX": 1,
+        "worldScaleZ": 1,
+        "verticalExaggeration": 1,
+        "embeddedHeightmapWidth": 0,
+        "embeddedHeightmapHeight": 0,
+        "embeddedHeightmapData": null
+      },
+      "entities": [
+        {
+          "type": "FBX",
+          "position": {
+            "X": 61.363396,
+            "Y": 52.04818,
+            "Z": 0.09974537
+          },
+          "rotation": {
+            "IsIdentity": false,
+            "X": 0,
+            "Y": 0,
+            "Z": 0,
+            "W": 0
+          },
+          "scale": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "assetPackKey": "man_mesh_pack",
+          "textureId": 0,
+          "height": 0,
+          "material": null,
+          "id": 1,
+          "components": [
+            {
+              "type": "SiegeEngine.Core.Definitions.TransformComponent",
+              "data": {
+                "Position": {
+                  "X": 61.363396,
+                  "Y": 52.04818,
+                  "Z": 0.09974537
+                },
+                "Rotation": {
+                  "IsIdentity": false,
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0,
+                  "W": 0
+                },
+                "Scale": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                }
+              }
+            },
+            {
+              "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
+              "data": {
+                "Position": {
+                  "X": 61.363396,
+                  "Y": 52.04818,
+                  "Z": 0.09974537
+                },
+                "Rotation": {
+                  "IsIdentity": false,
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0,
+                  "W": 0
+                },
+                "Scale": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                },
+                "Size": {
+                  "X": 1.3876218,
+                  "Y": 0.38755378,
+                  "Z": 1.8639052
+                },
+                "Mass": 1,
+                "Health": 100,
+                "IsBreakable": false,
+                "IsBroken": false,
+                "LocalBoundsMinCm": {
+                  "X": -69.35311,
+                  "Y": -21.214579,
+                  "Z": -0.9013186
+                },
+                "LocalBoundsMaxCm": {
+                  "X": 69.40906,
+                  "Y": 17.540802,
+                  "Z": 185.4892
+                }
+              }
+            },
+            {
+              "type": "SiegeEngine.Core.Definitions.ModelComponent",
+              "data": {
+                "Key": "man_mesh_pack",
+                "MaterialData": null
+              }
+            },
+            {
+              "type": "SiegeEngine.Core.Definitions.IComponent",
+              "data": {
+                "Key": null,
+                "MaterialData": null
+              }
+            }
+          ]
+        }
+      ],
+      "environment": {
+        "timeOfDay": 12,
+        "weather": "Clear",
+        "ambientColor": {
+          "X": 0.8,
+          "Y": 0.8,
+          "Z": 0.95
+        },
+        "fogDensity": 0.01
+      },
+      "skybox": {
+        "enabled": true,
+        "type": "Cubemap",
+        "cubemapPath": "",
+        "faces": [
+          "Assets/Skyboxes/idk/xpos.png",
+          "Assets/Skyboxes/idk/xneg.png",
+          "Assets/Skyboxes/idk/ypos.png",
+          "Assets/Skyboxes/idk/yneg.png",
+          "Assets/Skyboxes/idk/zpos.png",
+          "Assets/Skyboxes/idk/zneg.png"
+        ],
+        "rotationSpeed": 0.05,
+        "intensity": 1
+      },
+      "customData": {},
+      "settings": {
+        "avatarPackKey": "man_mesh_pack",
+        "animationPackKey": "blend_pack_all",
+        "controllerTypeName": "PlayerController",
+        "preferredSpawnPointIds": [
+          1
+        ],
+        "cameraMode": "ThirdPerson"
+      }
+    }
+  },
+  "Version": "1.0",
+  "LastOpenedScene": "idk",
+  "CameraType": "AngledOrtho",
+  "LastContext": "Scene Editor",
+  "PanelStates": {},
+  "CustomAssemblies": [],
+  "ScriptsEnabled": true,
+  "ScriptsDir": "Scripts"
+}

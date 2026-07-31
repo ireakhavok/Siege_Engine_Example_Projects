@@ -1,0 +1,13 @@
+C:\Users\ireak\OneDrive\Documents\CastleBuilder\Projects\chess\Scripts\Libs\SiegeScripts.deps.json
+C:\Users\ireak\OneDrive\Documents\CastleBuilder\Projects\chess\Scripts\Libs\SiegeScripts.dll
+C:\Users\ireak\OneDrive\Documents\CastleBuilder\Projects\chess\Scripts\Libs\SiegeScripts.pdb
+C:\Users\ireak\OneDrive\Documents\CastleBuilder\Projects\chess\Scripts\Libs\Foundation.dll
+C:\Users\ireak\OneDrive\Documents\CastleBuilder\Projects\chess\Scripts\Libs\SiegeEngine.dll
+C:\Users\ireak\OneDrive\Documents\CastleBuilder\Projects\chess\Scripts\obj\Release\net9.0\SiegeScripts.csproj.AssemblyReference.cache
+C:\Users\ireak\OneDrive\Documents\CastleBuilder\Projects\chess\Scripts\obj\Release\net9.0\SiegeScripts.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ireak\OneDrive\Documents\CastleBuilder\Projects\chess\Scripts\obj\Release\net9.0\SiegeScripts.csproj.CoreCompileInputs.cache
+C:\Users\ireak\OneDrive\Documents\CastleBuilder\Projects\chess\Scripts\obj\Release\net9.0\SiegeScr.A9825EEF.Up2Date
+C:\Users\ireak\OneDrive\Documents\CastleBuilder\Projects\chess\Scripts\obj\Release\net9.0\SiegeScripts.dll
+C:\Users\ireak\OneDrive\Documents\CastleBuilder\Projects\chess\Scripts\obj\Release\net9.0\refint\SiegeScripts.dll
+C:\Users\ireak\OneDrive\Documents\CastleBuilder\Projects\chess\Scripts\obj\Release\net9.0\SiegeScripts.pdb
+C:\Users\ireak\OneDrive\Documents\CastleBuilder\Projects\chess\Scripts\obj\Release\net9.0\ref\SiegeScripts.dll
