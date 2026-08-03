@@ -11,3 +11,17 @@ C:\Users\ireak\OneDrive\Documents\CastleBuilder\Projects\save3\Scripts\obj\Relea
 C:\Users\ireak\OneDrive\Documents\CastleBuilder\Projects\save3\Scripts\obj\Release\net9.0\refint\SiegeScripts.dll
 C:\Users\ireak\OneDrive\Documents\CastleBuilder\Projects\save3\Scripts\obj\Release\net9.0\SiegeScripts.pdb
 C:\Users\ireak\OneDrive\Documents\CastleBuilder\Projects\save3\Scripts\obj\Release\net9.0\ref\SiegeScripts.dll
+C:\repos\Siege_Engine_Example_Projects\save3\Scripts\Libs\SiegeScripts.deps.json
+C:\repos\Siege_Engine_Example_Projects\save3\Scripts\Libs\SiegeScripts.dll
+C:\repos\Siege_Engine_Example_Projects\save3\Scripts\Libs\SiegeScripts.pdb
+C:\repos\Siege_Engine_Example_Projects\save3\Scripts\Libs\Foundation.dll
+C:\repos\Siege_Engine_Example_Projects\save3\Scripts\Libs\SiegeEngine.dll
+C:\repos\Siege_Engine_Example_Projects\save3\Scripts\obj\Release\net9.0\SiegeScripts.csproj.AssemblyReference.cache
+C:\repos\Siege_Engine_Example_Projects\save3\Scripts\obj\Release\net9.0\SiegeScripts.GeneratedMSBuildEditorConfig.editorconfig
+C:\repos\Siege_Engine_Example_Projects\save3\Scripts\obj\Release\net9.0\SiegeScripts.csproj.CoreCompileInputs.cache
+C:\repos\Siege_Engine_Example_Projects\save3\Scripts\obj\Release\net9.0\SiegeScripts.sourcelink.json
+C:\repos\Siege_Engine_Example_Projects\save3\Scripts\obj\Release\net9.0\SiegeScr.A9825EEF.Up2Date
+C:\repos\Siege_Engine_Example_Projects\save3\Scripts\obj\Release\net9.0\SiegeScripts.dll
+C:\repos\Siege_Engine_Example_Projects\save3\Scripts\obj\Release\net9.0\refint\SiegeScripts.dll
+C:\repos\Siege_Engine_Example_Projects\save3\Scripts\obj\Release\net9.0\SiegeScripts.pdb
+C:\repos\Siege_Engine_Example_Projects\save3\Scripts\obj\Release\net9.0\ref\SiegeScripts.dll

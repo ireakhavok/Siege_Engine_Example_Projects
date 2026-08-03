@@ -1,3 +1,5 @@
+// Folder: Scripts/Chess
+// File: ChessScene.cs
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -29,6 +31,8 @@ namespace ChessProject
         double _cursorY;
         ChessAiDifficulty _difficulty = ChessAiDifficulty.Normal;
 
+        readonly bool _isHostedPreview;
+
         public ChessScene(SceneContext context)
             : base(
                 context.RenderContext,
@@ -37,7 +41,8 @@ namespace ChessProject
                 context.Server,
                 context.EventBus)
         {
-            Console.WriteLine("[ChessScene] Constructed via SceneContext");
+            _isHostedPreview = context != null && context.IsHostedPreview;
+            Console.WriteLine($"[ChessScene] Constructed via SceneContext (hostedPreview={_isHostedPreview})");
         }
 
         public override void Initialize(int width, int height)
@@ -56,36 +61,40 @@ namespace ChessProject
             _highlightBuffer = new VertexBuffer(_renderContext);
             RebuildMeshes();
 
-            try
+            // Hosted preview: editor owns the window and input. Never install callbacks.
+            if (!_isHostedPreview)
             {
-                _controlContext.SetWindowSizeCallback(_window, (w, nw, nh) =>
+                try
                 {
-                    if (nw > 0 && nh > 0)
+                    _controlContext.SetWindowSizeCallback(_window, (w, nw, nh) =>
                     {
-                        _width = nw;
-                        _height = nh;
-                        _renderContext.Viewport(0, 0, (uint)nw, (uint)nh);
-                    }
-                });
-                _controlContext.SetCursorPosCallback(_window, (w, x, y) =>
+                        if (nw > 0 && nh > 0)
+                        {
+                            _width = nw;
+                            _height = nh;
+                            _renderContext.Viewport(0, 0, (uint)nw, (uint)nh);
+                        }
+                    });
+                    _controlContext.SetCursorPosCallback(_window, (w, x, y) =>
+                    {
+                        _cursorX = x;
+                        _cursorY = y;
+                    });
+                    _controlContext.SetMouseButtonCallback(_window, (w, button, action, mods) =>
+                    {
+                        string a = action.ToString();
+                        string b = button.ToString();
+                        if (a.Equals("Press", StringComparison.OrdinalIgnoreCase)
+                            && (b.Equals("Left", StringComparison.OrdinalIgnoreCase)
+                                || b.Equals("Button1", StringComparison.OrdinalIgnoreCase)
+                                || b == "0"))
+                            _pendingClick = true;
+                    });
+                }
+                catch (Exception ex)
                 {
-                    _cursorX = x;
-                    _cursorY = y;
-                });
-                _controlContext.SetMouseButtonCallback(_window, (w, button, action, mods) =>
-                {
-                    string a = action.ToString();
-                    string b = button.ToString();
-                    if (a.Equals("Press", StringComparison.OrdinalIgnoreCase)
-                        && (b.Equals("Left", StringComparison.OrdinalIgnoreCase)
-                            || b.Equals("Button1", StringComparison.OrdinalIgnoreCase)
-                            || b == "0"))
-                        _pendingClick = true;
-                });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[ChessScene] input setup: {ex.Message}");
+                    Console.WriteLine($"[ChessScene] input setup: {ex.Message}");
+                }
             }
 
             _ready = true;
@@ -96,6 +105,13 @@ namespace ChessProject
         {
             base.Update(deltaTime);
             if (!_ready || _board == null) return;
+
+            // Hosted preview: no interactive logic, but keep meshes current so the board is visible.
+            if (_isHostedPreview)
+            {
+                RebuildMeshes();
+                return;
+            }
 
             if (_pendingClick)
             {
@@ -145,6 +161,7 @@ namespace ChessProject
 
         public void HandleClick(Vector2 windowMouse)
         {
+            if (_isHostedPreview) return;
             if (_board == null || _board.IsGameOver || _aiThinking) return;
             if (_board.Mode == ChessMode.VsAi && _board.SideToMove != _board.HumanColor) return;
 

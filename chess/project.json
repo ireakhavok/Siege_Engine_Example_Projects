@@ -7,6 +7,7 @@
     "ChessMain": {
       "name": "ChessMain",
       "sceneType": "Gameplay",
+      "customSceneClass": null,
       "terrain": {
         "heightmapPath": null,
         "colorTexturePath": null,
@@ -39,10 +40,7 @@
         "rotationSpeed": 0.05,
         "intensity": 1
       },
-      "customData": {
-        "chessMode": "VsAi",
-        "humanColor": "White"
-      },
+      "customData": {},
       "settings": {
         "avatarPackKey": null,
         "animationPackKey": null,
