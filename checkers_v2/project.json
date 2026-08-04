@@ -1,0 +1,19 @@
+{
+  "Name": "checkers",
+  "Type": "2D",
+  "Mode": "Single Player",
+  "AllowMods": true,
+  "Scenes": {
+    "CheckersMain": {
+      "name": "CheckersMain",
+      "sceneType": "Gameplay",
+      "entities": [],
+      "settings": {
+        "avatarPackKey": null,
+        "cameraMode": "Ortho"
+      }
+    }
+  },
+  "Version": "1.0",
+  "LastOpenedScene": "CheckersMain"
+}

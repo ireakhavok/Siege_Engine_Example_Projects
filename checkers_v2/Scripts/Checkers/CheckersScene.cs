@@ -1,5 +1,5 @@
-// Folder: Scripts/Chess
-// File: ChessScene.cs
+// Folder: CheckersProject (Scripts)
+// File: CheckersScene.cs
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -13,12 +13,12 @@ using SiegeEngine.Core.Rendering.ContextManagement;
 using SiegeEngine.Core.Rendering.Shaders;
 using SiegeEngine.Scenes;
 
-namespace ChessProject
+namespace CheckersProject
 {
     [CustomSceneEntry]
-    public sealed class ChessScene : Scene
+    public sealed class CheckersScene : Scene
     {
-        ChessBoardState _board;
+        CheckersBoardState _board;
         ShaderProgram _shader;
         VertexBuffer _boardBuffer;
         VertexBuffer _pieceBuffer;
@@ -29,11 +29,13 @@ namespace ChessProject
         double _cursorX;
         double _cursorY;
         bool _leftWasDown;
-        ChessAiDifficulty _difficulty = ChessAiDifficulty.Normal;
+        CheckersAiDifficulty _difficulty = CheckersAiDifficulty.Normal;
 
+        // When true the scene is hosted inside the Scene Editor as a view-only preview.
+        // Input and AI are suppressed; geometry is still rebuilt and drawn.
         readonly bool _isHostedPreview;
 
-        public ChessScene(SceneContext context)
+        public CheckersScene(SceneContext context)
             : base(
                 context.RenderContext,
                 context.ControlContext,
@@ -41,8 +43,8 @@ namespace ChessProject
                 context.Server,
                 context.EventBus)
         {
-            _isHostedPreview = context != null && context.IsHostedPreview;
-            Console.WriteLine($"[ChessScene] Constructed via SceneContext (hostedPreview={_isHostedPreview})");
+            _isHostedPreview = context?.IsHostedPreview ?? false;
+            Console.WriteLine($"[CheckersScene] Constructed via SceneContext (hostedPreview={_isHostedPreview})");
         }
 
         public override void Initialize(int width, int height)
@@ -51,9 +53,9 @@ namespace ChessProject
 
             _renderContext.ClearColor(0.10f, 0.12f, 0.14f, 1.0f);
 
-            _board = ChessBoardState.CreateStartingPosition();
-            _board.Mode = ChessMode.VsAi;
-            _board.HumanColor = ChessColor.White;
+            _board = CheckersBoardState.CreateStartingPosition();
+            _board.Mode = CheckersMode.VsAi;
+            _board.HumanColor = CheckersColor.White;
 
             _shader = new ShaderProgram(_renderContext, SceneShader.VertexShaderSource, SceneShader.FragmentShaderSource);
             _boardBuffer = new VertexBuffer(_renderContext);
@@ -66,8 +68,8 @@ namespace ChessProject
 
             _ready = true;
             Console.WriteLine(_isHostedPreview
-                ? "[ChessScene] Ready (hosted preview — view only)."
-                : "[ChessScene] Ready — white to move. AI is black with full material eval.");
+                ? "[CheckersScene] Ready (hosted preview — view only)."
+                : "[CheckersScene] Ready — white to move.");
         }
 
         public override void Update(float deltaTime)
@@ -93,7 +95,7 @@ namespace ChessProject
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ChessScene] input poll: {ex.Message}");
+                Console.WriteLine($"[CheckersScene] input poll: {ex.Message}");
             }
 
             TickAi();
@@ -103,11 +105,11 @@ namespace ChessProject
         void TickAi()
         {
             if (_board.IsGameOver || _aiThinking) return;
-            if (_board.Mode != ChessMode.VsAi) return;
+            if (_board.Mode != CheckersMode.VsAi) return;
             if (_board.SideToMove == _board.HumanColor) return;
 
             _aiThinking = true;
-            _board.Phase = ChessPhase.AiThinking;
+            _board.Phase = CheckersPhase.AiThinking;
             var snap = _board.Clone();
             var difficulty = _difficulty;
 
@@ -115,22 +117,31 @@ namespace ChessProject
             {
                 try
                 {
-                    var best = ChessAI.FindBestMove(snap, difficulty);
+                    var best = CheckersAI.FindBestMove(snap, difficulty);
                     if (best.HasValue && _board != null && !_board.IsGameOver)
                     {
                         var m = best.Value;
-                        if (ChessRules.TryMove(_board, m.From, m.To, m.Promotion, out var rec))
+                        if (CheckersRules.TryMove(_board, m.From, m.To, out var rec))
                         {
-                            string cap = rec.Captured != null ? $" x{rec.Captured.Type}" : "";
-                            Console.WriteLine($"[ChessAI] {rec.FromAlg}-{rec.ToAlg}{cap}  score={m.Score}");
-                            ChessRules.EvaluateTerminal(_board);
+                            string cap = rec.CapturedSquares.Count > 0 ? $" x{rec.CapturedSquares.Count}" : "";
+                            Console.WriteLine($"[CheckersAI] {rec.FromAlg}-{rec.ToAlg}{cap}  score={m.Score}");
+                            // Keep AI moving through multi-jumps
+                            while (_board.ContinuationFrom.HasValue && !_board.IsGameOver)
+                            {
+                                var cont = CheckersAI.FindBestMove(_board, difficulty);
+                                if (!cont.HasValue) break;
+                                if (!CheckersRules.TryMove(_board, cont.Value.From, cont.Value.To, out var rec2))
+                                    break;
+                                Console.WriteLine($"[CheckersAI] multi {rec2.FromAlg}-{rec2.ToAlg}");
+                            }
+                            CheckersRules.EvaluateTerminal(_board);
                         }
                     }
                 }
                 finally
                 {
-                    if (_board != null && _board.Phase == ChessPhase.AiThinking)
-                        _board.Phase = ChessPhase.Idle;
+                    if (_board != null && _board.Phase == CheckersPhase.AiThinking)
+                        _board.Phase = CheckersPhase.Idle;
                     _aiThinking = false;
                 }
             });
@@ -138,9 +149,8 @@ namespace ChessProject
 
         public void HandleClick(Vector2 windowMouse)
         {
-            if (_isHostedPreview) return;
             if (_board == null || _board.IsGameOver || _aiThinking) return;
-            if (_board.Mode == ChessMode.VsAi && _board.SideToMove != _board.HumanColor) return;
+            if (_board.Mode == CheckersMode.VsAi && _board.SideToMove != _board.HumanColor) return;
 
             float boardPx = MathF.Min(_width, _height) * 0.82f;
             float originX = (_width - boardPx) * 0.5f;
@@ -153,10 +163,10 @@ namespace ChessProject
             float v = 1f - (ly / boardPx);
             int file = (int)Math.Clamp(u * 8f, 0, 7);
             int rank = (int)Math.Clamp(v * 8f, 0, 7);
-            OnSquare(new ChessSquare(file, rank));
+            OnSquare(new CheckersSquare(file, rank));
         }
 
-        void OnSquare(ChessSquare sq)
+        void OnSquare(CheckersSquare sq)
         {
             string alg = sq.ToAlgebraic();
 
@@ -166,44 +176,41 @@ namespace ChessProject
                 if (piece != null && piece.Color == _board.SideToMove)
                 {
                     _board.SelectedSquare = alg;
-                    _board.Phase = ChessPhase.PieceSelected;
+                    _board.Phase = CheckersPhase.PieceSelected;
                 }
                 return;
             }
 
             if (_board.SelectedSquare == alg)
             {
-                _board.SelectedSquare = null;
-                _board.Phase = ChessPhase.Idle;
+                if (!_board.ContinuationFrom.HasValue)
+                {
+                    _board.SelectedSquare = null;
+                    _board.Phase = CheckersPhase.Idle;
+                }
                 return;
             }
 
             var re = _board.Get(sq);
-            if (re != null && re.Color == _board.SideToMove)
+            if (re != null && re.Color == _board.SideToMove && !_board.ContinuationFrom.HasValue)
             {
                 _board.SelectedSquare = alg;
                 return;
             }
 
-            if (!ChessSquare.TryParse(_board.SelectedSquare, out var from)) return;
+            if (!CheckersSquare.TryParse(_board.SelectedSquare, out var from)) return;
 
-            ChessPieceType? promo = null;
-            var moving = _board.Get(from);
-            if (moving?.Type == ChessPieceType.Pawn &&
-                ((moving.Color == ChessColor.White && sq.Rank == 7) ||
-                 (moving.Color == ChessColor.Black && sq.Rank == 0)))
-                promo = ChessPieceType.Queen;
-
-            if (ChessRules.TryMove(_board, from, sq, promo, out var rec))
+            if (CheckersRules.TryMove(_board, from, sq, out var rec))
             {
-                string cap = rec.Captured != null ? $" x{rec.Captured.Type}" : "";
-                Console.WriteLine($"[Chess] {rec.FromAlg}-{rec.ToAlg}{cap}");
-                ChessRules.EvaluateTerminal(_board);
+                string cap = rec.CapturedSquares.Count > 0 ? $" x{rec.CapturedSquares.Count}" : "";
+                Console.WriteLine($"[Checkers] {rec.FromAlg}-{rec.ToAlg}{cap}");
+                if (!_board.ContinuationFrom.HasValue)
+                    CheckersRules.EvaluateTerminal(_board);
             }
-            else
+            else if (!_board.ContinuationFrom.HasValue)
             {
                 _board.SelectedSquare = null;
-                _board.Phase = ChessPhase.Idle;
+                _board.Phase = CheckersPhase.Idle;
             }
         }
 
@@ -246,30 +253,30 @@ namespace ChessProject
             if (_board == null || _boardBuffer == null) return;
 
             var boardVerts = new List<Vertex>(8 * 8 * 6);
-            var pieceVerts = new List<Vertex>(32 * 48);
+            var pieceVerts = new List<Vertex>(24 * 48);
             var hiVerts = new List<Vertex>(64);
 
             for (int r = 0; r < 8; r++)
                 for (int f = 0; f < 8; f++)
                 {
-                    bool light = ((f + r) & 1) == 0;
+                    bool dark = ((f + r) & 1) == 1;
                     AddQuad(boardVerts, f, r, 1f, 1f, 0f,
-                        light ? 0.82f : 0.28f,
-                        light ? 0.72f : 0.22f,
-                        light ? 0.55f : 0.16f, 1f);
+                        dark ? 0.32f : 0.78f,
+                        dark ? 0.22f : 0.68f,
+                        dark ? 0.14f : 0.52f, 1f);
                 }
 
-            if (!string.IsNullOrEmpty(_board.LastFrom) && ChessSquare.TryParse(_board.LastFrom, out var lf))
+            if (!string.IsNullOrEmpty(_board.LastFrom) && CheckersSquare.TryParse(_board.LastFrom, out var lf))
                 AddQuad(hiVerts, lf.File + 0.04f, lf.Rank + 0.04f, 0.92f, 0.92f, 0.01f, 0.85f, 0.75f, 0.15f, 0.40f);
-            if (!string.IsNullOrEmpty(_board.LastTo) && ChessSquare.TryParse(_board.LastTo, out var lt))
+            if (!string.IsNullOrEmpty(_board.LastTo) && CheckersSquare.TryParse(_board.LastTo, out var lt))
                 AddQuad(hiVerts, lt.File + 0.04f, lt.Rank + 0.04f, 0.92f, 0.92f, 0.01f, 0.85f, 0.75f, 0.15f, 0.40f);
 
-            if (!string.IsNullOrEmpty(_board.SelectedSquare) && ChessSquare.TryParse(_board.SelectedSquare, out var sel))
+            if (!string.IsNullOrEmpty(_board.SelectedSquare) && CheckersSquare.TryParse(_board.SelectedSquare, out var sel))
             {
                 AddQuad(hiVerts, sel.File + 0.03f, sel.Rank + 0.03f, 0.94f, 0.94f, 0.02f, 0.20f, 0.70f, 1.0f, 0.50f);
-                foreach (var m in ChessRules.GetLegalMovesFrom(_board, sel))
+                foreach (var m in CheckersRules.GetLegalMovesFrom(_board, sel))
                 {
-                    bool isCap = _board.Get(m.To) != null;
+                    bool isCap = Math.Abs(m.To.File - m.From.File) == 2;
                     if (isCap)
                         AddRing(hiVerts, m.To.File + 0.5f, m.To.Rank + 0.5f, 0.38f, 0.28f, 0.03f, 0.95f, 0.25f, 0.20f, 0.85f);
                     else
@@ -282,13 +289,13 @@ namespace ChessProject
                 {
                     var p = _board.Board[r][f];
                     if (p == null) continue;
-                    bool white = p.Color == ChessColor.White;
-                    float fr = white ? 0.96f : 0.12f;
-                    float fg = white ? 0.94f : 0.12f;
-                    float fb = white ? 0.90f : 0.14f;
-                    float or_ = white ? 0.15f : 0.85f;
-                    float og = white ? 0.15f : 0.85f;
-                    float ob = white ? 0.18f : 0.80f;
+                    bool white = p.Color == CheckersColor.White;
+                    float fr = white ? 0.95f : 0.12f;
+                    float fg = white ? 0.92f : 0.12f;
+                    float fb = white ? 0.88f : 0.14f;
+                    float or_ = white ? 0.25f : 0.75f;
+                    float og = white ? 0.22f : 0.72f;
+                    float ob = white ? 0.18f : 0.65f;
 
                     float cx = f + 0.5f;
                     float cy = r + 0.5f;
@@ -300,89 +307,22 @@ namespace ChessProject
             Upload(_pieceBuffer, pieceVerts);
         }
 
-        void DrawPiece(List<Vertex> v, ChessPieceType type, float cx, float cy,
+        void DrawPiece(List<Vertex> v, CheckersPieceType type, float cx, float cy,
             float fr, float fg, float fb, float or_, float og, float ob)
         {
-            switch (type)
+            // base disc
+            AddCircle(v, cx, cy, 0.36f, 0.05f, fr, fg, fb, 1f, 16);
+            // rim
+            AddRing(v, cx, cy, 0.38f, 0.34f, 0.04f, or_, og, ob, 1f);
+
+            if (type == CheckersPieceType.King)
             {
-                case ChessPieceType.Pawn: DrawPawn(v, cx, cy, fr, fg, fb, or_, og, ob); break;
-                case ChessPieceType.Rook: DrawRook(v, cx, cy, fr, fg, fb, or_, og, ob); break;
-                case ChessPieceType.Knight: DrawKnight(v, cx, cy, fr, fg, fb, or_, og, ob); break;
-                case ChessPieceType.Bishop: DrawBishop(v, cx, cy, fr, fg, fb, or_, og, ob); break;
-                case ChessPieceType.Queen: DrawQueen(v, cx, cy, fr, fg, fb, or_, og, ob); break;
-                case ChessPieceType.King: DrawKing(v, cx, cy, fr, fg, fb, or_, og, ob); break;
+                // crown indicator
+                AddCircle(v, cx, cy + 0.08f, 0.14f, 0.07f, or_, og, ob, 1f, 10);
+                AddQuad(v, cx - 0.12f, cy + 0.16f, 0.08f, 0.10f, 0.08f, or_, og, ob, 1f);
+                AddQuad(v, cx - 0.02f, cy + 0.18f, 0.08f, 0.12f, 0.08f, or_, og, ob, 1f);
+                AddQuad(v, cx + 0.08f, cy + 0.16f, 0.08f, 0.10f, 0.08f, or_, og, ob, 1f);
             }
-        }
-
-        void DrawPawn(List<Vertex> v, float cx, float cy,
-            float fr, float fg, float fb, float or_, float og, float ob)
-        {
-            AddQuad(v, cx - 0.28f, cy - 0.38f, 0.56f, 0.12f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.10f, cy - 0.28f, 0.20f, 0.22f, 0.05f, fr, fg, fb, 1f);
-            AddCircle(v, cx, cy + 0.08f, 0.16f, 0.06f, fr, fg, fb, 1f, 12);
-            AddQuad(v, cx - 0.30f, cy - 0.40f, 0.60f, 0.04f, 0.04f, or_, og, ob, 1f);
-        }
-
-        void DrawRook(List<Vertex> v, float cx, float cy,
-            float fr, float fg, float fb, float or_, float og, float ob)
-        {
-            AddQuad(v, cx - 0.30f, cy - 0.38f, 0.60f, 0.12f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.22f, cy - 0.26f, 0.44f, 0.40f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.28f, cy + 0.14f, 0.14f, 0.18f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.07f, cy + 0.14f, 0.14f, 0.18f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx + 0.14f, cy + 0.18f, 0.14f, 0.18f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.30f, cy - 0.40f, 0.60f, 0.04f, 0.04f, or_, og, ob, 1f);
-        }
-
-        void DrawKnight(List<Vertex> v, float cx, float cy,
-            float fr, float fg, float fb, float or_, float og, float ob)
-        {
-            AddQuad(v, cx - 0.28f, cy - 0.38f, 0.56f, 0.12f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.18f, cy - 0.26f, 0.36f, 0.30f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.30f, cy + 0.00f, 0.28f, 0.22f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.34f, cy + 0.18f, 0.22f, 0.14f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.38f, cy + 0.10f, 0.12f, 0.10f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.22f, cy + 0.28f, 0.08f, 0.12f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.30f, cy - 0.40f, 0.60f, 0.04f, 0.04f, or_, og, ob, 1f);
-        }
-
-        void DrawBishop(List<Vertex> v, float cx, float cy,
-            float fr, float fg, float fb, float or_, float og, float ob)
-        {
-            AddQuad(v, cx - 0.28f, cy - 0.38f, 0.56f, 0.12f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.16f, cy - 0.26f, 0.32f, 0.20f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.12f, cy - 0.06f, 0.24f, 0.18f, 0.05f, fr, fg, fb, 1f);
-            AddCircle(v, cx, cy + 0.18f, 0.14f, 0.06f, fr, fg, fb, 1f, 10);
-            AddQuad(v, cx - 0.03f, cy + 0.22f, 0.06f, 0.16f, 0.07f, or_, og, ob, 1f);
-            AddCircle(v, cx, cy + 0.36f, 0.05f, 0.07f, fr, fg, fb, 1f, 8);
-            AddQuad(v, cx - 0.30f, cy - 0.40f, 0.60f, 0.04f, 0.04f, or_, og, ob, 1f);
-        }
-
-        void DrawQueen(List<Vertex> v, float cx, float cy,
-            float fr, float fg, float fb, float or_, float og, float ob)
-        {
-            AddQuad(v, cx - 0.32f, cy - 0.38f, 0.64f, 0.12f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.20f, cy - 0.26f, 0.40f, 0.28f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.26f, cy + 0.02f, 0.52f, 0.10f, 0.05f, fr, fg, fb, 1f);
-            for (int i = -2; i <= 2; i++)
-            {
-                float px = cx + i * 0.11f;
-                float h = (i == 0) ? 0.22f : 0.16f;
-                AddQuad(v, px - 0.04f, cy + 0.10f, 0.08f, h, 0.05f, fr, fg, fb, 1f);
-                AddCircle(v, px, cy + 0.10f + h, 0.045f, 0.06f, fr, fg, fb, 1f, 8);
-            }
-            AddQuad(v, cx - 0.32f, cy - 0.40f, 0.64f, 0.04f, 0.04f, or_, og, ob, 1f);
-        }
-
-        void DrawKing(List<Vertex> v, float cx, float cy,
-            float fr, float fg, float fb, float or_, float og, float ob)
-        {
-            AddQuad(v, cx - 0.30f, cy - 0.38f, 0.60f, 0.12f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.18f, cy - 0.26f, 0.36f, 0.30f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.24f, cy + 0.04f, 0.48f, 0.10f, 0.05f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.05f, cy + 0.12f, 0.10f, 0.32f, 0.06f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.16f, cy + 0.26f, 0.32f, 0.09f, 0.06f, fr, fg, fb, 1f);
-            AddQuad(v, cx - 0.30f, cy - 0.40f, 0.60f, 0.04f, 0.04f, or_, og, ob, 1f);
         }
 
         static void AddQuad(List<Vertex> verts, float x, float y, float w, float h, float z,
