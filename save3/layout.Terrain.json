@@ -1,0 +1,12 @@
+{
+  "Root": {
+    "NodeType": "tabbed",
+    "Panels": [],
+    "ActiveTabIndex": -1,
+    "IsVertical": false,
+    "SplitRatio": 0.5,
+    "Left": null,
+    "Right": null
+  },
+  "FloatingPanels": []
+}

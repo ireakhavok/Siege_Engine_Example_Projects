@@ -7,6 +7,7 @@
     "NewTerrain": {
       "name": "NewTerrain",
       "sceneType": "TerrainTest",
+      "customSceneClass": null,
       "terrain": {
         "heightmapPath": "Assets/Terrain/NewTerrain.tif",
         "colorTexturePath": "Assets\\Terrain\\NewTerrain.png",
@@ -47,28 +48,6 @@
           "id": 1,
           "components": [
             {
-              "type": "SiegeEngine.Core.Definitions.TransformComponent",
-              "data": {
-                "Position": {
-                  "X": 103.151245,
-                  "Y": 93.60099,
-                  "Z": 13.148671
-                },
-                "Rotation": {
-                  "IsIdentity": false,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": -0.6217925,
-                  "W": 0.7831821
-                },
-                "Scale": {
-                  "X": 1,
-                  "Y": 1,
-                  "Z": 1
-                }
-              }
-            },
-            {
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
@@ -98,16 +77,47 @@
                 "IsBreakable": false,
                 "IsBroken": false,
                 "LocalBoundsMinCm": {
-                  "X": -69.35311,
-                  "Y": -21.214579,
-                  "Z": -0.9013186
+                  "X": -0.6935311,
+                  "Y": -0.21214578,
+                  "Z": -0.009013186
                 },
                 "LocalBoundsMaxCm": {
-                  "X": 69.40906,
-                  "Y": 17.540802,
-                  "Z": 185.4892
+                  "X": 0.69409055,
+                  "Y": 0.17540802,
+                  "Z": 1.8548919
                 },
                 "Velocity": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "BodyType": 0,
+                "AngularVelocity": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "LinearDamping": 0.4,
+                "AngularDamping": 0.4,
+                "Friction": 1.8,
+                "Restitution": 0,
+                "KineticFriction": 0.6,
+                "StaticFriction": 0.85,
+                "RollingResistance": 0.2,
+                "IsSleeping": false,
+                "IslandId": -1,
+                "SleepThreshold": 0.05,
+                "CollisionEnabled": true,
+                "IsGrounded": false,
+                "SlopeLimitDegrees": 50,
+                "StepHeight": 0.35,
+                "LocalCentreOfMass": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "InvMass": 0,
+                "InvInertiaLocal": {
                   "X": 0,
                   "Y": 0,
                   "Z": 0
@@ -118,13 +128,6 @@
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
                 "Key": "man_mesh_pack",
-                "MaterialData": null
-              }
-            },
-            {
-              "type": "SiegeEngine.Core.Definitions.IComponent",
-              "data": {
-                "Key": null,
                 "MaterialData": null
               }
             }
@@ -138,11 +141,11 @@
             "Z": 14.577425
           },
           "rotation": {
-            "IsIdentity": false,
+            "IsIdentity": true,
             "X": 0,
             "Y": 0,
             "Z": 0,
-            "W": 0
+            "W": 1
           },
           "scale": {
             "X": 1,
@@ -156,28 +159,6 @@
           "id": 2,
           "components": [
             {
-              "type": "SiegeEngine.Core.Definitions.TransformComponent",
-              "data": {
-                "Position": {
-                  "X": 110.126434,
-                  "Y": 88.055145,
-                  "Z": 14.577425
-                },
-                "Rotation": {
-                  "IsIdentity": false,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0,
-                  "W": 0
-                },
-                "Scale": {
-                  "X": 1,
-                  "Y": 1,
-                  "Z": 1
-                }
-              }
-            },
-            {
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
@@ -186,11 +167,11 @@
                   "Z": 14.577425
                 },
                 "Rotation": {
-                  "IsIdentity": false,
+                  "IsIdentity": true,
                   "X": 0,
                   "Y": 0,
                   "Z": 0,
-                  "W": 0
+                  "W": 1
                 },
                 "Scale": {
                   "X": 1,
@@ -207,16 +188,47 @@
                 "IsBreakable": false,
                 "IsBroken": false,
                 "LocalBoundsMinCm": {
-                  "X": -69.35311,
-                  "Y": -21.214579,
-                  "Z": -0.9013186
+                  "X": -0.6935311,
+                  "Y": -0.21214578,
+                  "Z": -0.009013186
                 },
                 "LocalBoundsMaxCm": {
-                  "X": 69.40906,
-                  "Y": 17.540802,
-                  "Z": 185.4892
+                  "X": 0.69409055,
+                  "Y": 0.17540802,
+                  "Z": 1.8548919
                 },
                 "Velocity": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "BodyType": 0,
+                "AngularVelocity": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "LinearDamping": 0.4,
+                "AngularDamping": 0.4,
+                "Friction": 1.8,
+                "Restitution": 0,
+                "KineticFriction": 0.6,
+                "StaticFriction": 0.85,
+                "RollingResistance": 0.2,
+                "IsSleeping": false,
+                "IslandId": -1,
+                "SleepThreshold": 0.05,
+                "CollisionEnabled": true,
+                "IsGrounded": false,
+                "SlopeLimitDegrees": 50,
+                "StepHeight": 0.35,
+                "LocalCentreOfMass": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "InvMass": 0,
+                "InvInertiaLocal": {
                   "X": 0,
                   "Y": 0,
                   "Z": 0
@@ -227,13 +239,6 @@
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
                 "Key": "man_mesh_pack",
-                "MaterialData": null
-              }
-            },
-            {
-              "type": "SiegeEngine.Core.Definitions.IComponent",
-              "data": {
-                "Key": null,
                 "MaterialData": null
               }
             }
@@ -265,28 +270,6 @@
           "id": 3,
           "components": [
             {
-              "type": "SiegeEngine.Core.Definitions.TransformComponent",
-              "data": {
-                "Position": {
-                  "X": 107.97174,
-                  "Y": 95.892525,
-                  "Z": 14.135239
-                },
-                "Rotation": {
-                  "IsIdentity": false,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0.68330485,
-                  "W": 0.7301333
-                },
-                "Scale": {
-                  "X": 1,
-                  "Y": 1,
-                  "Z": 1
-                }
-              }
-            },
-            {
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
@@ -316,16 +299,47 @@
                 "IsBreakable": false,
                 "IsBroken": false,
                 "LocalBoundsMinCm": {
-                  "X": -13.805176,
-                  "Y": -351.51294,
-                  "Z": 4.5242767
+                  "X": -0.13805175,
+                  "Y": -3.5151293,
+                  "Z": 0.045242768
                 },
                 "LocalBoundsMaxCm": {
-                  "X": 13.805176,
-                  "Y": 351.51294,
-                  "Z": 441.75372
+                  "X": 0.13805175,
+                  "Y": 3.5151293,
+                  "Z": 4.417537
                 },
                 "Velocity": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "BodyType": 0,
+                "AngularVelocity": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "LinearDamping": 0.4,
+                "AngularDamping": 0.4,
+                "Friction": 1.8,
+                "Restitution": 0,
+                "KineticFriction": 0.6,
+                "StaticFriction": 0.85,
+                "RollingResistance": 0.2,
+                "IsSleeping": false,
+                "IslandId": -1,
+                "SleepThreshold": 0.05,
+                "CollisionEnabled": true,
+                "IsGrounded": false,
+                "SlopeLimitDegrees": 50,
+                "StepHeight": 0.35,
+                "LocalCentreOfMass": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "InvMass": 0,
+                "InvInertiaLocal": {
                   "X": 0,
                   "Y": 0,
                   "Z": 0
@@ -338,12 +352,342 @@
                 "Key": "sm_wall_pack",
                 "MaterialData": null
               }
+            }
+          ]
+        },
+        {
+          "type": "FBX",
+          "position": {
+            "X": 112.80279,
+            "Y": 93.415054,
+            "Z": 14.6234
+          },
+          "rotation": {
+            "IsIdentity": true,
+            "X": 0,
+            "Y": 0,
+            "Z": 0,
+            "W": 1
+          },
+          "scale": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "assetPackKey": "greenball_pack",
+          "textureId": 0,
+          "height": 0,
+          "material": null,
+          "id": 4,
+          "components": [
+            {
+              "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
+              "data": {
+                "Position": {
+                  "X": 112.80279,
+                  "Y": 93.415054,
+                  "Z": 14.6234
+                },
+                "Rotation": {
+                  "IsIdentity": true,
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0,
+                  "W": 1
+                },
+                "Scale": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                },
+                "Size": {
+                  "X": 1.9999988,
+                  "Y": 1.9999993,
+                  "Z": 2
+                },
+                "Mass": 1,
+                "Health": 100,
+                "IsBreakable": false,
+                "IsBroken": false,
+                "LocalBoundsMinCm": {
+                  "X": -0.9999997,
+                  "Y": -1,
+                  "Z": 0
+                },
+                "LocalBoundsMaxCm": {
+                  "X": 0.99999905,
+                  "Y": 0.99999934,
+                  "Z": 2
+                },
+                "Velocity": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "BodyType": 0,
+                "AngularVelocity": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "LinearDamping": 0.4,
+                "AngularDamping": 0.4,
+                "Friction": 1.8,
+                "Restitution": 0,
+                "KineticFriction": 0.6,
+                "StaticFriction": 0.85,
+                "RollingResistance": 0.2,
+                "IsSleeping": false,
+                "IslandId": -1,
+                "SleepThreshold": 0.05,
+                "CollisionEnabled": true,
+                "IsGrounded": false,
+                "SlopeLimitDegrees": 50,
+                "StepHeight": 0.35,
+                "LocalCentreOfMass": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "InvMass": 0,
+                "InvInertiaLocal": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                }
+              }
             },
             {
-              "type": "SiegeEngine.Core.Definitions.IComponent",
+              "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": null,
+                "Key": "greenball_pack",
                 "MaterialData": null
+              }
+            }
+          ]
+        },
+        {
+          "type": "FBX",
+          "position": {
+            "X": 110.61962,
+            "Y": 91.32608,
+            "Z": 14.6234
+          },
+          "rotation": {
+            "IsIdentity": true,
+            "X": 0,
+            "Y": 0,
+            "Z": 0,
+            "W": 1
+          },
+          "scale": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "assetPackKey": "greenball_pack",
+          "textureId": 0,
+          "height": 0,
+          "material": null,
+          "id": 5,
+          "components": [
+            {
+              "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
+              "data": {
+                "Position": {
+                  "X": 110.61962,
+                  "Y": 91.32608,
+                  "Z": 14.6234
+                },
+                "Rotation": {
+                  "IsIdentity": true,
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0,
+                  "W": 1
+                },
+                "Scale": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                },
+                "Size": {
+                  "X": 1.9999988,
+                  "Y": 1.9999993,
+                  "Z": 2
+                },
+                "Mass": 1,
+                "Health": 100,
+                "IsBreakable": false,
+                "IsBroken": false,
+                "LocalBoundsMinCm": {
+                  "X": -0.9999997,
+                  "Y": -1,
+                  "Z": 0
+                },
+                "LocalBoundsMaxCm": {
+                  "X": 0.99999905,
+                  "Y": 0.99999934,
+                  "Z": 2
+                },
+                "Velocity": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "BodyType": 0,
+                "AngularVelocity": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "LinearDamping": 0.4,
+                "AngularDamping": 0.4,
+                "Friction": 1.8,
+                "Restitution": 0,
+                "KineticFriction": 0.6,
+                "StaticFriction": 0.85,
+                "RollingResistance": 0.2,
+                "IsSleeping": false,
+                "IslandId": -1,
+                "SleepThreshold": 0.05,
+                "CollisionEnabled": true,
+                "IsGrounded": false,
+                "SlopeLimitDegrees": 50,
+                "StepHeight": 0.35,
+                "LocalCentreOfMass": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "InvMass": 0,
+                "InvInertiaLocal": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                }
+              }
+            },
+            {
+              "type": "SiegeEngine.Core.Definitions.ModelComponent",
+              "data": {
+                "Key": "greenball_pack",
+                "MaterialData": null
+              }
+            }
+          ]
+        },
+        {
+          "type": "SoundSource",
+          "position": {
+            "X": 108.64188,
+            "Y": 98.99594,
+            "Z": 13.892263
+          },
+          "rotation": {
+            "IsIdentity": true,
+            "X": 0,
+            "Y": 0,
+            "Z": 0,
+            "W": 1
+          },
+          "scale": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "assetPackKey": null,
+          "textureId": 0,
+          "height": 0,
+          "material": null,
+          "id": 6,
+          "components": [
+            {
+              "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
+              "data": {
+                "Position": {
+                  "X": 108.64188,
+                  "Y": 98.99594,
+                  "Z": 13.892263
+                },
+                "Rotation": {
+                  "IsIdentity": true,
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0,
+                  "W": 1
+                },
+                "Scale": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                },
+                "Size": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                },
+                "Mass": 1,
+                "Health": 100,
+                "IsBreakable": false,
+                "IsBroken": false,
+                "LocalBoundsMinCm": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "LocalBoundsMaxCm": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "Velocity": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "BodyType": 0,
+                "AngularVelocity": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "LinearDamping": 0.4,
+                "AngularDamping": 0.4,
+                "Friction": 1.8,
+                "Restitution": 0,
+                "KineticFriction": 0.6,
+                "StaticFriction": 0.85,
+                "RollingResistance": 0.2,
+                "IsSleeping": false,
+                "IslandId": -1,
+                "SleepThreshold": 0.05,
+                "CollisionEnabled": false,
+                "IsGrounded": false,
+                "SlopeLimitDegrees": 50,
+                "StepHeight": 0.35,
+                "LocalCentreOfMass": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "InvMass": 0,
+                "InvInertiaLocal": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                }
+              }
+            },
+            {
+              "type": "SiegeEngine.Core.Definitions.SoundComponent",
+              "data": {
+                "AudioClip": "Sounds\\IDE\\Music\\1. F4DED.wav",
+                "Type": "SoundSource",
+                "IsSensitive": false,
+                "Loop": true,
+                "Volume": 1,
+                "AutoPlay": true
               }
             }
           ]
@@ -388,6 +732,7 @@
     "idk": {
       "name": "idk",
       "sceneType": "TerrainTest",
+      "customSceneClass": null,
       "terrain": {
         "heightmapPath": null,
         "colorTexturePath": null,
