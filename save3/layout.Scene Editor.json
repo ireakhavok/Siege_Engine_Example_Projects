@@ -4,63 +4,81 @@
     "Panels": [],
     "ActiveTabIndex": -1,
     "IsVertical": false,
-    "SplitRatio": 0.8,
+    "SplitRatio": 0.2,
     "Left": {
-      "NodeType": "split",
-      "Panels": [],
-      "ActiveTabIndex": -1,
+      "NodeType": "tabbed",
+      "Panels": [
+        "ToolChest.PostProcessPanel, ToolChest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+      ],
+      "ActiveTabIndex": 0,
       "IsVertical": false,
-      "SplitRatio": 0.4908854,
-      "Left": {
-        "NodeType": "tabbed",
-        "Panels": [
-          "CastleBuilder.SceneEditorPanel, CastleBuilder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        ],
-        "ActiveTabIndex": 0,
-        "IsVertical": false,
-        "SplitRatio": 0.5,
-        "Left": null,
-        "Right": null
-      },
-      "Right": {
-        "NodeType": "tabbed",
-        "Panels": [
-          "MapRoom.TerrainCreatorPanel, MapRoom, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        ],
-        "ActiveTabIndex": 0,
-        "IsVertical": false,
-        "SplitRatio": 0.5,
-        "Left": null,
-        "Right": null
-      }
+      "SplitRatio": 0.5,
+      "Left": null,
+      "Right": null
     },
     "Right": {
       "NodeType": "split",
       "Panels": [],
       "ActiveTabIndex": -1,
-      "IsVertical": true,
-      "SplitRatio": 0.5,
+      "IsVertical": false,
+      "SplitRatio": 0.8,
       "Left": {
-        "NodeType": "tabbed",
-        "Panels": [
-          "ToolChest.TreeViewPanel, ToolChest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        ],
-        "ActiveTabIndex": 0,
+        "NodeType": "split",
+        "Panels": [],
+        "ActiveTabIndex": -1,
         "IsVertical": false,
         "SplitRatio": 0.5,
-        "Left": null,
-        "Right": null
+        "Left": {
+          "NodeType": "tabbed",
+          "Panels": [
+            "CastleBuilder.SceneEditorPanel, CastleBuilder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+          ],
+          "ActiveTabIndex": 0,
+          "IsVertical": false,
+          "SplitRatio": 0.5,
+          "Left": null,
+          "Right": null
+        },
+        "Right": {
+          "NodeType": "tabbed",
+          "Panels": [
+            "MapRoom.TerrainCreatorPanel, MapRoom, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+          ],
+          "ActiveTabIndex": 0,
+          "IsVertical": false,
+          "SplitRatio": 0.5,
+          "Left": null,
+          "Right": null
+        }
       },
       "Right": {
-        "NodeType": "tabbed",
-        "Panels": [
-          "ToolChest.PropertiesPanel, ToolChest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        ],
-        "ActiveTabIndex": 0,
-        "IsVertical": false,
+        "NodeType": "split",
+        "Panels": [],
+        "ActiveTabIndex": -1,
+        "IsVertical": true,
         "SplitRatio": 0.5,
-        "Left": null,
-        "Right": null
+        "Left": {
+          "NodeType": "tabbed",
+          "Panels": [
+            "ToolChest.TreeViewPanel, ToolChest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+          ],
+          "ActiveTabIndex": 0,
+          "IsVertical": false,
+          "SplitRatio": 0.5,
+          "Left": null,
+          "Right": null
+        },
+        "Right": {
+          "NodeType": "tabbed",
+          "Panels": [
+            "ToolChest.PropertiesPanel, ToolChest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+          ],
+          "ActiveTabIndex": 0,
+          "IsVertical": false,
+          "SplitRatio": 0.5,
+          "Left": null,
+          "Right": null
+        }
       }
     }
   },
