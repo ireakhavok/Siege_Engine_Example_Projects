@@ -4,7 +4,7 @@
     "Panels": [],
     "ActiveTabIndex": -1,
     "IsVertical": false,
-    "SplitRatio": 0.2,
+    "SplitRatio": 0.11536458,
     "Left": {
       "NodeType": "tabbed",
       "Panels": [
@@ -21,13 +21,13 @@
       "Panels": [],
       "ActiveTabIndex": -1,
       "IsVertical": false,
-      "SplitRatio": 0.8,
+      "SplitRatio": 0.8191458,
       "Left": {
         "NodeType": "split",
         "Panels": [],
         "ActiveTabIndex": -1,
         "IsVertical": false,
-        "SplitRatio": 0.5,
+        "SplitRatio": 0.48849544,
         "Left": {
           "NodeType": "tabbed",
           "Panels": [
