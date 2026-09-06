@@ -1,12 +1,50 @@
 {
   "Root": {
-    "NodeType": "tabbed",
+    "NodeType": "split",
     "Panels": [],
     "ActiveTabIndex": -1,
     "IsVertical": false,
-    "SplitRatio": 0.5,
-    "Left": null,
-    "Right": null
+    "SplitRatio": 0.22,
+    "Left": {
+      "NodeType": "tabbed",
+      "Panels": [
+        "ToolChest.TreeViewPanel, ToolChest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+      ],
+      "ActiveTabIndex": 0,
+      "IsVertical": false,
+      "SplitRatio": 0.5,
+      "Left": null,
+      "Right": null
+    },
+    "Right": {
+      "NodeType": "split",
+      "Panels": [],
+      "ActiveTabIndex": -1,
+      "IsVertical": false,
+      "SplitRatio": 0.72,
+      "Left": {
+        "NodeType": "tabbed",
+        "Panels": [
+          "MapRoom.TerrainCreatorPanel, MapRoom, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "ActiveTabIndex": 0,
+        "IsVertical": false,
+        "SplitRatio": 0.5,
+        "Left": null,
+        "Right": null
+      },
+      "Right": {
+        "NodeType": "tabbed",
+        "Panels": [
+          "ToolChest.PropertiesPanel, ToolChest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "ActiveTabIndex": 0,
+        "IsVertical": false,
+        "SplitRatio": 0.5,
+        "Left": null,
+        "Right": null
+      }
+    }
   },
   "FloatingPanels": []
 }

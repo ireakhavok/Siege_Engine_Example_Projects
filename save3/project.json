@@ -46,6 +46,8 @@
           "height": 0,
           "material": null,
           "id": 1,
+          "hiddenMeshIndices": null,
+          "materialOptions": null,
           "components": [
             {
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
@@ -159,6 +161,8 @@
           "height": 0,
           "material": null,
           "id": 2,
+          "hiddenMeshIndices": null,
+          "materialOptions": null,
           "components": [
             {
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
@@ -272,6 +276,8 @@
           "height": 0,
           "material": null,
           "id": 3,
+          "hiddenMeshIndices": null,
+          "materialOptions": null,
           "components": [
             {
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
@@ -385,6 +391,8 @@
           "height": 0,
           "material": null,
           "id": 4,
+          "hiddenMeshIndices": null,
+          "materialOptions": null,
           "components": [
             {
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
@@ -498,6 +506,8 @@
           "height": 0,
           "material": null,
           "id": 5,
+          "hiddenMeshIndices": null,
+          "materialOptions": null,
           "components": [
             {
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
@@ -611,6 +621,8 @@
           "height": 0,
           "material": null,
           "id": 6,
+          "hiddenMeshIndices": null,
+          "materialOptions": null,
           "components": [
             {
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
@@ -726,6 +738,8 @@
           "height": 0,
           "material": null,
           "id": 7,
+          "hiddenMeshIndices": null,
+          "materialOptions": null,
           "components": [
             {
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
@@ -839,6 +853,8 @@
           "height": 0,
           "material": null,
           "id": 8,
+          "hiddenMeshIndices": null,
+          "materialOptions": null,
           "components": [
             {
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
@@ -952,6 +968,8 @@
           "height": 0,
           "material": null,
           "id": 9,
+          "hiddenMeshIndices": null,
+          "materialOptions": null,
           "components": [
             {
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
@@ -1065,6 +1083,8 @@
           "height": 0,
           "material": null,
           "id": 10,
+          "hiddenMeshIndices": null,
+          "materialOptions": null,
           "components": [
             {
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
@@ -1178,6 +1198,8 @@
           "height": 0,
           "material": null,
           "id": 11,
+          "hiddenMeshIndices": null,
+          "materialOptions": null,
           "components": [
             {
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
@@ -1291,6 +1313,8 @@
           "height": 0,
           "material": null,
           "id": 12,
+          "hiddenMeshIndices": null,
+          "materialOptions": null,
           "components": [
             {
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
@@ -1529,6 +1553,8 @@
           "height": 0,
           "material": null,
           "id": 1,
+          "hiddenMeshIndices": null,
+          "materialOptions": null,
           "components": [
             {
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
@@ -1611,6 +1637,9 @@
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
                 "Key": "man_mesh_pack",
+                "CastShadows": true,
+                "ReceiveShadows": true,
+                "HiddenMeshIndices": [],
                 "MaterialData": null
               }
             },
@@ -1693,12 +1722,12 @@
         "type": "Cubemap",
         "cubemapPath": "",
         "faces": [
-          "Assets/Skyboxes/idk/xpos.png",
-          "Assets/Skyboxes/idk/xneg.png",
-          "Assets/Skyboxes/idk/yneg.png",
-          "Assets/Skyboxes/idk/ypos.png",
-          "Assets/Skyboxes/idk/zpos.png",
-          "Assets/Skyboxes/idk/zneg.png"
+          "C:\\repos\\Siege_Engine_Example_Projects\\save3\\Assets\\Skyboxes\\idk\\xpos.png",
+          "C:\\repos\\Siege_Engine_Example_Projects\\save3\\Assets\\Skyboxes\\idk\\xneg.png",
+          "C:\\repos\\Siege_Engine_Example_Projects\\save3\\Assets\\Skyboxes\\idk\\yneg.png",
+          "C:\\repos\\Siege_Engine_Example_Projects\\save3\\Assets\\Skyboxes\\idk\\ypos.png",
+          "C:\\repos\\Siege_Engine_Example_Projects\\save3\\Assets\\Skyboxes\\idk\\zpos.png",
+          "C:\\repos\\Siege_Engine_Example_Projects\\save3\\Assets\\Skyboxes\\idk\\zneg.png"
         ],
         "rotationSpeed": 0.05,
         "intensity": 1,
