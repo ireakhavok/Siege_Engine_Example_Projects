@@ -40,8 +40,9 @@ namespace ProjectScripts
             if (key != Key.I) return;
             if (action != InputAction.Press) return;
             _open = !_open;
-            _eventBus.Publish(new OpenGameHudEvent
+            _eventBus.Publish(new OpenHostedContentEvent
             {
+                Key = "InventoryHud",
                 HtmlRelativePath = "InventoryHud.html",
                 HtmlContent = HudHtml,
                 Title = "Inventory",
