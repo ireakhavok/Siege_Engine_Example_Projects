@@ -1637,12 +1637,12 @@
         "type": "Cubemap",
         "cubemapPath": "",
         "faces": [
-          "C:\\repos\\Siege_Engine_Example_Projects\\save3\\Assets\\Skyboxes\\NewTerrain\\xpos.png",
-          "C:\\repos\\Siege_Engine_Example_Projects\\save3\\Assets\\Skyboxes\\NewTerrain\\xneg.png",
-          "C:\\repos\\Siege_Engine_Example_Projects\\save3\\Assets\\Skyboxes\\NewTerrain\\ypos.png",
-          "C:\\repos\\Siege_Engine_Example_Projects\\save3\\Assets\\Skyboxes\\NewTerrain\\yneg.png",
-          "C:\\repos\\Siege_Engine_Example_Projects\\save3\\Assets\\Skyboxes\\NewTerrain\\zpos.png",
-          "C:\\repos\\Siege_Engine_Example_Projects\\save3\\Assets\\Skyboxes\\NewTerrain\\zneg.png"
+          "Assets/Skyboxes/NewTerrain/xpos.png",
+          "Assets/Skyboxes/NewTerrain/xneg.png",
+          "Assets/Skyboxes/NewTerrain/ypos.png",
+          "Assets/Skyboxes/NewTerrain/yneg.png",
+          "Assets/Skyboxes/NewTerrain/zpos.png",
+          "Assets/Skyboxes/NewTerrain/zneg.png"
         ],
         "rotationSpeed": 0.05,
         "intensity": 1,

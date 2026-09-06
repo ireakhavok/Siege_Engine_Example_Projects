@@ -24,7 +24,7 @@ namespace ProjectScripts
             Console.WriteLine("[TestSlideController] Custom ice-slide controller constructed with live services – override active");
         }
 
-        public override void Update(Player player, float deltaTime, Action<int, Vector2, Quaternion> sendMovementRequest, CameraController camera)
+        public override void Update(Player player, float deltaTime, Action<int, Vector3, Quaternion> sendMovementRequest, CameraController camera)
         {
             if (player == null || camera == null) return;
 

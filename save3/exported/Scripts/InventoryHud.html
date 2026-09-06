@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  pointer-events: none;
+}
+.inv {
+  position: fixed;
+  right: 16px;
+  top: 56px;
+  bottom: 56px;
+  width: 248px;
+  background: rgba(16, 14, 12, 0.90);
+  border: 1px solid #6e5642;
+  box-shadow: inset 0 0 0 1px #3a2e24;
+  color: #eadcc8;
+  font-family: Georgia, "Times New Roman", serif;
+  padding: 12px 12px 14px;
+  pointer-events: none;
+}
+.inv h1 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  letter-spacing: 3px;
+  text-align: center;
+  color: #d4b483;
+}
+.gold {
+  text-align: right;
+  font-size: 11px;
+  color: #c4a15a;
+  margin-bottom: 10px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 7px;
+}
+.slot {
+  aspect-ratio: 1 / 1;
+  background: #26201a;
+  border: 1px solid #5a4636;
+}
+.slot.worn {
+  border-color: #8a6a3a;
+  background: #2c261e;
+}
+</style>
+</head>
+<body>
+  <div class="inv">
+    <h1>INVENTORY</h1>
+    <div class="gold">0 gold</div>
+    <div class="grid">
+      <div class="slot worn"></div><div class="slot worn"></div><div class="slot worn"></div><div class="slot"></div>
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+    </div>
+  </div>
+</body>
+</html>

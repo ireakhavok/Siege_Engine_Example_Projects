@@ -77,12 +77,6 @@
   },
   "MaterialOptions": [
     {
-      "meshIndex": 0,
-      "materialIndex": 0,
-      "opacityPath": "../../Textures/T_Birchleaf_O.png",
-      "fields": []
-    },
-    {
       "meshIndex": 2,
       "materialIndex": 0,
       "opacityPath": "../../Textures/T_Birchleaf_O.png",
@@ -96,6 +90,12 @@
     },
     {
       "meshIndex": 4,
+      "materialIndex": 0,
+      "opacityPath": "../../Textures/T_Birchleaf_O.png",
+      "fields": []
+    },
+    {
+      "meshIndex": 0,
       "materialIndex": 0,
       "opacityPath": "../../Textures/T_Birchleaf_O.png",
       "fields": []
