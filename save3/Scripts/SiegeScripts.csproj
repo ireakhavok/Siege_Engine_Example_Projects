@@ -5,16 +5,19 @@
     <OutputPath>Libs\</OutputPath>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SiegeEngine">
-      <HintPath>SiegeEngine.dll</HintPath>
+      <HintPath>C:\repos\Siege_Engine_Example_Projects\save3\Scripts\SiegeEngine.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="Foundation">
-      <HintPath>Foundation.dll</HintPath>
+      <HintPath>C:\repos\Siege_Engine_Example_Projects\save3\Scripts\Foundation.dll</HintPath>
+      <Private>false</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="**/*.cs" />
+    <Compile Include="**/*.cs" Exclude="obj/**/*.cs;Libs/**/*.cs;BuildOut/**/*.cs" />
   </ItemGroup>
 </Project>
