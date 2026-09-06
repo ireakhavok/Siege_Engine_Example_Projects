@@ -1,28 +1,29 @@
-using System;
-using System.IO;
+// Folder: chess/Scripts/Chess
+// File: ChessHud.cs
 using SiegeEngine.Core.Definitions;
 using SiegeEngine.Core.Events;
 using SiegeEngine.Core.Interfaces;
 using SiegeEngine.Core.Managers;
+using SiegeEngine.Systems;
+using System;
+using System.IO;
 
 namespace ChessProject
 {
-    [RegisterHostedContent]
-    public sealed class ChessHud : IHostedContent
+    [RegisterGameSystem]
+    public sealed class ChessHud : GameSystem
     {
         private readonly EventBus _eventBus;
         private bool _opened;
 
-        public string DataKey => "ChessHud";
-
-        public ChessHud(EventBus eventBus)
+        public ChessHud(IGameServer server, EventBus eventBus) : base(server)
         {
             _eventBus = eventBus;
         }
 
-        public void Init()
+        public override void Update(float deltaTime)
         {
-            if (_eventBus == null || _opened) return;
+            if (_opened || _eventBus == null) return;
             _opened = true;
             try
             {
@@ -43,29 +44,26 @@ namespace ChessProject
                     }
                 }
                 if (!copied && !File.Exists(dest))
-                    File.WriteAllText(dest, "<html><body style='background:#1a1612;color:#e2c48a;font-family:Georgia;padding:12px'><h1>CHESS HUD</h1><p>Inventory + board chrome</p></body></html>");
+                    File.WriteAllText(dest, FallbackHtml);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("[ChessHud] stage HTML: " + ex.Message);
             }
+
             _eventBus.Publish(new OpenGameHudEvent
             {
                 HtmlRelativePath = "ChessHud.html",
-                Title = "Chess",
+                Title = "Chess HUD",
                 Chrome = PanelChromeStyle.Game,
                 Docking = DockingMode.Dynamic,
                 Open = true,
                 Width = 280f,
                 Height = 320f
             });
-            Console.WriteLine("[ChessHud] OpenGameHudEvent ChessHud.html");
+            Console.WriteLine("[ChessHud] opened ChessHud.html");
         }
 
-        public void Update(float deltaTime) { }
-
-        public void Render() { }
-
-        public void Dispose() { }
+        private const string FallbackHtml = "<html><body style='background:#1a1612;color:#e2c48a;font-family:Georgia;padding:12px'><h1>CHESS HUD</h1><p>Inventory</p></body></html>";
     }
 }

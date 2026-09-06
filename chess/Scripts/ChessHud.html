@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+html,body{margin:0;padding:0;height:100%;background:#1a1612;color:#f0e6d2;font-family:Georgia,serif;}
+.wrap{padding:12px;}
+h1{margin:0 0 8px;font-size:18px;letter-spacing:1px;color:#e2c48a;}
+.turn{font-size:13px;margin-bottom:10px;color:#c4b49a;}
+.board{display:grid;grid-template-columns:repeat(8,24px);grid-template-rows:repeat(8,24px);width:192px;border:2px solid #6b4f2a;margin-bottom:12px;}
+.sq{width:24px;height:24px;font-size:16px;line-height:24px;text-align:center;}
+.lt{background:#e6d3a3;}
+.dk{background:#8a5a32;color:#f3efe4;}
+.inv{border-top:1px solid #6b4f2a;padding-top:8px;}
+.inv h2{margin:0 0 6px;font-size:13px;color:#e2c48a;}
+.slot{display:inline-block;min-width:70px;padding:4px 6px;margin:2px;background:#2a221c;border:1px solid #6b4f2a;font-size:11px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>CHESS HUD</h1>
+  <div class="turn">Play Host overlay — inventory + board chrome</div>
+  <div class="board">
+    <div class="sq lt">r</div><div class="sq dk">n</div><div class="sq lt">b</div><div class="sq dk">q</div><div class="sq lt">k</div><div class="sq dk">b</div><div class="sq lt">n</div><div class="sq dk">r</div>
+    <div class="sq dk">p</div><div class="sq lt">p</div><div class="sq dk">p</div><div class="sq lt">p</div><div class="sq dk">p</div><div class="sq lt">p</div><div class="sq dk">p</div><div class="sq lt">p</div>
+    <div class="sq lt"></div><div class="sq dk"></div><div class="sq lt"></div><div class="sq dk"></div><div class="sq lt"></div><div class="sq dk"></div><div class="sq lt"></div><div class="sq dk"></div>
+    <div class="sq dk"></div><div class="sq lt"></div><div class="sq dk"></div><div class="sq lt"></div><div class="sq dk"></div><div class="sq lt"></div><div class="sq dk"></div><div class="sq lt"></div>
+    <div class="sq lt"></div><div class="sq dk"></div><div class="sq lt"></div><div class="sq dk"></div><div class="sq lt"></div><div class="sq dk"></div><div class="sq lt"></div><div class="sq dk"></div>
+    <div class="sq dk"></div><div class="sq lt"></div><div class="sq dk"></div><div class="sq lt"></div><div class="sq dk"></div><div class="sq lt"></div><div class="sq dk"></div><div class="sq lt"></div>
+    <div class="sq lt">P</div><div class="sq dk">P</div><div class="sq lt">P</div><div class="sq dk">P</div><div class="sq lt">P</div><div class="sq dk">P</div><div class="sq lt">P</div><div class="sq dk">P</div>
+    <div class="sq dk">R</div><div class="sq lt">N</div><div class="sq dk">B</div><div class="sq lt">Q</div><div class="sq dk">K</div><div class="sq lt">B</div><div class="sq dk">N</div><div class="sq lt">R</div>
+  </div>
+  <div class="inv">
+    <h2>Inventory</h2>
+    <div class="slot">white_pawn</div>
+    <div class="slot">white_knight</div>
+  </div>
+</div>
+</body>
+</html>

@@ -30,7 +30,46 @@
           "Y": 0.8,
           "Z": 0.95
         },
-        "fogDensity": 0.01
+        "fogDensity": 0.01,
+        "antiAliasing": "SMAA",
+        "fogMode": "Off",
+        "fogQuality": "Off",
+        "fogColor": {
+          "X": 0.62,
+          "Y": 0.7,
+          "Z": 0.82
+        },
+        "fogHeight": 8,
+        "fogHeightFalloff": 0.08,
+        "fogStart": 0,
+        "volumetricIntensity": 0.25,
+        "shadowQuality": "Medium",
+        "shadowDistance": 2048,
+        "shadowSmooth": false,
+        "sunEnabled": false,
+        "sunDirection": {
+          "X": -0.85,
+          "Y": 0.1,
+          "Z": -0.52
+        },
+        "sunColor": {
+          "X": 1,
+          "Y": 1,
+          "Z": 1
+        },
+        "sunIntensity": 1,
+        "sunCastShadows": true,
+        "exposure": 1,
+        "tonemap": "Off",
+        "bloomEnabled": false,
+        "bloomThreshold": 1,
+        "bloomIntensity": 0.35,
+        "contrast": 1,
+        "saturation": 1,
+        "temperature": 0,
+        "autoExposure": false,
+        "adaptSeconds": 1.4,
+        "targetLuma": 0.26
       },
       "skybox": {
         "enabled": false,
@@ -38,7 +77,15 @@
         "cubemapPath": "",
         "faces": [],
         "rotationSpeed": 0.05,
-        "intensity": 1
+        "intensity": 1,
+        "verticalOffset": 0,
+        "orientation": {
+          "IsIdentity": true,
+          "X": 0,
+          "Y": 0,
+          "Z": 0,
+          "W": 1
+        }
       },
       "customData": {},
       "settings": {
