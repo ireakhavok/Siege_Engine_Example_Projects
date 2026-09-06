@@ -9,11 +9,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SiegeEngine">
-      <HintPath>C:\repos\Siege_Engine_Example_Projects\save3\Scripts\SiegeEngine.dll</HintPath>
+      <HintPath>C:\repos\Siege_Engine_Example_Projects\save3\Scripts\Libs\SiegeEngine.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="Foundation">
-      <HintPath>C:\repos\Siege_Engine_Example_Projects\save3\Scripts\Foundation.dll</HintPath>
+      <HintPath>C:\repos\Siege_Engine_Example_Projects\save3\Scripts\Libs\Foundation.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
