@@ -709,7 +709,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.SoundComponent",
               "data": {
-                "AudioClip": "Sounds\\IDE\\Music\\1. F4DED.wav",
+                "AudioClip": "Assets/Sounds/IDE/Music/1. F4DED.wav",
                 "Type": "SoundSource",
                 "IsSensitive": false,
                 "Loop": true,
