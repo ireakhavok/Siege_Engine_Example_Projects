@@ -1,3 +1,5 @@
+// Folder: Scripts/Checkers
+// File: CheckersScene.cs
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -23,21 +25,19 @@ namespace CheckersProject
         VertexBuffer _highlightBuffer;
 
         bool _aiThinking;
-        bool _pendingClick;
         bool _ready;
         double _cursorX;
         double _cursorY;
+        bool _leftWasDown;
         CheckersAiDifficulty _difficulty = CheckersAiDifficulty.Normal;
 
+        readonly bool _isHostedPreview;
+
         public CheckersScene(SceneContext context)
-            : base(
-                context.RenderContext,
-                context.ControlContext,
-                context.Window,
-                context.Server,
-                context.EventBus)
+            : base(context)
         {
-            Console.WriteLine("[CheckersScene] Constructed via SceneContext");
+            _isHostedPreview = context != null && context.IsHostedPreview;
+            Console.WriteLine($"[CheckersScene] Constructed via SceneContext (hostedPreview={_isHostedPreview})");
         }
 
         public override void Initialize(int width, int height)
@@ -56,40 +56,13 @@ namespace CheckersProject
             _highlightBuffer = new VertexBuffer(_renderContext);
             RebuildMeshes();
 
-            try
-            {
-                _controlContext.SetWindowSizeCallback(_window, (w, nw, nh) =>
-                {
-                    if (nw > 0 && nh > 0)
-                    {
-                        _width = nw;
-                        _height = nh;
-                        _renderContext.Viewport(0, 0, (uint)nw, (uint)nh);
-                    }
-                });
-                _controlContext.SetCursorPosCallback(_window, (w, x, y) =>
-                {
-                    _cursorX = x;
-                    _cursorY = y;
-                });
-                _controlContext.SetMouseButtonCallback(_window, (w, button, action, mods) =>
-                {
-                    string a = action.ToString();
-                    string b = button.ToString();
-                    if (a.Equals("Press", StringComparison.OrdinalIgnoreCase)
-                        && (b.Equals("Left", StringComparison.OrdinalIgnoreCase)
-                            || b.Equals("Button1", StringComparison.OrdinalIgnoreCase)
-                            || b == "0"))
-                        _pendingClick = true;
-                });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[CheckersScene] input setup: {ex.Message}");
-            }
+            // No global Set*Callback installation. Host owns the window.
+            // Play path polls IControlContext; editor path is muted by IsHostedPreview.
 
             _ready = true;
-            Console.WriteLine("[CheckersScene] Ready — white to move.");
+            Console.WriteLine(_isHostedPreview
+                ? "[CheckersScene] Ready (hosted preview — view only)."
+                : "[CheckersScene] Ready — white to move.");
         }
 
         public override void Update(float deltaTime)
@@ -97,10 +70,24 @@ namespace CheckersProject
             base.Update(deltaTime);
             if (!_ready || _board == null) return;
 
-            if (_pendingClick)
+            // Hosted preview: keep geometry current, never run input or AI.
+            if (_isHostedPreview)
             {
-                _pendingClick = false;
-                HandleClick(new Vector2((float)_cursorX, (float)_cursorY));
+                RebuildMeshes();
+                return;
+            }
+
+            try
+            {
+                _controlContext.GetCursorPos(_window, out _cursorX, out _cursorY);
+                bool leftDown = _controlContext.GetMouseButton(_window, MouseButton.Left) == InputAction.Press;
+                if (leftDown && !_leftWasDown)
+                    HandleClick(new Vector2((float)_cursorX, (float)_cursorY));
+                _leftWasDown = leftDown;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[CheckersScene] input poll: {ex.Message}");
             }
 
             TickAi();
@@ -154,6 +141,7 @@ namespace CheckersProject
 
         public void HandleClick(Vector2 windowMouse)
         {
+            if (_isHostedPreview) return;
             if (_board == null || _board.IsGameOver || _aiThinking) return;
             if (_board.Mode == CheckersMode.VsAi && _board.SideToMove != _board.HumanColor) return;
 

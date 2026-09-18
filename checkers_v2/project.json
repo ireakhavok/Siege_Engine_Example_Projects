@@ -7,7 +7,7 @@
     "CheckersMain": {
       "name": "CheckersMain",
       "sceneType": "Gameplay",
-      "customSceneClass": null,
+      "customSceneClass": "CheckersScene",
       "terrain": {
         "heightmapPath": null,
         "colorTexturePath": null,
@@ -111,7 +111,7 @@
   },
   "Version": "1.0",
   "LastOpenedScene": "CheckersMain",
-  "CameraType": "Perspective",
+  "CameraType": "AngledOrtho",
   "LastContext": "Scene Editor",
   "PanelStates": {},
   "CustomAssemblies": [],

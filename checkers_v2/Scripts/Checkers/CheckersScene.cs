@@ -36,12 +36,7 @@ namespace CheckersProject
         readonly bool _isHostedPreview;
 
         public CheckersScene(SceneContext context)
-            : base(
-                context.RenderContext,
-                context.ControlContext,
-                context.Window,
-                context.Server,
-                context.EventBus)
+            : base(context)
         {
             _isHostedPreview = context?.IsHostedPreview ?? false;
             Console.WriteLine($"[CheckersScene] Constructed via SceneContext (hostedPreview={_isHostedPreview})");
