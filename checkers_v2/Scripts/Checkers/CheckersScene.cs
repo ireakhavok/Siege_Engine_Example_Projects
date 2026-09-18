@@ -8,9 +8,9 @@ using SiegeEngine.Core.Definitions;
 using SiegeEngine.Core.Events;
 using SiegeEngine.Core.Interfaces;
 using SiegeEngine.Core.Managers;
-using SiegeEngine.Core.Rendering;
-using SiegeEngine.Core.Rendering.ContextManagement;
-using SiegeEngine.Core.Rendering.Shaders;
+using SiegeEngine.Core.GPU;
+using SiegeEngine.Core.GPU.ContextManagement;
+using SiegeEngine.Core.GPU.Shaders;
 using SiegeEngine.Scenes;
 
 namespace CheckersProject
@@ -214,24 +214,26 @@ namespace CheckersProject
             }
         }
 
-        protected override void RenderContent(IReadOnlyList<Entity> entities, Matrix4x4 view, Matrix4x4 projection)
+        protected override void GetViewProjection(out Matrix4x4 view, out Matrix4x4 projection)
         {
             float half = 5.5f;
             float aspect = AspectRatio > 0 ? AspectRatio : 16f / 9f;
-            Matrix4x4 ortho = Matrix4x4.CreateOrthographic(half * 2f * aspect, half * 2f, 0.1f, 100f);
-            Matrix4x4 boardView = Matrix4x4.CreateLookAt(
+            projection = Matrix4x4.CreateOrthographic(half * 2f * aspect, half * 2f, 0.1f, 100f);
+            view = Matrix4x4.CreateLookAt(
                 new Vector3(4f, 4f, 12f),
                 new Vector3(4f, 4f, 0f),
                 new Vector3(0f, 1f, 0f));
+        }
 
+        protected override void RenderContent(IReadOnlyList<Entity> entities, Matrix4x4 view, Matrix4x4 projection)
+        {
             _renderContext.Disable(_renderContext.Enums.DepthTest);
 
             if (_shader != null)
             {
                 _shader.Use();
-                _shader.SetMatrix4("uModel", Matrix4x4.Identity);
-                _shader.SetMatrix4("uView", boardView);
-                _shader.SetMatrix4("uProjection", ortho);
+                _renderContext.SetConstants(ConstantSlot.Frame, new FrameCB { View = view, Projection = projection });
+                _renderContext.SetConstants(ConstantSlot.Object, new ObjectCB { Model = Matrix4x4.Identity, NormalMatrix = Matrix4x4.Identity });
             }
 
             DrawBuf(_boardBuffer);

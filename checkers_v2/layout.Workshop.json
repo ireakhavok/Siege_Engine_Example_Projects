@@ -1,0 +1,50 @@
+{
+  "Root": {
+    "NodeType": "split",
+    "Panels": [],
+    "ActiveTabIndex": -1,
+    "IsVertical": true,
+    "SplitRatio": 0.72,
+    "Left": {
+      "NodeType": "split",
+      "Panels": [],
+      "ActiveTabIndex": -1,
+      "IsVertical": false,
+      "SplitRatio": 0.78,
+      "Left": {
+        "NodeType": "tabbed",
+        "Panels": [
+          "ToolChest.ScriptEditorPanel, CastleBuilder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "ActiveTabIndex": 0,
+        "IsVertical": false,
+        "SplitRatio": 0.5,
+        "Left": null,
+        "Right": null
+      },
+      "Right": {
+        "NodeType": "tabbed",
+        "Panels": [
+          "CastleBuilder.PlayHostPanel, CastleBuilder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "ActiveTabIndex": 0,
+        "IsVertical": false,
+        "SplitRatio": 0.5,
+        "Left": null,
+        "Right": null
+      }
+    },
+    "Right": {
+      "NodeType": "tabbed",
+      "Panels": [
+        "ToolChest.ConsolePanel, ToolChest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+      ],
+      "ActiveTabIndex": 0,
+      "IsVertical": false,
+      "SplitRatio": 0.5,
+      "Left": null,
+      "Right": null
+    }
+  },
+  "FloatingPanels": []
+}
