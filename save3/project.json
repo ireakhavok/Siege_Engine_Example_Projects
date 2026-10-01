@@ -1670,7 +1670,7 @@
           "Z": 0.95
         },
         "fogDensity": 0.005,
-        "antiAliasing": "SMAA",
+        "antiAliasing": "Off",
         "fogMode": "Exponential",
         "fogQuality": "Off",
         "fogColor": {
