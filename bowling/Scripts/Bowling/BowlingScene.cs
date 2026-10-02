@@ -62,6 +62,7 @@ namespace BowlingProject
         float _power;
         bool _charging;
         bool _rWas;
+        bool _pinsArmed;
         string _banner = "";
 
         Vector3 _camEye;
@@ -76,7 +77,7 @@ namespace BowlingProject
         public override void Initialize(int width, int height)
         {
             base.Initialize(width, height);
-            _renderContext.ClearColor(0.012f, 0.015f, 0.02f, 1f);
+            _renderContext.ClearColor(0.025f, 0.03f, 0.038f, 1f);
             _shader = ShaderProgram.FromId(_renderContext, ShaderId.Grid);
             _houseBuf = new VertexBuffer(_renderContext);
             _liveBuf = new VertexBuffer(_renderContext);
@@ -97,39 +98,50 @@ namespace BowlingProject
             if (deltaTime < 0f) deltaTime = 0f;
             if (deltaTime > 0.05f) deltaTime = 0.05f;
             _time += deltaTime;
-            _renderContext.ClearColor(0.012f, 0.015f, 0.02f, 1f);
+            _renderContext.ClearColor(0.025f, 0.03f, 0.038f, 1f);
             if (_preview || !_houseReady) return;
             if (!_started) NewGame();
 
             Poll(deltaTime);
+            if (!_pinsArmed) HoldRack();
             if (_phase == Phase.Rolling)
+            {
                 TickRoll(deltaTime);
+                ArmPins();
+            }
             else if (_phase == Phase.Watching)
                 TickWatch(deltaTime);
 
+            KeepUprightPinsOnDeck();
             BuryFallen();
         }
 
         protected override void GetViewProjection(out Matrix4x4 view, out Matrix4x4 projection)
         {
             float aspect = AspectRatio > 0.01f ? AspectRatio : 16f / 9f;
-            projection = Matrix4x4.CreatePerspectiveFieldOfView(50f * MathF.PI / 180f, aspect, 0.05f, 80f);
-            if (_preview || _ballBody == null)
+            // Aim, the editor, and the settle all look down the lane from the
+            // approach. Chase only while the ball is rolling.
+            bool downTheLane = _preview || _ballBody == null || _phase != Phase.Rolling;
+            float fov = downTheLane ? 34f : 42f;
+            projection = Matrix4x4.CreatePerspectiveFieldOfView(fov * MathF.PI / 180f, aspect, 0.06f, 90f);
+            if (downTheLane)
             {
-                _camEye = new Vector3(1.65f, -3.1f, 2.05f);
-                _camTarget = new Vector3(0f, 11.5f, 0.35f);
+                _camEye = new Vector3(0.04f, -3.15f, 1.58f);
+                _camTarget = new Vector3(0f, 17.6f, 0.22f);
             }
             else
             {
                 Vector3 dir = AimDir();
                 Vector3 ball = _ballBody.RenderPosition;
                 Vector3 back = new Vector3(-dir.X, -dir.Y, 0f);
-                Vector3 right = Vector3.Cross(dir, Vector3.UnitZ);
-                Vector3 chaseEye = ball + back * 2.45f + right * 0.42f + new Vector3(0f, 0f, 1.38f);
-                Vector3 chaseTarget = ball + dir * 5.5f + new Vector3(0f, 0f, 0.12f);
+                Vector3 chaseEye = ball + back * 2.05f + new Vector3(0f, 0f, 1.22f);
+                chaseEye.X = Math.Clamp(chaseEye.X, -0.42f, 0.42f);
+                chaseEye.Y = Math.Max(chaseEye.Y, -3.35f);
+                chaseEye.Z = Math.Clamp(chaseEye.Z, 0.95f, 1.7f);
+                Vector3 chaseTarget = ball + dir * 7.5f + new Vector3(0f, 0f, 0.08f);
                 float deck = Math.Clamp((ball.Y - 11f) / 6f, 0f, 1f);
                 deck = deck * deck * (3f - 2f * deck);
-                var holdEye = new Vector3(1.15f, 13.4f, 1.85f);
+                var holdEye = new Vector3(0.22f, 14.6f, 1.55f);
                 var holdTarget = new Vector3(0f, 18.7f, 0.32f);
                 _camEye = Vector3.Lerp(chaseEye, holdEye, deck);
                 _camTarget = Vector3.Lerp(chaseTarget, holdTarget, deck);
@@ -342,15 +354,19 @@ namespace BowlingProject
         void Commit()
         {
             int standing = CountStanding();
+            if (_liveAtRelease <= 0)
+            {
+                _banner = "";
+                _bannerUntil = 0f;
+                SpawnAimBall();
+                _phase = Phase.Aim;
+                return;
+            }
             int knocked = _liveAtRelease - standing;
             if (knocked < 0) knocked = 0;
-            if (knocked > 10) knocked = 10;
+            if (knocked > _liveAtRelease) knocked = _liveAtRelease;
             Score.Add(knocked);
-
-            if (standing == 0 && _thrownFresh) _banner = "STRIKE";
-            else if (standing == 0) _banner = "SPARE";
-            else if (knocked == 0) _banner = _ballLeftLane ? "GUTTER" : "";
-            else _banner = "";
+            _banner = BannerFor(standing);
             _bannerUntil = _time + 1.8f;
 
             if (Score.IsComplete)
@@ -488,13 +504,16 @@ namespace BowlingProject
                 body.SleepThreshold = 0.12f;
                 body.RebuildShape(_pinModel);
                 body.Mass = LaneGeometry.PinMass;
-                body.BodyType = BodyType.Dynamic;
-                body.Wake();
+                body.BodyType = BodyType.Kinematic;
+                body.Velocity = Vector3.Zero;
+                body.AngularVelocity = Vector3.Zero;
+                body.IsSleeping = true;
                 e.AddComponent(body);
                 _server.AddEntity(e);
                 _pins[i] = new Pin { Entity = e, Body = body, Live = true };
             }
             _freshRack = true;
+            _pinsArmed = false;
         }
 
         void SpawnAimBall()
@@ -525,6 +544,64 @@ namespace BowlingProject
             _server.AddEntity(e);
             _ball = e;
             _ballBody = body;
+        }
+
+        void HoldRack()
+        {
+            for (int i = 0; i < _pins.Length; i++)
+            {
+                var b = _pins[i].Body;
+                if (b == null || !_pins[i].Live) continue;
+                var spot = LaneGeometry.PinSpot(i);
+                b.Position = spot;
+                b.RenderPosition = spot;
+                b.Rotation = Quaternion.Identity;
+                b.Velocity = Vector3.Zero;
+                b.AngularVelocity = Vector3.Zero;
+                if (b.BodyType != BodyType.Kinematic)
+                    b.BodyType = BodyType.Kinematic;
+            }
+        }
+
+        void ArmPins()
+        {
+            if (_pinsArmed || _ballBody == null) return;
+            if (_ballBody.Position.Y < 12.2f && !_ballLeftLane) return;
+            for (int i = 0; i < _pins.Length; i++)
+            {
+                var b = _pins[i].Body;
+                if (b == null || !_pins[i].Live || !b.CollisionEnabled) continue;
+                b.BodyType = BodyType.Dynamic;
+                b.Mass = LaneGeometry.PinMass;
+                b.Wake();
+            }
+            _pinsArmed = true;
+        }
+
+        void KeepUprightPinsOnDeck()
+        {
+            if (!_pinsArmed) return;
+            float rest = LaneGeometry.DeckZ + LaneGeometry.PinHeight * 0.5f;
+            for (int i = 0; i < _pins.Length; i++)
+            {
+                var b = _pins[i].Body;
+                if (b == null || !_pins[i].Live || !b.CollisionEnabled) continue;
+                if (MathF.Abs(b.Position.X) > LaneGeometry.LaneHalf - 0.02f) continue;
+                if (b.Position.Y < 16.4f || b.Position.Y > LaneGeometry.DeckEndY) continue;
+                if (_ballBody != null)
+                {
+                    float dx = MathF.Abs(_ballBody.Position.X - b.Position.X);
+                    float dy = MathF.Abs(_ballBody.Position.Y - b.Position.Y);
+                    if (dx < 0.85f && dy < 1.4f) continue;
+                }
+                Vector3 up = Vector3.Transform(Vector3.UnitZ, b.Rotation);
+                if (up.Z < 0.55f) continue;
+                if (b.Position.Z >= rest - 0.004f) continue;
+                b.Position = new Vector3(b.Position.X, b.Position.Y, rest);
+                if (b.Velocity.Z < 0f)
+                    b.Velocity = new Vector3(b.Velocity.X, b.Velocity.Y, 0f);
+                b.RenderPosition = b.Position;
+            }
         }
 
         static bool TrySetSphere(PhysicsComponent body, float radius)
@@ -675,10 +752,12 @@ namespace BowlingProject
             for (int i = 0; i < _pins.Length; i++)
             {
                 var b = _pins[i].Body;
-                if (b == null || !b.IsVisible) continue;
-                LaneGeometry.AddPin(_live, b.RenderPosition, b.Rotation);
+                if (b == null) continue;
+                var spot = b.RenderPosition;
+                _live.Disc(new Vector3(spot.X, spot.Y, LaneGeometry.DeckZ + 0.012f), 0.065f, new Vector3(0.02f, 0.015f, 0.012f), 10);
+                LaneGeometry.AddPin(_live, spot, b.Rotation);
             }
-            if (_ballBody != null && _ballBody.IsVisible)
+            if (_ballBody != null)
                 LaneGeometry.AddBall(_live, _ballBody.RenderPosition, _ballBody.Rotation);
             if (_phase == Phase.Aim && _ballBody != null)
                 LaneGeometry.AddAimDots(_live, BallOrigin(), AimDir());
@@ -686,12 +765,17 @@ namespace BowlingProject
 
         void SetBanner(int standing)
         {
+            _banner = BannerFor(standing);
+        }
+
+        string BannerFor(int standing)
+        {
             int knocked = _liveAtRelease - standing;
             if (knocked < 0) knocked = 0;
-            if (standing == 0 && _thrownFresh) _banner = "STRIKE";
-            else if (standing == 0) _banner = "SPARE";
-            else if (knocked == 0) _banner = _ballLeftLane ? "GUTTER" : "";
-            else _banner = "";
+            if (_thrownFresh && _liveAtRelease >= 10 && standing == 0) return "STRIKE";
+            if (!_thrownFresh && _liveAtRelease > 0 && standing == 0) return "SPARE";
+            if (knocked == 0 && _ballLeftLane) return "GUTTER";
+            return "";
         }
 
         void BuildHud()

@@ -2,10 +2,13 @@
 
 Castle compiles `Scripts/` on Play. Nothing here is copied into the engine.
 
-1. Copy the whole `bowling` folder to `Documents/CastleBuilder/Projects/bowling`.
+1. Copy the whole `bowling` folder over the project you load.
+   If that is `Siege_Engine_Example_Projects/bowling`, replace that folder.
    The project root is the folder that contains `project.json`.
-2. Launch Castle and use Load Project on that folder.
-3. Press Play.
+2. Launch Castle and use Load Project on that folder. Reload if it is already open so scripts rebuild.
+3. Press Play. The scene editor hosts `BowlingScene` and should show the approach looking down the lane at ten pins.
+
+Pins and the ball are built in code. There is no pin mesh to import.
 
 `BowlingLaunch` sends Play's `RuntimeGameplay` scene to `BowlingScene`. The alley in the scene editor is the same class, drawing only, with no physics.
 

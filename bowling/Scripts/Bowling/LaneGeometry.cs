@@ -233,32 +233,61 @@ namespace BowlingProject
                     band);
             }
 
-            // House shell: side walls, ceiling, light bars, ball return.
-            var wall = new Vector3(0.035f, 0.04f, 0.05f);
-            m.Box(new Vector3(-3.4f, ApproachY - 0.4f, DeckZ - 0.2f), new Vector3(-1.08f, PitY + 0.4f, DeckZ + 2.8f), wall);
-            m.Box(new Vector3(1.08f, ApproachY - 0.4f, DeckZ - 0.2f), new Vector3(3.4f, PitY + 0.4f, DeckZ + 2.8f), wall);
-            m.Box(new Vector3(-3.4f, ApproachY - 0.5f, DeckZ + 2.75f), new Vector3(3.4f, PitY + 0.5f, DeckZ + 2.92f), new Vector3(0.025f, 0.026f, 0.03f));
-            m.Box(new Vector3(-3.4f, ApproachY - 0.8f, DeckZ - 0.55f), new Vector3(3.4f, ApproachY - 0.2f, DeckZ + 2.8f), new Vector3(0.03f, 0.032f, 0.04f));
+            // House shell. Walls sit well outside the kickbacks so the
+            // approach camera, including a wide scene-editor panel, is in the
+            // room looking down the lane — not inside a wall.
+            var carpet = new Vector3(0.13f, 0.09f, 0.065f);
+            var apron = Approach * 1.15f;
+            m.Box(new Vector3(-2.15f, ApproachY, DeckZ - 0.03f), new Vector3(-LaneHalf, FoulY + 0.01f, DeckZ + 0.001f), apron);
+            m.Box(new Vector3(LaneHalf, ApproachY, DeckZ - 0.03f), new Vector3(2.15f, FoulY + 0.01f, DeckZ + 0.001f), apron);
+            m.Box(new Vector3(-2.15f, FoulY, DeckZ - 0.10f), new Vector3(-0.99f, PitY, DeckZ - 0.02f), carpet);
+            m.Box(new Vector3(0.99f, FoulY, DeckZ - 0.10f), new Vector3(2.15f, PitY, DeckZ - 0.02f), carpet);
 
-            var lamp = new Vector3(1.6f, 1.45f, 1.15f);
+            var wall = new Vector3(0.11f, 0.115f, 0.13f);
+            m.Box(new Vector3(-3.5f, ApproachY - 0.2f, DeckZ - 0.25f), new Vector3(-2.15f, PitY + 0.3f, DeckZ + 3.45f), wall);
+            m.Box(new Vector3(2.15f, ApproachY - 0.2f, DeckZ - 0.25f), new Vector3(3.5f, PitY + 0.3f, DeckZ + 3.45f), wall);
+            m.Box(new Vector3(-3.5f, ApproachY - 0.3f, DeckZ + 3.45f), new Vector3(3.5f, PitY + 0.3f, DeckZ + 3.62f), new Vector3(0.06f, 0.062f, 0.07f));
+            m.Box(new Vector3(-3.5f, ApproachY - 1.15f, DeckZ - 0.55f), new Vector3(3.5f, ApproachY - 0.62f, DeckZ + 3.45f), new Vector3(0.07f, 0.075f, 0.085f));
+
+            var trim = new Vector3(0.20f, 0.16f, 0.12f);
+            for (int i = 0; i < 6; i++)
+            {
+                float y = ApproachY + 0.15f + i * 4.15f;
+                m.Box(new Vector3(-2.15f, y, DeckZ + 0.85f), new Vector3(-2.08f, y + 0.06f, DeckZ + 2.55f), trim);
+                m.Box(new Vector3(2.08f, y, DeckZ + 0.85f), new Vector3(2.15f, y + 0.06f, DeckZ + 2.55f), trim);
+            }
+
+            var lamp = new Vector3(1.7f, 1.55f, 1.25f);
             for (int i = 0; i < 5; i++)
             {
-                float y = 1.2f + i * 4.0f;
-                m.Box(new Vector3(-0.55f, y, DeckZ + 2.55f), new Vector3(0.55f, y + 0.55f, DeckZ + 2.68f), lamp);
+                float y = 1.5f + i * 3.6f;
+                m.Box(new Vector3(-0.38f, y, DeckZ + 3.18f), new Vector3(0.38f, y + 0.42f, DeckZ + 3.32f), lamp);
             }
-            m.Box(new Vector3(-0.7f, HeadPinY - 0.4f, DeckZ + 2.35f), new Vector3(0.7f, HeadPinY + 1.3f, DeckZ + 2.48f), lamp * 1.1f);
+            m.Box(new Vector3(-0.62f, HeadPinY - 0.15f, DeckZ + 3.05f), new Vector3(0.62f, HeadPinY + 1.35f, DeckZ + 3.2f), lamp * 1.2f);
 
-            // Ball return on the right of the approach.
-            m.Box(new Vector3(0.62f, ApproachY, DeckZ), new Vector3(0.98f, -0.15f, DeckZ + 0.28f), new Vector3(0.10f, 0.11f, 0.13f));
-            m.Box(new Vector3(0.66f, ApproachY + 0.15f, DeckZ + 0.28f), new Vector3(0.94f, -0.35f, DeckZ + 0.34f), new Vector3(0.02f, 0.02f, 0.025f));
+            // Ball return on the right of the approach, settee on the left.
+            m.Box(new Vector3(0.62f, ApproachY, DeckZ), new Vector3(0.98f, -0.15f, DeckZ + 0.28f), new Vector3(0.16f, 0.17f, 0.19f));
+            m.Box(new Vector3(0.66f, ApproachY + 0.15f, DeckZ + 0.28f), new Vector3(0.94f, -0.35f, DeckZ + 0.34f), new Vector3(0.03f, 0.03f, 0.035f));
+            m.Box(new Vector3(-1.55f, ApproachY + 0.25f, DeckZ), new Vector3(-0.78f, -0.55f, DeckZ + 0.40f), new Vector3(0.28f, 0.14f, 0.09f));
+            m.Box(new Vector3(-1.52f, ApproachY + 0.30f, DeckZ + 0.40f), new Vector3(-0.80f, -0.60f, DeckZ + 0.78f), new Vector3(0.34f, 0.18f, 0.11f));
 
-            // Masking fascia above the curtain.
-            m.Box(new Vector3(-1.2f, PitY + 0.12f, DeckZ + 1.25f), new Vector3(1.2f, PitY + 0.28f, DeckZ + 2.7f), new Vector3(0.08f, 0.09f, 0.11f));
+            // Masking and the pinsetter, so the rack reads against the pit.
+            var mask = new Vector3(0.09f, 0.095f, 0.11f);
+            m.Box(new Vector3(-1.35f, 16.85f, DeckZ + 0.05f), new Vector3(-0.98f, 20.7f, DeckZ + 2.7f), mask);
+            m.Box(new Vector3(0.98f, 16.85f, DeckZ + 0.05f), new Vector3(1.35f, 20.7f, DeckZ + 2.7f), mask);
+            m.Box(new Vector3(-1.2f, PitY + 0.12f, DeckZ + 1.25f), new Vector3(1.2f, PitY + 0.28f, DeckZ + 2.9f), new Vector3(0.12f, 0.125f, 0.14f));
+            m.Box(new Vector3(-0.70f, 17.55f, DeckZ + 0.78f), new Vector3(0.70f, 20.15f, DeckZ + 1.65f), new Vector3(0.045f, 0.048f, 0.055f));
+            m.Box(new Vector3(-0.58f, 18.55f, DeckZ + 0.70f), new Vector3(0.58f, 18.72f, DeckZ + 0.82f), new Vector3(0.22f, 0.23f, 0.24f));
 
             if (restRack)
             {
+                var shadow = new Vector3(0.015f, 0.012f, 0.01f);
                 for (int i = 0; i < 10; i++)
-                    AddPin(m, PinSpot(i), Quaternion.Identity);
+                {
+                    var spot = PinSpot(i);
+                    m.Disc(new Vector3(spot.X, spot.Y, DeckZ + 0.012f), 0.07f, shadow, 12);
+                    AddPin(m, spot, Quaternion.Identity);
+                }
                 AddBall(m, new Vector3(0.18f, -2.15f, DeckZ + BallRadius), Quaternion.Identity);
             }
         }
