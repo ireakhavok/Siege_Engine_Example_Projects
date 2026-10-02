@@ -1,0 +1,17 @@
+{
+  "Name": "Bowling",
+  "Type": "3D",
+  "CameraType": "Perspective",
+  "LastOpenedScene": "Alley",
+  "LastContext": "Scene Editor",
+  "Scenes": {
+    "Alley": {
+      "name": "Alley",
+      "sceneType": "Gameplay",
+      "customSceneClass": "BowlingScene",
+      "settings": { "cameraMode": "Perspective" },
+      "environment": {},
+      "entities": []
+    }
+  }
+}
