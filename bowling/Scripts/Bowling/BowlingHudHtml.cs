@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using SiegeEngine.Core.Definitions;
@@ -23,7 +24,7 @@ namespace BowlingProject
         {
             if (players < 1) players = 1;
             if (players > 4) players = 4;
-            return 64f + players * 30f;
+            return 78f + players * 34f;
         }
 
         public static string Build(BowlingScore[] scores, int players, int turn, int frame, int ball, PhaseLabel phase, float power, bool charging, float hook, string banner)
@@ -78,6 +79,55 @@ namespace BowlingProject
             return sb.ToString();
         }
 
+        public static string WriteLive(BowlingScore[] scores, int players, int turn, int frame, int ball, PhaseLabel phase, float power, bool charging, float hook, string banner)
+        {
+            string html = Build(scores, players, turn, frame, ball, phase, power, charging, hook, banner);
+            string dir = UiDirectory();
+            if (string.IsNullOrEmpty(dir)) return null;
+            try
+            {
+                Directory.CreateDirectory(dir);
+                string path = Path.Combine(dir, "score.live.html");
+                File.WriteAllText(path, html);
+                return path;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        static string UiDirectory()
+        {
+            string dir = Directory.GetCurrentDirectory();
+            for (int i = 0; i < 8 && !string.IsNullOrEmpty(dir); i++)
+            {
+                if (File.Exists(Path.Combine(dir, "project.json")))
+                    return Path.Combine(dir, "UI");
+                if (File.Exists(Path.Combine(dir, "bowling", "project.json")))
+                    return Path.Combine(dir, "bowling", "UI");
+                dir = Path.GetDirectoryName(dir);
+            }
+            try
+            {
+                string loc = typeof(BowlingHudContent).Assembly.Location;
+                if (!string.IsNullOrEmpty(loc))
+                {
+                    dir = Path.GetDirectoryName(loc);
+                    for (int i = 0; i < 8 && !string.IsNullOrEmpty(dir); i++)
+                    {
+                        if (File.Exists(Path.Combine(dir, "project.json")))
+                            return Path.Combine(dir, "UI");
+                        dir = Path.GetDirectoryName(dir);
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return null;
+        }
+
         static string Status(int players, int turn, int frame, int ball, PhaseLabel phase)
         {
             if (phase == PhaseLabel.Over)
@@ -104,17 +154,18 @@ namespace BowlingProject
 
     public static class BowlingHudHost
     {
-        public static void Push(SceneContext context, string html, float height)
+        public static void Push(SceneContext context, string html, string file, float height)
         {
-            if (context?.EventBus == null || string.IsNullOrEmpty(html)) return;
+            if (context?.EventBus == null) return;
+            if (string.IsNullOrEmpty(html) && string.IsNullOrEmpty(file)) return;
             var evt = new OpenGameHudEvent
             {
                 Key = BowlingHudContent.PanelKey,
-                HtmlRelativePath = BowlingHudContent.PanelKey,
+                HtmlRelativePath = string.IsNullOrEmpty(file) ? BowlingHudContent.PanelKey : file,
                 Title = "Bowling",
-                HtmlContent = html,
+                HtmlContent = string.IsNullOrEmpty(file) ? html : null,
                 Open = true,
-                Width = 860f,
+                Width = 920f,
                 Height = height,
                 AllowMove = false
             };

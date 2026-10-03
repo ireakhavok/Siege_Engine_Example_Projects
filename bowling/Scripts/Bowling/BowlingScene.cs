@@ -549,8 +549,12 @@ namespace BowlingProject
             string html = BowlingHudContent.Build(
                 _scores, _players, _turn, _frame, _ballInFrame, label, shownPower, _charging, _hook, banner);
             if (_hudOpened && html == _hudSig) return;
+            if (_hudOpened)
+                BowlingHudHost.Close(_context);
             _hudSig = html;
-            BowlingHudHost.Push(_context, html, BowlingHudContent.PanelHeight(_players));
+            string file = BowlingHudContent.WriteLive(
+                _scores, _players, _turn, _frame, _ballInFrame, label, shownPower, _charging, _hook, banner);
+            BowlingHudHost.Push(_context, html, file, BowlingHudContent.PanelHeight(_players));
             _hudOpened = true;
         }
 
@@ -824,7 +828,7 @@ namespace BowlingProject
             _staticBodies.Add(e);
         }
 
-        static Vector3 PinBoxSize => new Vector3(0.10f, 0.10f, LaneGeometry.PinHeight);
+        static Vector3 PinBoxSize => new Vector3(0.072f, 0.072f, LaneGeometry.PinHeight);
 
         static float PinCenterZ => LaneGeometry.DeckZ + LaneGeometry.PinHeight * 0.5f + 0.008f;
 
