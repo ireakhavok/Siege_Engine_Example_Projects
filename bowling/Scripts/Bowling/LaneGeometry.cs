@@ -69,12 +69,25 @@ namespace BowlingProject
 
         public void Disc(Vector3 c, float radius, Vector3 albedo, int seg)
         {
+            Ellipse(c, radius, radius, 0f, albedo, seg);
+        }
+
+        public void Ellipse(Vector3 c, float rx, float ry, float angle, Vector3 albedo, int seg)
+        {
+            float ca = MathF.Cos(angle);
+            float sa = MathF.Sin(angle);
             for (int i = 0; i < seg; i++)
             {
                 float a0 = i * (MathF.PI * 2f) / seg;
                 float a1 = (i + 1) * (MathF.PI * 2f) / seg;
-                var p0 = c + new Vector3(MathF.Cos(a0) * radius, MathF.Sin(a0) * radius, 0f);
-                var p1 = c + new Vector3(MathF.Cos(a1) * radius, MathF.Sin(a1) * radius, 0f);
+                var p0 = c + new Vector3(
+                    ca * MathF.Cos(a0) * rx - sa * MathF.Sin(a0) * ry,
+                    sa * MathF.Cos(a0) * rx + ca * MathF.Sin(a0) * ry,
+                    0f);
+                var p1 = c + new Vector3(
+                    ca * MathF.Cos(a1) * rx - sa * MathF.Sin(a1) * ry,
+                    sa * MathF.Cos(a1) * rx + ca * MathF.Sin(a1) * ry,
+                    0f);
                 Tri(c, p0, p1, albedo);
             }
         }
@@ -109,6 +122,15 @@ namespace BowlingProject
         public const float FoulY = 0f;
         public const float DeckEndY = 19.42f;
         public const float PitY = 21.15f;
+        public const int LaneCount = 5;
+        public const float GutterWidth = 0.24f;
+        public const float LanePitch = 1.66f;
+        public const float ReleaseY = -2.35f;
+        public const float BreakStartY = 7.0f;
+        public const float BreakEndY = 16.0f;
+        public const float HookAccel = 1.15f;
+
+        public static float LaneOrigin(int lane) => (lane - 2) * LanePitch;
 
         public static readonly Vector3 Wood = new Vector3(0.66f, 0.46f, 0.24f);
         public static readonly Vector3 Maple = new Vector3(0.86f, 0.74f, 0.46f);
@@ -145,7 +167,14 @@ namespace BowlingProject
                 case 8: x = 0.5f * s; y = row * 3f; break;
                 default: x = 1.5f * s; y = row * 3f; break;
             }
-            return new Vector3(x, HeadPinY + y, DeckZ + PinHeight * 0.5f);
+            return new Vector3(x, HeadPinY + y, DeckZ + PinHeight * 0.5f + 0.004f);
+        }
+
+        public static Vector3 PinSpot(int index, float laneX)
+        {
+            var p = PinSpot(index);
+            p.X += laneX;
+            return p;
         }
 
         public static float PinRadiusAt(float t)
@@ -163,146 +192,164 @@ namespace BowlingProject
 
         public static void BuildHouse(BowlMesh m, bool restRack)
         {
+            DrawRoom(m);
+            for (int lane = 0; lane < LaneCount; lane++)
+            {
+                float ox = LaneOrigin(lane);
+                bool player = lane == 2;
+                bool outer = lane == 0 || lane == LaneCount - 1;
+                DrawLane(m, ox, player);
+                if (restRack || outer)
+                    DrawRestRack(m, ox, restRack && player);
+            }
+        }
+
+        static void DrawRoom(BowlMesh m)
+        {
+            float left = LaneOrigin(0) - 1.15f;
+            float right = LaneOrigin(LaneCount - 1) + 1.15f;
+            float wallIn = right + 0.55f;
+            var carpet = new Vector3(0.11f, 0.075f, 0.055f);
+            var apron = new Vector3(0.14f, 0.15f, 0.17f);
+            // Subfloor under every lane and the walkways between them.
+            m.Box(new Vector3(-wallIn, ApproachY - 0.05f, DeckZ - 0.08f), new Vector3(wallIn, PitY + 0.2f, DeckZ - 0.012f), carpet);
+            m.Box(new Vector3(-wallIn, ApproachY, DeckZ - 0.012f), new Vector3(wallIn, FoulY, DeckZ + 0.001f), apron);
+
+            var wall = new Vector3(0.12f, 0.125f, 0.14f);
+            m.Box(new Vector3(-wallIn - 1.6f, ApproachY - 0.2f, DeckZ - 0.3f), new Vector3(-wallIn, PitY + 0.4f, DeckZ + 3.5f), wall);
+            m.Box(new Vector3(wallIn, ApproachY - 0.2f, DeckZ - 0.3f), new Vector3(wallIn + 1.6f, PitY + 0.4f, DeckZ + 3.5f), wall);
+            m.Box(new Vector3(-wallIn - 1.6f, ApproachY - 0.3f, DeckZ + 3.5f), new Vector3(wallIn + 1.6f, PitY + 0.4f, DeckZ + 3.68f), new Vector3(0.055f, 0.058f, 0.065f));
+            m.Box(new Vector3(-wallIn - 1.6f, ApproachY - 1.2f, DeckZ - 0.55f), new Vector3(wallIn + 1.6f, ApproachY - 0.55f, DeckZ + 3.5f), new Vector3(0.07f, 0.075f, 0.085f));
+
+            var trim = new Vector3(0.22f, 0.17f, 0.12f);
+            for (int i = 0; i < 6; i++)
+            {
+                float y = ApproachY + 0.2f + i * 4.2f;
+                m.Box(new Vector3(-wallIn, y, DeckZ + 0.9f), new Vector3(-wallIn + 0.07f, y + 0.05f, DeckZ + 2.5f), trim);
+                m.Box(new Vector3(wallIn - 0.07f, y, DeckZ + 0.9f), new Vector3(wallIn, y + 0.05f, DeckZ + 2.5f), trim);
+            }
+
+            // Seating and returns sit outside the lanes, not on them.
+            var bench = new Vector3(0.30f, 0.15f, 0.09f);
+            m.Box(new Vector3(-wallIn + 0.08f, ApproachY + 0.35f, DeckZ), new Vector3(-wallIn + 0.72f, -0.7f, DeckZ + 0.42f), bench);
+            m.Box(new Vector3(-wallIn + 0.12f, ApproachY + 0.4f, DeckZ + 0.42f), new Vector3(-wallIn + 0.68f, -0.75f, DeckZ + 0.78f), bench * 1.15f);
+            m.Box(new Vector3(wallIn - 0.72f, ApproachY + 0.15f, DeckZ), new Vector3(wallIn - 0.08f, -0.2f, DeckZ + 0.32f), new Vector3(0.16f, 0.17f, 0.19f));
+            m.Box(new Vector3(wallIn - 0.66f, ApproachY + 0.3f, DeckZ + 0.32f), new Vector3(wallIn - 0.14f, -0.4f, DeckZ + 0.38f), new Vector3(0.03f, 0.03f, 0.035f));
+
+            // One masking wall behind every rack.
+            float spanL = left - 0.2f;
+            float spanR = right + 0.2f;
+            m.Box(new Vector3(spanL, PitY, DeckZ - 0.45f), new Vector3(spanR, PitY + 0.2f, DeckZ + 1.45f), new Vector3(0.02f, 0.02f, 0.025f));
+            for (int s = 0; s < 8; s++)
+            {
+                float z0 = DeckZ + 0.06f + s * 0.15f;
+                var band = (s % 2 == 0) ? new Vector3(0.12f, 0.02f, 0.03f) : new Vector3(0.82f, 0.78f, 0.70f);
+                m.Quad(
+                    new Vector3(spanL, PitY - 0.01f, z0),
+                    new Vector3(spanR, PitY - 0.01f, z0),
+                    new Vector3(spanR, PitY - 0.01f, z0 + 0.075f),
+                    new Vector3(spanL, PitY - 0.01f, z0 + 0.075f),
+                    band);
+            }
+            m.Box(new Vector3(spanL, PitY + 0.12f, DeckZ + 1.3f), new Vector3(spanR, PitY + 0.32f, DeckZ + 3.15f), new Vector3(0.10f, 0.105f, 0.12f));
+        }
+
+        static void DrawLane(BowlMesh m, float ox, bool player)
+        {
             const int boards = 39;
             float width = LaneHalf * 2f;
             float boardW = width / boards;
-            float x0 = -LaneHalf;
-
+            float x0 = ox - LaneHalf;
             for (int i = 0; i < boards; i++)
             {
                 float xa = x0 + i * boardW;
                 float xb = xa + boardW;
                 float stripe = 0.90f + 0.10f * ((i * 7) % 5) / 4f;
                 if ((i % 5) == 0) stripe *= 0.92f;
+                float across = MathF.Abs((i + 0.5f) / boards - 0.5f) * 2f;
+                float oil = 0.58f + 0.42f * across;
                 var wood = Wood * stripe;
                 var maple = Maple * (0.94f + 0.06f * ((i * 3) % 4) / 3f);
-                float z = DeckZ;
-                QuadY(m, xa, xb, ApproachY, FoulY, z, Approach * (0.85f + 0.15f * stripe));
-                QuadY(m, xa, xb, FoulY, 17.55f, z, wood);
-                QuadY(m, xa, xb, 17.55f, DeckEndY, z + 0.001f, maple);
+                var approach = Approach * (player ? 1.05f : 0.85f) * (0.9f + 0.1f * stripe);
+                QuadY(m, xa, xb, ApproachY, FoulY, DeckZ, approach);
+                QuadY(m, xa, xb, FoulY, 12.5f, DeckZ, wood * oil);
+                QuadY(m, xa, xb, 12.5f, 17.55f, DeckZ, wood * (0.9f + 0.1f * across));
+                QuadY(m, xa, xb, 17.55f, DeckEndY, DeckZ + 0.001f, maple);
             }
 
-            // Foul line and lane edges.
+            var foul = player ? new Vector3(0.96f, 0.96f, 0.93f) : new Vector3(0.55f, 0.55f, 0.52f);
             m.Quad(
-                new Vector3(-LaneHalf, -0.018f, DeckZ + 0.008f),
-                new Vector3(LaneHalf, -0.018f, DeckZ + 0.008f),
-                new Vector3(LaneHalf, 0.018f, DeckZ + 0.008f),
-                new Vector3(-LaneHalf, 0.018f, DeckZ + 0.008f),
-                new Vector3(0.95f, 0.95f, 0.92f));
-            m.Quad(
-                new Vector3(-LaneHalf - 0.012f, FoulY, DeckZ + 0.006f),
-                new Vector3(-LaneHalf, FoulY, DeckZ + 0.006f),
-                new Vector3(-LaneHalf, DeckEndY, DeckZ + 0.006f),
-                new Vector3(-LaneHalf - 0.012f, DeckEndY, DeckZ + 0.006f),
-                new Vector3(0.05f, 0.05f, 0.05f));
-            m.Quad(
-                new Vector3(LaneHalf, FoulY, DeckZ + 0.006f),
-                new Vector3(LaneHalf + 0.012f, FoulY, DeckZ + 0.006f),
-                new Vector3(LaneHalf + 0.012f, DeckEndY, DeckZ + 0.006f),
-                new Vector3(LaneHalf, DeckEndY, DeckZ + 0.006f),
-                new Vector3(0.05f, 0.05f, 0.05f));
+                new Vector3(ox - LaneHalf, -0.02f, DeckZ + 0.008f),
+                new Vector3(ox + LaneHalf, -0.02f, DeckZ + 0.008f),
+                new Vector3(ox + LaneHalf, 0.02f, DeckZ + 0.008f),
+                new Vector3(ox - LaneHalf, 0.02f, DeckZ + 0.008f),
+                foul);
 
-            AddArrows(m);
-            AddDots(m, 0.22f, 0.018f);
-            AddDots(m, 4.57f, 0.012f);
+            AddArrows(m, ox, player ? 1f : 0.65f);
+            AddDots(m, ox, 0.22f, 0.016f);
+            AddDots(m, ox, -1.15f, 0.02f);
+            AddDots(m, ox, -2.55f, 0.016f);
+            AddGutter(m, -1, ox);
+            AddGutter(m, 1, ox);
 
-            // Gutters.
-            AddGutter(m, -1);
-            AddGutter(m, 1);
+            float outer = LaneHalf + GutterWidth;
+            var curb = new Vector3(0.05f, 0.05f, 0.055f);
+            m.Box(new Vector3(ox - outer - 0.04f, FoulY, DeckZ - 0.16f), new Vector3(ox - outer, DeckEndY, DeckZ + 0.04f), curb);
+            m.Box(new Vector3(ox + outer, FoulY, DeckZ - 0.16f), new Vector3(ox + outer + 0.04f, DeckEndY, DeckZ + 0.04f), curb);
 
-            // Kickbacks.
-            var kick = new Vector3(0.04f, 0.04f, 0.045f);
-            var rail = new Vector3(0.55f, 0.06f, 0.07f);
-            m.Box(new Vector3(-1.08f, -1.2f, DeckZ - 0.10f), new Vector3(-0.90f, PitY, DeckZ + 0.52f), kick);
-            m.Box(new Vector3(0.90f, -1.2f, DeckZ - 0.10f), new Vector3(1.08f, PitY, DeckZ + 0.52f), kick);
-            m.Box(new Vector3(-1.09f, -1.2f, DeckZ + 0.48f), new Vector3(-0.89f, PitY, DeckZ + 0.56f), rail);
-            m.Box(new Vector3(0.89f, -1.2f, DeckZ + 0.48f), new Vector3(1.09f, PitY, DeckZ + 0.56f), rail);
+            var kick = new Vector3(0.045f, 0.045f, 0.05f);
+            var rail = new Vector3(0.55f, 0.07f, 0.08f);
+            m.Box(new Vector3(ox - outer - 0.06f, 16.3f, DeckZ - 0.12f), new Vector3(ox - outer + 0.02f, PitY, DeckZ + 0.48f), kick);
+            m.Box(new Vector3(ox + outer - 0.02f, 16.3f, DeckZ - 0.12f), new Vector3(ox + outer + 0.06f, PitY, DeckZ + 0.48f), kick);
+            m.Box(new Vector3(ox - outer - 0.06f, 16.3f, DeckZ + 0.42f), new Vector3(ox - outer + 0.02f, PitY, DeckZ + 0.50f), rail);
+            m.Box(new Vector3(ox + outer - 0.02f, 16.3f, DeckZ + 0.42f), new Vector3(ox + outer + 0.06f, PitY, DeckZ + 0.50f), rail);
 
-            // Pit and curtain.
-            m.Box(new Vector3(-1.08f, DeckEndY + 0.02f, DeckZ - 0.42f), new Vector3(1.08f, PitY, DeckZ - 0.30f), new Vector3(0.03f, 0.03f, 0.035f));
-            m.Box(new Vector3(-1.15f, PitY, DeckZ - 0.42f), new Vector3(1.15f, PitY + 0.18f, DeckZ + 1.35f), new Vector3(0.02f, 0.02f, 0.025f));
-            for (int s = 0; s < 8; s++)
+            m.Box(new Vector3(ox - LaneHalf - 0.15f, DeckEndY + 0.02f, DeckZ - 0.42f), new Vector3(ox + LaneHalf + 0.15f, PitY, DeckZ - 0.28f), new Vector3(0.025f, 0.025f, 0.03f));
+
+            for (int i = 0; i < 10; i++)
             {
-                float z0 = DeckZ + 0.05f + s * 0.14f;
-                var band = (s % 2 == 0) ? new Vector3(0.12f, 0.02f, 0.03f) : new Vector3(0.82f, 0.78f, 0.70f);
-                m.Quad(
-                    new Vector3(-1.05f, PitY - 0.01f, z0),
-                    new Vector3(1.05f, PitY - 0.01f, z0),
-                    new Vector3(1.05f, PitY - 0.01f, z0 + 0.07f),
-                    new Vector3(-1.05f, PitY - 0.01f, z0 + 0.07f),
-                    band);
+                var spot = PinSpot(i, ox);
+                m.Disc(new Vector3(spot.X, spot.Y, DeckZ + 0.006f), 0.045f, new Vector3(0.25f, 0.18f, 0.10f), 8);
             }
 
-            // House shell. Walls sit well outside the kickbacks so the
-            // approach camera, including a wide scene-editor panel, is in the
-            // room looking down the lane — not inside a wall.
-            var carpet = new Vector3(0.13f, 0.09f, 0.065f);
-            var apron = Approach * 1.15f;
-            m.Box(new Vector3(-2.15f, ApproachY, DeckZ - 0.03f), new Vector3(-LaneHalf, FoulY + 0.01f, DeckZ + 0.001f), apron);
-            m.Box(new Vector3(LaneHalf, ApproachY, DeckZ - 0.03f), new Vector3(2.15f, FoulY + 0.01f, DeckZ + 0.001f), apron);
-            m.Box(new Vector3(-2.15f, FoulY, DeckZ - 0.10f), new Vector3(-0.99f, PitY, DeckZ - 0.02f), carpet);
-            m.Box(new Vector3(0.99f, FoulY, DeckZ - 0.10f), new Vector3(2.15f, PitY, DeckZ - 0.02f), carpet);
-
-            var wall = new Vector3(0.11f, 0.115f, 0.13f);
-            m.Box(new Vector3(-3.5f, ApproachY - 0.2f, DeckZ - 0.25f), new Vector3(-2.15f, PitY + 0.3f, DeckZ + 3.45f), wall);
-            m.Box(new Vector3(2.15f, ApproachY - 0.2f, DeckZ - 0.25f), new Vector3(3.5f, PitY + 0.3f, DeckZ + 3.45f), wall);
-            m.Box(new Vector3(-3.5f, ApproachY - 0.3f, DeckZ + 3.45f), new Vector3(3.5f, PitY + 0.3f, DeckZ + 3.62f), new Vector3(0.06f, 0.062f, 0.07f));
-            m.Box(new Vector3(-3.5f, ApproachY - 1.15f, DeckZ - 0.55f), new Vector3(3.5f, ApproachY - 0.62f, DeckZ + 3.45f), new Vector3(0.07f, 0.075f, 0.085f));
-
-            var trim = new Vector3(0.20f, 0.16f, 0.12f);
-            for (int i = 0; i < 6; i++)
+            var lamp = new Vector3(1.75f, 1.6f, 1.3f);
+            if (player)
             {
-                float y = ApproachY + 0.15f + i * 4.15f;
-                m.Box(new Vector3(-2.15f, y, DeckZ + 0.85f), new Vector3(-2.08f, y + 0.06f, DeckZ + 2.55f), trim);
-                m.Box(new Vector3(2.08f, y, DeckZ + 0.85f), new Vector3(2.15f, y + 0.06f, DeckZ + 2.55f), trim);
-            }
-
-            var lamp = new Vector3(1.7f, 1.55f, 1.25f);
-            for (int i = 0; i < 5; i++)
-            {
-                float y = 1.5f + i * 3.6f;
-                m.Box(new Vector3(-0.38f, y, DeckZ + 3.18f), new Vector3(0.38f, y + 0.42f, DeckZ + 3.32f), lamp);
-            }
-            m.Box(new Vector3(-0.62f, HeadPinY - 0.15f, DeckZ + 3.05f), new Vector3(0.62f, HeadPinY + 1.35f, DeckZ + 3.2f), lamp * 1.2f);
-
-            // Ball return on the right of the approach, settee on the left.
-            m.Box(new Vector3(0.62f, ApproachY, DeckZ), new Vector3(0.98f, -0.15f, DeckZ + 0.28f), new Vector3(0.16f, 0.17f, 0.19f));
-            m.Box(new Vector3(0.66f, ApproachY + 0.15f, DeckZ + 0.28f), new Vector3(0.94f, -0.35f, DeckZ + 0.34f), new Vector3(0.03f, 0.03f, 0.035f));
-            m.Box(new Vector3(-1.55f, ApproachY + 0.25f, DeckZ), new Vector3(-0.78f, -0.55f, DeckZ + 0.40f), new Vector3(0.28f, 0.14f, 0.09f));
-            m.Box(new Vector3(-1.52f, ApproachY + 0.30f, DeckZ + 0.40f), new Vector3(-0.80f, -0.60f, DeckZ + 0.78f), new Vector3(0.34f, 0.18f, 0.11f));
-
-            // Masking and the pinsetter, so the rack reads against the pit.
-            var mask = new Vector3(0.09f, 0.095f, 0.11f);
-            m.Box(new Vector3(-1.35f, 16.85f, DeckZ + 0.05f), new Vector3(-0.98f, 20.7f, DeckZ + 2.7f), mask);
-            m.Box(new Vector3(0.98f, 16.85f, DeckZ + 0.05f), new Vector3(1.35f, 20.7f, DeckZ + 2.7f), mask);
-            m.Box(new Vector3(-1.2f, PitY + 0.12f, DeckZ + 1.25f), new Vector3(1.2f, PitY + 0.28f, DeckZ + 2.9f), new Vector3(0.12f, 0.125f, 0.14f));
-            m.Box(new Vector3(-0.70f, 17.55f, DeckZ + 0.78f), new Vector3(0.70f, 20.15f, DeckZ + 1.65f), new Vector3(0.045f, 0.048f, 0.055f));
-            m.Box(new Vector3(-0.58f, 18.55f, DeckZ + 0.70f), new Vector3(0.58f, 18.72f, DeckZ + 0.82f), new Vector3(0.22f, 0.23f, 0.24f));
-
-            if (restRack)
-            {
-                var shadow = new Vector3(0.015f, 0.012f, 0.01f);
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 4; i++)
                 {
-                    var spot = PinSpot(i);
-                    m.Disc(new Vector3(spot.X, spot.Y, DeckZ + 0.012f), 0.07f, shadow, 12);
-                    AddPin(m, spot, Quaternion.Identity);
+                    float y = 2.2f + i * 4.0f;
+                    m.Box(new Vector3(ox - 0.34f, y, DeckZ + 3.15f), new Vector3(ox + 0.34f, y + 0.36f, DeckZ + 3.3f), lamp);
                 }
-                AddBall(m, new Vector3(0.18f, -2.15f, DeckZ + BallRadius), Quaternion.Identity);
             }
+            m.Box(new Vector3(ox - 0.55f, HeadPinY - 0.2f, DeckZ + 2.95f), new Vector3(ox + 0.55f, HeadPinY + 1.2f, DeckZ + 3.1f), lamp);
+            m.Box(new Vector3(ox - 0.62f, 17.7f, DeckZ + 0.85f), new Vector3(ox + 0.62f, 20.05f, DeckZ + 1.55f), new Vector3(0.04f, 0.042f, 0.05f));
+        }
+
+        static void DrawRestRack(BowlMesh m, float ox, bool withBall)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                var spot = PinSpot(i, ox);
+                AddCastShadow(m, spot, 0.09f);
+                AddPin(m, spot, Quaternion.Identity);
+            }
+            if (!withBall) return;
+            var ball = new Vector3(0.20f, ReleaseY, DeckZ + BallRadius + 0.012f);
+            AddCastShadow(m, ball, 0.14f);
+            AddBall(m, ball, Quaternion.Identity);
+            AddStance(m, 0.20f);
         }
 
         static void QuadY(BowlMesh m, float x0, float x1, float y0, float y1, float z, Vector3 albedo)
         {
-            // Long boards get a couple of grain breaks so the lane is not one flat fill.
-            const int cuts = 6;
+            const int cuts = 4;
             for (int c = 0; c < cuts; c++)
             {
                 float t0 = c / (float)cuts;
                 float t1 = (c + 1) / (float)cuts;
                 float ya = y0 + (y1 - y0) * t0;
                 float yb = y0 + (y1 - y0) * t1;
-                float grain = 0.93f + 0.07f * MathF.Abs(MathF.Sin(ya * 1.7f + x0 * 9f));
+                float grain = 0.94f + 0.06f * MathF.Abs(MathF.Sin(ya * 1.7f + x0 * 9f));
                 m.Quad(
                     new Vector3(x0, ya, z),
                     new Vector3(x1, ya, z),
@@ -312,43 +359,43 @@ namespace BowlingProject
             }
         }
 
-        static void AddGutter(BowlMesh m, int side)
+        static void AddGutter(BowlMesh m, int side, float ox)
         {
-            float inner = side < 0 ? -LaneHalf - 0.02f : LaneHalf + 0.02f;
-            float outer = side < 0 ? -0.98f : 0.98f;
+            float inner = ox + (side < 0 ? -LaneHalf - 0.012f : LaneHalf + 0.012f);
+            float outer = ox + (side < 0 ? -(LaneHalf + GutterWidth) : LaneHalf + GutterWidth);
             float xL = MathF.Min(inner, outer);
             float xR = MathF.Max(inner, outer);
-            float zTop = DeckZ - 0.01f;
-            float zBot = DeckZ - 0.095f;
+            float zTop = DeckZ - 0.008f;
+            float zBot = DeckZ - 0.14f;
+            float far = side < 0 ? xL : xR;
             m.Quad(
                 new Vector3(inner, FoulY, zTop),
                 new Vector3(inner, DeckEndY, zTop),
-                new Vector3(side < 0 ? xL : xR, DeckEndY, zBot),
-                new Vector3(side < 0 ? xL : xR, FoulY, zBot),
+                new Vector3(far, DeckEndY, zBot),
+                new Vector3(far, FoulY, zBot),
                 Gutter);
             m.Quad(
                 new Vector3(xL, FoulY, zBot),
                 new Vector3(xR, FoulY, zBot),
                 new Vector3(xR, DeckEndY, zBot),
                 new Vector3(xL, DeckEndY, zBot),
-                Gutter * 0.8f);
-            float wall = side < 0 ? xL : xR;
+                Gutter * 0.75f);
             m.Quad(
-                new Vector3(wall, FoulY, zBot),
-                new Vector3(wall, DeckEndY, zBot),
-                new Vector3(wall, DeckEndY, DeckZ + 0.02f),
-                new Vector3(wall, FoulY, DeckZ + 0.02f),
-                Gutter * 1.3f);
+                new Vector3(far, FoulY, zBot),
+                new Vector3(far, DeckEndY, zBot),
+                new Vector3(far, DeckEndY, DeckZ + 0.02f),
+                new Vector3(far, FoulY, DeckZ + 0.02f),
+                Gutter * 1.35f);
         }
 
-        static void AddArrows(BowlMesh m)
+        static void AddArrows(BowlMesh m, float ox, float shade)
         {
             float y = 4.572f;
             float[] xs = { 0f, -0.135f, 0.135f, -0.270f, 0.270f, -0.405f, 0.405f };
-            var ink = new Vector3(0.18f, 0.09f, 0.04f);
+            var ink = new Vector3(0.18f, 0.09f, 0.04f) * shade;
             for (int i = 0; i < xs.Length; i++)
             {
-                float x = xs[i];
+                float x = ox + xs[i];
                 float z = DeckZ + 0.009f;
                 var tip = new Vector3(x, y + 0.11f, z);
                 var l0 = new Vector3(x - 0.055f, y - 0.02f, z);
@@ -363,12 +410,66 @@ namespace BowlingProject
             }
         }
 
-        static void AddDots(BowlMesh m, float y, float radius)
+        static void AddDots(BowlMesh m, float ox, float y, float radius)
         {
             float[] xs = { 0f, -0.135f, 0.135f, -0.270f, 0.270f, -0.405f, 0.405f };
             var ink = new Vector3(0.20f, 0.10f, 0.05f);
             for (int i = 0; i < xs.Length; i++)
-                m.Disc(new Vector3(xs[i], y, DeckZ + 0.009f), radius, ink, 10);
+                m.Disc(new Vector3(ox + xs[i], y, DeckZ + 0.009f), radius, ink, 8);
+        }
+
+        public static void AddCastShadow(BowlMesh m, Vector3 pos, float radius)
+        {
+            float h = pos.Z - DeckZ;
+            if (h < 0.01f) h = 0.01f;
+            if (h > 2.2f) return;
+            var c = new Vector3(pos.X + h * 0.22f, pos.Y + h * 0.48f, DeckZ + 0.008f);
+            const float ang = 1.16f;
+            m.Ellipse(c, radius * 0.95f, radius * 2.05f, ang, new Vector3(0.012f, 0.008f, 0.006f), 14);
+            c.Z = DeckZ + 0.011f;
+            m.Ellipse(c, radius * 0.42f, radius * 0.85f, ang, new Vector3(0.0f, 0.0f, 0.0f), 10);
+        }
+
+        public static void AddStance(BowlMesh m, float lateral)
+        {
+            var shoe = new Vector3(0.72f, 0.68f, 0.48f);
+            float y = ReleaseY - 0.22f;
+            float z = DeckZ + 0.01f;
+            m.Disc(new Vector3(lateral - 0.10f, y, z), 0.05f, shoe, 8);
+            m.Disc(new Vector3(lateral + 0.08f, y + 0.06f, z), 0.05f, shoe * 0.85f, 8);
+        }
+
+        public static void AddHookPath(BowlMesh m, Vector3 origin, float aim, float hook, float speed)
+        {
+            float dt = 0.045f;
+            var pos = origin;
+            var vel = new Vector3(MathF.Sin(aim), MathF.Cos(aim), 0f) * MathF.Max(4.5f, speed);
+            bool gutter = false;
+            float gutterX = 0f;
+            for (int i = 1; i <= 48; i++)
+            {
+                if (!gutter && MathF.Abs(pos.X) > LaneHalf - 0.02f)
+                {
+                    gutter = true;
+                    gutterX = MathF.Sign(pos.X) * (LaneHalf + GutterWidth * 0.55f);
+                    vel.X = 0f;
+                }
+                if (!gutter && pos.Y > BreakStartY && pos.Y < BreakEndY)
+                {
+                    float along = Math.Clamp((pos.Y - BreakStartY) / 8f, 0f, 1f);
+                    Vector3 fwd = Vector3.Normalize(vel);
+                    Vector3 right = Vector3.Cross(fwd, Vector3.UnitZ);
+                    vel -= right * (HookAccel * hook * along) * dt;
+                }
+                if (gutter) pos.X = gutterX;
+                pos += new Vector3(vel.X, vel.Y, 0f) * dt;
+                if (pos.Y > HeadPinY + 0.4f) break;
+                var ink = gutter
+                    ? new Vector3(0.75f, 0.12f, 0.10f)
+                    : new Vector3(0.97f, 0.84f, 0.36f);
+                if ((i & 1) == 0)
+                    m.Disc(new Vector3(pos.X, pos.Y, DeckZ + 0.016f), gutter ? 0.028f : 0.02f, ink * (1f - i / 70f), 6);
+            }
         }
 
         public static void AddPin(BowlMesh m, Vector3 center, Quaternion rotation)

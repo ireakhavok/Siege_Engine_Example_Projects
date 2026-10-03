@@ -15,11 +15,15 @@ This is a project, not an engine change. Load it the same way as chess. Pins and
 | Input | Action |
 |---|---|
 | A / D or Left / Right | Move your feet on the approach |
-| Mouse left / right | Aim |
-| Q / E | Less / more hook |
+| Mouse left / right | Aim. The gold dots on the lane are the shot |
+| Q / E | Straighten the path, or bend it left. Red dots are a gutter |
 | Hold Space or left mouse, then release | Set power and throw |
 | R | New game |
 
-A right-hand hook breaks left toward the pocket. Start on the right side of the lane, aim at the head pin, and let the ball come in late.
+The center lane is the one you bowl. Four more lanes sit beside it. Pins on your lane and the two next to it are real dynamic bodies. A ball that leaves the lane drops into the gutter and cannot hit the rack.
+
+Gold dots on the lane are the ball path. Q straightens it, E bends it left. If the dots turn red, that shot is a gutter. The same curve is drawn in the small lane at the bottom left.
+
+The ball starts on the approach, in front of the feet marks, on the board you chose with A and D.
 
 Pins that stay up are left for the second ball. A strike or a spare racks a fresh set. The tenth frame gives the extra balls. Knocked-down pins are anything no longer standing on the deck: tipped, in the gutter, or in the pit.
