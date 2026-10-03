@@ -753,6 +753,26 @@ namespace BowlingProject
             }
         }
 
+        public static FBXModel LaneSlab(float x0, float x1, float y0, float y1, float z)
+        {
+            float zb = z - 0.02f;
+            var model = new FBXModel { UnitToMeters = 1f, Skeleton = null };
+            var mesh = new MeshData { Name = "Lane" };
+            void V(float x, float y, float zz) =>
+                mesh.Vertices.Add(new FBXVertex(x, y, zz, 0f, 0f, 1f, 0f, 0f, 0f));
+            V(x0, y0, z); V(x1, y0, z); V(x1, y1, z); V(x0, y1, z);
+            V(x0, y0, zb); V(x1, y0, zb); V(x1, y1, zb); V(x0, y1, zb);
+            void Face(uint a, uint b, uint c, uint d)
+            {
+                mesh.Indices.Add(a); mesh.Indices.Add(b); mesh.Indices.Add(c);
+                mesh.Indices.Add(a); mesh.Indices.Add(c); mesh.Indices.Add(d);
+            }
+            Face(0, 1, 2, 3);
+            Face(4, 7, 6, 5);
+            model.Meshes.Add(mesh);
+            return model;
+        }
+
         public static FBXModel Sheet(params Vector3[] corners)
         {
             var model = new FBXModel { UnitToMeters = 1f, Skeleton = null };

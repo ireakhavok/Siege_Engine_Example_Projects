@@ -794,16 +794,9 @@ namespace BowlingProject
                     float yb = MathF.Min(y + 2f, y1);
                     float mid = (y + yb) * 0.5f;
                     LaneGeometry.DeckFriction(mid, out float kinetic, out float stat);
-                    float yStart = y > y0 + 0.001f ? y - 0.05f : y;
-                    float yEnd = yb < y1 - 0.001f ? yb + 0.05f : yb;
                     float x0 = ox - LaneGeometry.LaneHalf;
                     float x1 = ox + LaneGeometry.LaneHalf;
-                    float z = LaneGeometry.DeckZ;
-                    AddSurface(LaneGeometry.Sheet(
-                        new Vector3(x0, yStart, z),
-                        new Vector3(x1, yStart, z),
-                        new Vector3(x1, yEnd, z),
-                        new Vector3(x0, yEnd, z)), kinetic, stat);
+                    AddSurface(LaneGeometry.LaneSlab(x0, x1, y, yb, LaneGeometry.DeckZ), kinetic, stat);
                     y = yb;
                 }
                 AddGutterMesh(ox, -1);
@@ -830,19 +823,14 @@ namespace BowlingProject
             float y0 = LaneGeometry.FoulY;
             float y1 = LaneGeometry.DeckEndY;
             float zFloor = LaneGeometry.DeckZ - LaneGeometry.GutterDepth;
+            float x0 = MathF.Min(inner, outer);
+            float x1 = MathF.Max(inner, outer);
+            AddSurface(LaneGeometry.LaneSlab(x0, x1, y0, y1, zFloor), 0.20f, 0.28f);
             AddSurface(LaneGeometry.Sheet(
-                new Vector3(inner, y0, LaneGeometry.DeckZ),
-                new Vector3(inner, y1, LaneGeometry.DeckZ),
-                new Vector3(inner, y1, zFloor),
-                new Vector3(inner, y0, zFloor),
-                new Vector3(inner, y0, zFloor),
-                new Vector3(inner, y1, zFloor),
-                new Vector3(outer, y1, zFloor),
-                new Vector3(outer, y0, zFloor),
                 new Vector3(outer, y0, zFloor),
                 new Vector3(outer, y1, zFloor),
-                new Vector3(outer, y1, LaneGeometry.DeckZ + 0.02f),
-                new Vector3(outer, y0, LaneGeometry.DeckZ + 0.02f)), 0.20f, 0.28f);
+                new Vector3(outer, y1, LaneGeometry.DeckZ),
+                new Vector3(outer, y0, LaneGeometry.DeckZ)), 0.35f, 0.45f);
         }
 
         void AddKickback(float ox, int side)
