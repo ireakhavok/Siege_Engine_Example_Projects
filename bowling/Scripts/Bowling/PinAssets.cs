@@ -6,23 +6,28 @@ using SiegeEngine.Core.AssetParsing.Model;
 namespace BowlingProject
 {
     /// <summary>
-    /// Pin and ball meshes live in Assets/*.fbx. The physics body is built from
-    /// that mesh. If a build cannot parse the file, the same shape is built in
-    /// memory so the rack still exists.
+    /// The pin and ball are asset packs, the same way save3 loads a mesh:
+    /// Assets/pin_pack/assetpack.json points at pin.fbx. This only reads that
+    /// file. The scene entities own the physics bodies.
     /// </summary>
     public static class PinAssets
     {
         static FBXModel _pin;
         static FBXModel _ball;
 
-        public static FBXModel Pin => _pin ??= Load("pin.fbx", LaneGeometry.PinCollider());
-        public static FBXModel Ball => _ball ??= Load("ball.fbx", LaneGeometry.BallCollider());
+        public static FBXModel Pin => _pin ??= Load("pin_pack", "pin.fbx", LaneGeometry.PinCollider());
+        public static FBXModel Ball => _ball ??= Load("ball_pack", "ball.fbx", LaneGeometry.BallCollider());
 
-        static FBXModel Load(string file, FBXModel fallback)
+        public static string PackPath(string pack)
+        {
+            return Find(pack, "assetpack.json");
+        }
+
+        static FBXModel Load(string pack, string file, FBXModel fallback)
         {
             try
             {
-                string path = Find(file);
+                string path = Find(pack, file);
                 if (path == null) return fallback;
                 var forest = FBXParser.Load(path);
                 var model = FBXParser.BuildModelFromForest(forest);
@@ -37,34 +42,17 @@ namespace BowlingProject
             }
         }
 
-        public static void Rebuild(PhysicsComponent body, FBXModel model)
+        static string Find(string pack, string file)
         {
-            if (body == null) return;
-            try
-            {
-                if (model != null)
-                    body.RebuildShape(model);
-                else
-                    body.RebuildShape(null);
-            }
-            catch
-            {
-                try { body.RebuildShape(null); } catch { }
-            }
-            try { body.RecomputeMassProperties(); } catch { }
-        }
-
-        static string Find(string file)
-        {
-            string hit = Walk(Directory.GetCurrentDirectory(), file);
+            string hit = Walk(Directory.GetCurrentDirectory(), pack, file);
             if (hit != null) return hit;
-            hit = Walk(AppContext.BaseDirectory, file);
+            hit = Walk(AppContext.BaseDirectory, pack, file);
             if (hit != null) return hit;
             try
             {
                 string loc = typeof(PinAssets).Assembly.Location;
                 if (!string.IsNullOrEmpty(loc))
-                    hit = Walk(Path.GetDirectoryName(loc), file);
+                    hit = Walk(Path.GetDirectoryName(loc), pack, file);
             }
             catch
             {
@@ -73,15 +61,15 @@ namespace BowlingProject
             return hit;
         }
 
-        static string Walk(string start, string file)
+        static string Walk(string start, string pack, string file)
         {
             string dir = start;
             for (int i = 0; i < 8 && !string.IsNullOrEmpty(dir); i++)
             {
-                string direct = Path.Combine(dir, "Assets", file);
+                string direct = Path.Combine(dir, "Assets", pack, file);
                 if (File.Exists(direct) && File.Exists(Path.Combine(dir, "project.json")))
                     return direct;
-                string nested = Path.Combine(dir, "bowling", "Assets", file);
+                string nested = Path.Combine(dir, "bowling", "Assets", pack, file);
                 if (File.Exists(nested) && File.Exists(Path.Combine(dir, "bowling", "project.json")))
                     return nested;
                 dir = Path.GetDirectoryName(dir);

@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection;
+using SiegeEngine.Core.AssetParsing.Model;
 using SiegeEngine.Core.Definitions;
+using SiegeEngine.Core.Events;
 using SiegeEngine.Core.GPU;
 using SiegeEngine.Core.GPU.ContextManagement;
 using SiegeEngine.Core.GPU.Shaders;
@@ -55,6 +57,7 @@ namespace BowlingProject
         bool _hudOpened;
         string _hudSig = "";
         bool _menuOpened;
+        BowlingMenuPanel _menuPanel;
         int _menuPlayers;
         readonly bool[] _digitWas = new bool[4];
         readonly Key[] _playerKeys = new Key[4];
@@ -119,7 +122,6 @@ namespace BowlingProject
         {
             if (deltaTime < 0f) deltaTime = 0f;
             if (deltaTime > 0.05f) deltaTime = 0.05f;
-            MenuBus.Arm(this, _context);
             TrackSize();
             KeepBallSphere();
             base.Update(deltaTime);
@@ -127,12 +129,9 @@ namespace BowlingProject
             _renderContext.ClearColor(0.025f, 0.03f, 0.038f, 1f);
             if (!_houseReady) return;
             RememberView();
-            MenuBus.Listen(_context?.EventBus);
-            MenuBus.Arm(this, _context);
             if (_phase == Phase.Menu)
                 PollMenu();
             SyncMenu();
-            MenuBus.Arm(this, _context);
             if (_preview) return;
             if (!_started) EnsureWorld();
             SeatWildPins();
@@ -222,7 +221,7 @@ namespace BowlingProject
 
         public override void Dispose()
         {
-            if (_menuOpened) BowlingMenuHost.Close(_context);
+            if (_menuOpened) CloseMenu();
             if (_hudOpened) BowlingHudHost.Close(_context);
             _shader?.Dispose();
             _houseBuf?.Dispose();
@@ -323,7 +322,10 @@ namespace BowlingProject
         void PollMenu()
         {
             EnsurePlayerKeys();
-            MenuBus.Drain(ref _players, out bool start);
+            if (BowlingMenuPanel.Players >= 1 && BowlingMenuPanel.Players <= 4)
+                _players = BowlingMenuPanel.Players;
+            bool start = BowlingMenuPanel.Start;
+            BowlingMenuPanel.Start = false;
             for (int i = 0; i < 4; i++)
             {
                 if (!_playerKeyOk[i]) continue;
@@ -533,25 +535,30 @@ namespace BowlingProject
 
         BowlingScore Score => _scores[_turn];
 
+        void CloseMenu()
+        {
+            if (_menuPanel != null && _eventBus != null)
+                _eventBus.Publish(new ClosePanelEvent(_menuPanel));
+            _menuPanel = null;
+            _menuOpened = false;
+            _menuPlayers = 0;
+        }
+
         void SyncMenu()
         {
-            if (_context == null) return;
+            if (_preview || _eventBus == null) return;
             if (_phase != Phase.Menu)
             {
-                if (_menuOpened)
-                {
-                    BowlingMenuHost.Close(_context);
-                    _menuOpened = false;
-                    _menuPlayers = 0;
-                }
+                if (_menuOpened) CloseMenu();
                 return;
             }
-            if (_menuOpened && _players == _menuPlayers) return;
-            if (_menuOpened)
-                BowlingMenuHost.Close(_context);
-            _menuPlayers = _players;
-            BowlingMenuHost.Push(_context, _players);
+            if (_menuOpened) return;
+            BowlingMenuPanel.Players = _players;
+            BowlingMenuPanel.Start = false;
+            _menuPanel = new BowlingMenuPanel(_renderContext, _controlContext, _window, _eventBus, _players, _viewW, _viewH);
+            _eventBus.Publish(new OpenPanelEvent(_menuPanel) { Mode = OpenMode.Overlay });
             _menuOpened = true;
+            _menuPlayers = _players;
         }
 
         void SyncHud()
@@ -947,21 +954,134 @@ namespace BowlingProject
 
         void SpawnRack()
         {
-            ClearPins();
-            SpawnLane(_pins, 0f);
-            SpawnLane(_leftPins, -LaneGeometry.LanePitch);
-            SpawnLane(_rightPins, LaneGeometry.LanePitch);
+            LoadPinPack();
+            if (!AdoptScenePins())
+            {
+                ClearPins();
+                SpawnLane(_pins, 0f);
+                SpawnLane(_leftPins, -LaneGeometry.LanePitch);
+                SpawnLane(_rightPins, LaneGeometry.LanePitch);
+            }
+            else
+            {
+                ResetLane(_pins, 0f);
+                ResetLane(_leftPins, -LaneGeometry.LanePitch);
+                ResetLane(_rightPins, LaneGeometry.LanePitch);
+            }
             _freshRack = true;
+        }
+
+        void LoadPinPack()
+        {
+            try
+            {
+                if (ModelManager.Instance == null) return;
+                string path = PinAssets.PackPath("pin_pack");
+                if (!string.IsNullOrEmpty(path))
+                {
+                    var load = ModelManager.Instance.GetType().GetMethod("LoadAnimationPack");
+                    if (load != null) load.Invoke(ModelManager.Instance, new object[] { path });
+                }
+            }
+            catch
+            {
+                // The scene loader already registers packs that are in project.json.
+            }
+        }
+
+        bool AdoptScenePins()
+        {
+            var found = new System.Collections.Generic.List<(Entity e, PhysicsComponent b, float x, float y)>();
+            var entities = GetEntities();
+            if (entities == null) return false;
+            for (int i = 0; i < entities.Count; i++)
+            {
+                Entity e = entities[i] as Entity;
+                if (e == null) continue;
+                ModelComponent model = e.GetComponent<ModelComponent>();
+                if (model == null || model.Key != "pin_pack") continue;
+                PhysicsComponent body = e.GetComponent<PhysicsComponent>();
+                if (body == null) continue;
+                found.Add((e, body, body.Position.X, body.Position.Y));
+            }
+            if (found.Count < 10) return false;
+            found.Sort((a, b) =>
+            {
+                int c = a.x.CompareTo(b.x);
+                return c != 0 ? c : a.y.CompareTo(b.y);
+            });
+            FillAdopted(_leftPins, found, -LaneGeometry.LanePitch);
+            FillAdopted(_pins, found, 0f);
+            FillAdopted(_rightPins, found, LaneGeometry.LanePitch);
+            return _pins[0].Body != null;
+        }
+
+        static void FillAdopted(Pin[] pins, System.Collections.Generic.List<(Entity e, PhysicsComponent b, float x, float y)> found, float laneX)
+        {
+            var used = new bool[found.Count];
+            for (int i = 0; i < pins.Length; i++)
+            {
+                var spot = LaneGeometry.PinSpot(i, laneX);
+                int best = -1;
+                float bestD = 0.6f;
+                for (int k = 0; k < found.Count; k++)
+                {
+                    if (used[k]) continue;
+                    float dx = found[k].x - spot.X;
+                    float dy = found[k].y - spot.Y;
+                    float d = dx * dx + dy * dy;
+                    if (d < bestD) { bestD = d; best = k; }
+                }
+                if (best < 0) continue;
+                used[best] = true;
+                pins[i] = new Pin { Entity = found[best].e, Body = found[best].b, Live = true, Loose = false };
+            }
+        }
+
+        static void ResetLane(Pin[] pins, float laneX)
+        {
+            for (int i = 0; i < pins.Length; i++)
+            {
+                var b = pins[i].Body;
+                if (b == null) continue;
+                var spot = LaneGeometry.PinSpot(i, laneX);
+                spot.Z = PinCenterZ;
+                b.Position = spot;
+                b.RenderPosition = spot;
+                b.Rotation = Quaternion.Identity;
+                b.Velocity = Vector3.Zero;
+                b.AngularVelocity = Vector3.Zero;
+                b.CollisionEnabled = true;
+                b.Wake();
+            }
         }
 
         void SpawnLane(Pin[] pins, float laneX)
         {
             var box = PinBoxSize;
+            FBXModel mesh = null;
+            try
+            {
+                if (ModelManager.Instance != null && ModelManager.Instance.TryGetModel("pin_pack", out FBXModel loaded))
+                    mesh = loaded;
+            }
+            catch
+            {
+                mesh = null;
+            }
+            if (mesh == null) mesh = PinAssets.Pin;
             for (int i = 0; i < pins.Length; i++)
             {
                 var spot = LaneGeometry.PinSpot(i, laneX);
                 spot.Z = PinCenterZ;
-                var e = new Entity();
+                var e = new Entity { Type = "FBX" };
+                e.AddComponent(new ModelComponent
+                {
+                    Model = mesh,
+                    Key = "pin_pack",
+                    CastShadows = true,
+                    ReceiveShadows = true
+                });
                 var body = new PhysicsComponent();
                 body.UseBoneHitboxes = false;
                 body.KeepUpright = false;
@@ -976,14 +1096,8 @@ namespace BowlingProject
                 body.Mass = LaneGeometry.PinMass;
                 StampBox(body, box);
                 body.BodyType = BodyType.Dynamic;
-                e.AddComponent(new ModelComponent
-                {
-                    Model = PinAssets.Pin,
-                    Key = "pin.fbx",
-                    CastShadows = true,
-                    ReceiveShadows = true
-                });
-                PinAssets.Rebuild(body, PinAssets.Pin);
+                try { body.RebuildShape(mesh); }
+                catch { Rebuild(body); }
                 body.Position = spot;
                 body.RenderPosition = spot;
                 body.Rotation = Quaternion.Identity;

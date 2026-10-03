@@ -6,188 +6,195 @@
 html, body {
   margin: 0;
   padding: 0;
-  width: 400px;
-  height: 308px;
-  background: #100e0c;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #070605;
+  background-image: url("MenuBackground.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
   color: #f3ecdf;
   font-family: "Segoe UI", sans-serif;
 }
-#hero {
-  width: 400px;
-  height: 96px;
-  background-color: #21180f;
-  background-image: url("MenuBackground.png");
-  background-position: center center;
-  background-size: cover;
+#screen {
+  width: 100%;
+  height: 100%;
   overflow: hidden;
+  text-align: center;
 }
-#body {
-  padding: 16px 18px 14px;
+#card {
+  width: 420px;
+  margin: 120px auto 0;
+  padding: 22px 24px 20px;
+  background-color: #100e0c;
+  border: 1px solid #c6a15b;
+  text-align: left;
 }
 .kicker {
   color: #c6a15b;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 4px;
-  line-height: 14px;
-  margin: 0 0 2px;
+  line-height: 16px;
+  margin: 0 0 4px;
 }
 h1 {
-  margin: 0 0 8px;
+  margin: 0 0 12px;
   color: #f3ecdf;
-  font-size: 26px;
-  line-height: 30px;
+  font-size: 32px;
+  line-height: 36px;
   letter-spacing: 5px;
   font-weight: 700;
 }
 .label {
   color: #8d7d62;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 3px;
-  line-height: 14px;
-  margin: 0 0 8px;
+  line-height: 16px;
+  margin: 0 0 10px;
 }
-.row { }
 .choice {
   display: inline-block;
-  width: 84px;
-  height: 54px;
+  width: 86px;
+  height: 56px;
   margin: 0 8px 0 0;
   background: #1a1612;
   border: 1px solid #3d3428;
   color: #f3ecdf;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 650;
-  line-height: 54px;
+  line-height: 56px;
   text-align: center;
   cursor: pointer;
 }
 .choice:hover {
   display: inline-block;
-  width: 84px;
-  height: 54px;
+  width: 86px;
+  height: 56px;
   margin: 0 8px 0 0;
   background: #3a2c16;
   border: 1px solid #e7c56a;
   color: #ffe7a3;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
-  line-height: 54px;
+  line-height: 56px;
   text-align: center;
   cursor: pointer;
 }
 .choice:active {
   display: inline-block;
-  width: 84px;
-  height: 54px;
+  width: 86px;
+  height: 56px;
   margin: 0 8px 0 0;
   background: #5a4018;
   border: 1px solid #ffe7a3;
   color: #fff6d8;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
-  line-height: 54px;
+  line-height: 56px;
   text-align: center;
   cursor: pointer;
 }
 .picked {
   display: inline-block;
-  width: 84px;
-  height: 54px;
+  width: 86px;
+  height: 56px;
   margin: 0 8px 0 0;
   background: #c6a15b;
   border: 1px solid #e7c56a;
   color: #1a1208;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
-  line-height: 54px;
+  line-height: 56px;
   text-align: center;
   cursor: pointer;
 }
 .picked:hover {
   display: inline-block;
-  width: 84px;
-  height: 54px;
+  width: 86px;
+  height: 56px;
   margin: 0 8px 0 0;
   background: #e7c56a;
   border: 1px solid #ffe7a3;
   color: #1a1208;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
-  line-height: 54px;
+  line-height: 56px;
   text-align: center;
   cursor: pointer;
 }
 .picked:active {
   display: inline-block;
-  width: 84px;
-  height: 54px;
+  width: 86px;
+  height: 56px;
   margin: 0 8px 0 0;
   background: #ffe7a3;
   border: 1px solid #fff6d8;
   color: #1a1208;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
-  line-height: 54px;
+  line-height: 56px;
   text-align: center;
   cursor: pointer;
 }
 .start {
   display: block;
-  margin: 12px 0 0;
+  margin: 16px 0 0;
   background: #c6a15b;
   border: 1px solid #e7c56a;
   color: #1a1208;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: 2px;
-  line-height: 16px;
+  line-height: 18px;
   text-align: center;
-  padding: 12px 8px;
+  padding: 14px 8px;
   cursor: pointer;
 }
 .start:hover {
   display: block;
-  margin: 12px 0 0;
+  margin: 16px 0 0;
   background: #e7c56a;
   border: 1px solid #ffe7a3;
   color: #1a1208;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: 2px;
-  line-height: 16px;
+  line-height: 18px;
   text-align: center;
-  padding: 12px 8px;
+  padding: 14px 8px;
   cursor: pointer;
 }
 .start:active {
   display: block;
-  margin: 12px 0 0;
+  margin: 16px 0 0;
   background: #ffe7a3;
   border: 1px solid #fff6d8;
   color: #1a1208;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: 2px;
-  line-height: 16px;
+  line-height: 18px;
   text-align: center;
-  padding: 12px 8px;
+  padding: 14px 8px;
   cursor: pointer;
 }
 </style>
 </head>
 <body>
-<div id="hero"></div>
-<div id="body">
-  <div class="kicker">TEN PIN</div>
-  <h1>BOWLING</h1>
-  <div class="label">PLAYERS</div>
-  <div class="row">
-    <div class="button {{P1}}" data-hook="menu.players1">1</div>
-    <div class="button {{P2}}" data-hook="menu.players2">2</div>
-    <div class="button {{P3}}" data-hook="menu.players3">3</div>
-    <div class="button {{P4}}" data-hook="menu.players4">4</div>
+<div id="screen">
+  <div id="card">
+    <div class="kicker">TEN PIN</div>
+    <h1>BOWLING</h1>
+    <div class="label">PLAYERS</div>
+    <div class="row">
+      <div class="button {{P1}}" data-hook="menu.players1">1</div>
+      <div class="button {{P2}}" data-hook="menu.players2">2</div>
+      <div class="button {{P3}}" data-hook="menu.players3">3</div>
+      <div class="button {{P4}}" data-hook="menu.players4">4</div>
+    </div>
+    <div class="button start" data-hook="menu.start">STEP ONTO THE LANE</div>
   </div>
-  <div class="button start" data-hook="menu.start">STEP ONTO THE LANE</div>
 </div>
 </body>
 </html>

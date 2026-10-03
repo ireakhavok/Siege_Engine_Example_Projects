@@ -1,0 +1,35 @@
+{
+  "Id": "pin_pack",
+  "Name": "pin_pack",
+  "Clips": [],
+  "BoneNameToIndex": {},
+  "DefaultBlendParams": {
+    "X": 0,
+    "Y": 0,
+    "Z": 0
+  },
+  "BlendConfig": {
+    "XMin": -1,
+    "XMax": 1,
+    "YMin": -1,
+    "YMax": 1,
+    "ZMin": -2,
+    "ZMax": 2,
+    "DeadZone": 0.1,
+    "SnapStep": 0.25
+  },
+  "SourceFBXPath": "./pin.fbx",
+  "SourceSkeletonPath": "./pin.fbx",
+  "Material": {
+    "name": "Pin",
+    "properties": {
+      "DiffuseColor": 0.93,
+      "EmissiveColor": 0,
+      "EmissiveFactor": 0,
+      "SpecularFactor": 0.2,
+      "Shininess": 20
+    },
+    "textures": {},
+    "textureSlots": []
+  }
+}

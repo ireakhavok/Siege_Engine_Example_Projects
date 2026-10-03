@@ -1,0 +1,35 @@
+{
+  "Id": "ball_pack",
+  "Name": "ball_pack",
+  "Clips": [],
+  "BoneNameToIndex": {},
+  "DefaultBlendParams": {
+    "X": 0,
+    "Y": 0,
+    "Z": 0
+  },
+  "BlendConfig": {
+    "XMin": -1,
+    "XMax": 1,
+    "YMin": -1,
+    "YMax": 1,
+    "ZMin": -2,
+    "ZMax": 2,
+    "DeadZone": 0.1,
+    "SnapStep": 0.25
+  },
+  "SourceFBXPath": "./ball.fbx",
+  "SourceSkeletonPath": "./ball.fbx",
+  "Material": {
+    "name": "Ball",
+    "properties": {
+      "DiffuseColor": 0.62,
+      "EmissiveColor": 0,
+      "EmissiveFactor": 0,
+      "SpecularFactor": 0.3,
+      "Shininess": 30
+    },
+    "textures": {},
+    "textureSlots": []
+  }
+}
