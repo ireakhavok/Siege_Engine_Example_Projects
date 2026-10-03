@@ -81,7 +81,6 @@ namespace BowlingProject
         bool _rWas;
         bool _qWas;
         bool _eWas;
-        bool _thrownThisFrame;
         string _banner = "";
 
         Vector3 _camEye;
@@ -110,6 +109,14 @@ namespace BowlingProject
             _houseReady = true;
             _viewW = width > 2 ? width : 1280f;
             _viewH = height > 2 ? height : 720f;
+            if (!_panel && _controlContext != null)
+            {
+                _controlContext.SetWindowSizeCallback(_window, (nint w, int nw, int nh) =>
+                {
+                    if (nw > 0 && nh > 0)
+                        Resize(nw, nh);
+                });
+            }
             MenuView(out _camEye, out _camTarget);
             if (_preview)
             {
@@ -152,7 +159,7 @@ namespace BowlingProject
 
         protected override void GetViewProjection(out Matrix4x4 view, out Matrix4x4 projection)
         {
-            float aspect = _viewH > 2f ? _viewW / _viewH : (AspectRatio > 0.01f ? AspectRatio : 16f / 9f);
+            float aspect = AspectRatio > 0.01f ? AspectRatio : 16f / 9f;
             if (_preview)
             {
                 _camEye = new Vector3(0.85f, -4.35f, 1.72f);
@@ -286,7 +293,7 @@ namespace BowlingProject
             _eWas = e;
             if (_phase == Phase.Aim)
             {
-                _lateral = Math.Clamp(_lateral + (right - left) * 0.55f * dt, -0.40f, 0.40f);
+                _lateral = Math.Clamp(_lateral + (right - left) * 1.15f * dt, -0.50f, 0.50f);
                 ReadAim();
                 bool held = space || mouse;
                 if (held) _power = 0.5f + 0.5f * MathF.Sin(_time * 2.7f);
@@ -355,16 +362,40 @@ namespace BowlingProject
             }
         }
 
+        public override void Resize(int width, int height)
+        {
+            base.Resize(width, height);
+            if (width > 2 && height > 2)
+            {
+                _viewW = width;
+                _viewH = height;
+            }
+        }
+
         void RememberView()
         {
-            if (_width > 2f) _viewW = _width;
+            try
+            {
+                _controlContext.GetWindowSize(_window, out int w, out int h);
+                if (w > 2 && h > 2 && (w != _width || h != _height))
+                    Resize(w, h);
+            }
+            catch
+            {
+            }
+            if (_width > 2 && _height > 2)
+            {
+                _viewW = _width;
+                _viewH = _height;
+                return;
+            }
             try
             {
                 Viewport vp = _controlContext.GetCurrentViewport();
-                if (vp.Width > 2f)
+                if (vp.Width > 2f && vp.Height > 2f)
                 {
                     _viewW = vp.Width;
-                    _viewH = vp.Height > 2f ? vp.Height : _viewW * 9f / 16f;
+                    _viewH = vp.Height;
                 }
             }
             catch
@@ -442,7 +473,7 @@ namespace BowlingProject
                 if (w > 2f)
                 {
                     float n = Math.Clamp(x / w * 2f - 1f, -1f, 1f);
-                    _aim = n * 0.14f;
+                    _aim = n * 0.70f;
                 }
             }
             catch
@@ -570,9 +601,6 @@ namespace BowlingProject
         void TickRoll(float dt)
         {
             if (_ballBody == null) { _phase = Phase.Watching; _watch = 0f; _quiet = 0f; return; }
-            if (!_thrownThisFrame)
-                GuideRoll(dt);
-            _thrownThisFrame = false;
             KeepBallHonest(dt);
 
             if (Quiet()) _quiet += dt;
@@ -592,31 +620,6 @@ namespace BowlingProject
                 SetBanner(CountStanding());
             }
             else _watch += dt;
-        }
-
-        void GuideRoll(float dt)
-        {
-            var p = _ballBody;
-            if (p == null) return;
-            if (p.Position.Y > LaneGeometry.HeadPinY - 1.1f)
-            {
-                p.KineticFriction = 0.45f;
-                p.StaticFriction = 0.55f;
-                p.Friction = 0.45f;
-                return;
-            }
-            // The deck contact does not hold a manifold, so the solver never
-            // sees the skid. This is the same impulse the dots integrate.
-            p.KineticFriction = 0f;
-            p.StaticFriction = 0f;
-            p.Friction = 0f;
-            if (MathF.Abs(p.Position.X) > LaneGeometry.LaneHalf) return;
-            Vector3 vel = p.Velocity;
-            Vector3 omega = p.AngularVelocity;
-            LaneGeometry.ApplySkid(ref vel, ref omega, p.Position.Y, dt);
-            p.Velocity = new Vector3(vel.X, vel.Y, p.Velocity.Z);
-            p.AngularVelocity = new Vector3(omega.X, omega.Y, p.AngularVelocity.Z);
-            p.Wake();
         }
 
         void KeepBallHonest(float dt)
@@ -747,12 +750,14 @@ namespace BowlingProject
             body.Position = BallOrigin();
             body.RenderPosition = body.Position;
             body.Rotation = Quaternion.Identity;
+            body.Friction = LaneGeometry.BallKinetic;
+            body.KineticFriction = LaneGeometry.BallKinetic;
+            body.StaticFriction = LaneGeometry.BallStatic;
             LaneGeometry.ReleaseSpin(_aim, _hook, speed, out Vector3 vel, out Vector3 spin);
             body.Velocity = vel;
             body.AngularVelocity = spin;
             body.Wake();
             body.CollisionEnabled = true;
-            _thrownThisFrame = true;
             _phase = Phase.Rolling;
         }
 
@@ -781,7 +786,7 @@ namespace BowlingProject
             float y1 = LaneGeometry.DeckEndY;
             float length = y1 - y0;
             float midY = (y0 + y1) * 0.5f;
-            const float thick = 0.40f;
+            const float thick = 0.06f;
             for (int lane = 0; lane < LaneGeometry.LaneCount; lane++)
             {
                 float ox = LaneGeometry.LaneOrigin(lane);
@@ -811,6 +816,8 @@ namespace BowlingProject
                 float railZ = (railZ0 + railZ1) * 0.5f;
                 AddBox(new Vector3(ox - inner - railW * 0.5f, railY, railZ), rail);
                 AddBox(new Vector3(ox + inner + railW * 0.5f, railY, railZ), rail);
+                AddGutterFloor(ox, -1);
+                AddGutterFloor(ox, 1);
             }
 
             float backT = 0.22f;
@@ -819,6 +826,26 @@ namespace BowlingProject
             AddBox(
                 new Vector3((spanL + spanR) * 0.5f, LaneGeometry.PitY + backT * 0.5f, 0.45f),
                 new Vector3(spanR - spanL, backT, 1.4f));
+        }
+
+        void AddGutterFloor(float ox, int side)
+        {
+            float sign = side < 0 ? -1f : 1f;
+            float inner = LaneGeometry.LaneHalf + 0.012f;
+            float outer = LaneGeometry.LaneHalf + LaneGeometry.GutterWidth;
+            float y0 = LaneGeometry.FoulY;
+            float y1 = LaneGeometry.DeckEndY;
+            float midY = (y0 + y1) * 0.5f;
+            float floorTop = -0.14f;
+            float floorThick = 0.05f;
+            AddBox(
+                new Vector3(ox + sign * (inner + outer) * 0.5f, midY, floorTop - floorThick * 0.5f),
+                new Vector3(outer - inner, y1 - y0, floorThick),
+                0.14f, 0.18f);
+            AddBox(
+                new Vector3(ox + sign * (outer + 0.03f), midY, -0.02f),
+                new Vector3(0.04f, y1 - y0, 0.28f),
+                0.35f, 0.45f);
         }
 
         void AddBox(Vector3 center, Vector3 fullSize)
@@ -952,9 +979,9 @@ namespace BowlingProject
             var o = BallOrigin();
             body.Position = o;
             body.RenderPosition = o;
-            body.Friction = 0f;
-            body.KineticFriction = 0f;
-            body.StaticFriction = 0f;
+            body.Friction = LaneGeometry.BallKinetic;
+            body.KineticFriction = LaneGeometry.BallKinetic;
+            body.StaticFriction = LaneGeometry.BallStatic;
             body.Restitution = LaneGeometry.BallRestitution;
             body.RollingResistance = LaneGeometry.BallRollingResistance;
             body.LinearDamping = LaneGeometry.BallLinearDamping;

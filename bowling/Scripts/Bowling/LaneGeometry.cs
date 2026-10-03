@@ -158,7 +158,7 @@ namespace BowlingProject
         public const float ReleaseY = -2.35f;
         public const float OilEndY = 6f;
         public const float DryStartY = 10f;
-        public const float OilKinetic = 0.040f;
+        public const float OilKinetic = 0.020f;
         public const float DryKinetic = 0.30f;
         public const float RollFraction = 0.58f;
         public const float SideRev = 20f;
@@ -460,13 +460,14 @@ namespace BowlingProject
 
         public static void AddCastShadow(BowlMesh m, Vector3 pos, float radius)
         {
-            float h = pos.Z - DeckZ;
-            if (h < 0.01f) h = 0.01f;
+            if (pos.Z < DeckZ - 0.45f) return;
+            float ground = pos.Z < DeckZ - 0.02f ? pos.Z - 0.02f : DeckZ + 0.008f;
+            float h = MathF.Max(0.01f, pos.Z - ground);
             if (h > 2.2f) return;
-            var c = new Vector3(pos.X + h * 0.22f, pos.Y + h * 0.48f, DeckZ + 0.008f);
+            var c = new Vector3(pos.X + h * 0.22f, pos.Y + h * 0.48f, ground);
             const float ang = 1.16f;
             m.Ellipse(c, radius * 0.95f, radius * 2.05f, ang, new Vector3(0.012f, 0.008f, 0.006f), 14);
-            c.Z = DeckZ + 0.011f;
+            c.Z = ground + 0.003f;
             m.Ellipse(c, radius * 0.42f, radius * 0.85f, ang, new Vector3(0.0f, 0.0f, 0.0f), 10);
         }
 
@@ -543,6 +544,23 @@ namespace BowlingProject
             ApplySkid(ref vel, ref omega, pos.Y, dt);
         }
 
+        public static void AdvanceRoll(ref Vector3 pos, ref Vector3 vel, ref Vector3 omega, ref bool gutter, ref float gutterX, float dt)
+        {
+            if (!gutter && MathF.Abs(pos.X) > LaneHalf - 0.02f)
+            {
+                gutter = true;
+                gutterX = MathF.Sign(pos.X) * (LaneHalf + GutterWidth * 0.55f);
+                vel.X = 0f;
+            }
+            if (gutter)
+            {
+                pos.X = gutterX;
+                pos.Y += vel.Y * dt;
+                return;
+            }
+            StepSkid(ref pos, ref vel, ref omega, dt);
+        }
+
         public static void AddHookPath(BowlMesh m, Vector3 origin, float aim, float hook, float speed)
         {
             ReleaseSpin(aim, hook, MathF.Max(4.5f, speed), out Vector3 vel, out Vector3 omega);
@@ -552,19 +570,7 @@ namespace BowlingProject
             const float dt = 1f / 60f;
             for (int i = 1; i <= 240; i++)
             {
-                if (!gutter && MathF.Abs(pos.X) > LaneHalf - 0.02f)
-                {
-                    gutter = true;
-                    gutterX = MathF.Sign(pos.X) * (LaneHalf + GutterWidth * 0.55f);
-                    vel.X = 0f;
-                }
-                if (gutter)
-                {
-                    pos.X = gutterX;
-                    pos.Y += vel.Y * dt;
-                }
-                else
-                    StepSkid(ref pos, ref vel, ref omega, dt);
+                AdvanceRoll(ref pos, ref vel, ref omega, ref gutter, ref gutterX, dt);
                 if (pos.Y > HeadPinY + 0.4f) break;
                 if ((i % 6) != 0) continue;
                 var ink = gutter
