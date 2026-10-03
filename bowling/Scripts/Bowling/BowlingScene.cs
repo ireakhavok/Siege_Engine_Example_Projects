@@ -195,6 +195,8 @@ namespace BowlingProject
                     _liveBuf.UpdateCustomWithUV(_live.Vertices, _live.Indices);
                     Draw(_liveBuf);
                 }
+                if (_phase != Phase.Menu)
+                    DrawScoreboard();
             }
         }
 
@@ -239,6 +241,57 @@ namespace BowlingProject
             {
                 // The alley still draws if the menu mesh fails.
             }
+        }
+
+        void DrawScoreboard()
+        {
+            try
+            {
+                RememberView();
+                float w = _viewW > 2f ? _viewW : 1280f;
+                float h = _viewH > 2f ? _viewH : 720f;
+                _ui.Clear();
+                float barH = 22f + _players * 18f;
+                BowlingHud.Panel(_ui, 12f, 10f, MathF.Min(w - 24f, 980f), barH, new Vector3(0.05f, 0.05f, 0.06f));
+                var ink = new Vector3(0.96f, 0.91f, 0.82f);
+                var dim = new Vector3(0.62f, 0.58f, 0.50f);
+                string head = "F" + (_frame + 1) + "  B" + (_ballInFrame + 1);
+                if (_phase == Phase.Over) head = "FINAL";
+                BowlingHud.Text(_ui, head, 22f, 16f, 2.2f, new Vector3(0.95f, 0.82f, 0.45f));
+                for (int p = 0; p < _players; p++)
+                {
+                    string line = ScoreLine(p);
+                    BowlingHud.Text(_ui, line, 22f, 34f + p * 16f, 2.1f, p == _turn ? ink : dim);
+                }
+                PlaceMenuInView(_ui, w, h);
+                if (_ui.Indices.Count == 0) return;
+                _renderContext.SetCull(GpuCullMode.None);
+                _renderContext.SetDepthTest(false);
+                _renderContext.SetDepthWrite(false);
+                _uiBuf.UpdateCustomWithUV(_ui.Vertices, _ui.Indices);
+                Draw(_uiBuf);
+                _renderContext.SetDepthTest(true);
+                _renderContext.SetDepthWrite(true);
+            }
+            catch
+            {
+            }
+        }
+
+        string ScoreLine(int player)
+        {
+            var score = _scores[player];
+            var text = "P" + (player + 1) + " ";
+            for (int f = 0; f < 10; f++)
+            {
+                string mark = BowlingHud.Marks(score, f);
+                if (mark.Length == 0) mark = "--";
+                if (mark.Length > 3) mark = mark.Substring(0, 3);
+                while (mark.Length < 3) mark += " ";
+                text += mark + " ";
+            }
+            text += score.Total().ToString();
+            return text;
         }
 
         void PlaceMenuInView(BowlMesh mesh, float w, float h)
