@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
 using System.Reflection;
+using SiegeEngine.Core.AssetParsing;
+using SiegeEngine.Core.AssetParsing.Model;
 using SiegeEngine.Core.Definitions;
 using SiegeEngine.Core.GPU;
 using SiegeEngine.Core.GPU.ContextManagement;
@@ -48,6 +51,7 @@ namespace BowlingProject
         readonly Pin[] _rightPins = new Pin[10];
         Entity _ball;
         PhysicsComponent _ballBody;
+        FBXModel _pinMesh;
 
         BowlingScore[] _scores = { new BowlingScore(), new BowlingScore(), new BowlingScore(), new BowlingScore() };
         int _players = 1;
@@ -120,7 +124,6 @@ namespace BowlingProject
             if (deltaTime < 0f) deltaTime = 0f;
             if (deltaTime > 0.05f) deltaTime = 0.05f;
             MenuBus.Arm(this, _context);
-            KeepBallSphere();
             base.Update(deltaTime);
             _time += deltaTime;
             _renderContext.ClearColor(0.025f, 0.03f, 0.038f, 1f);
@@ -717,13 +720,11 @@ namespace BowlingProject
             _gutterX = 0f;
             _quiet = 0f;
             _watch = 0f;
-            float d = LaneGeometry.BallRadius * 2f;
             var body = _ballBody;
             body.Mass = LaneGeometry.BallMass;
-            StampBox(body, new Vector3(d, d, d));
             body.BodyType = BodyType.Dynamic;
-            Rebuild(body);
-            TrySetSphere(body, LaneGeometry.BallRadius);
+            SetSphere(body, LaneGeometry.BallRadius);
+            body.RecomputeMassProperties();
             body.Position = BallOrigin();
             body.RenderPosition = body.Position;
             body.Rotation = Quaternion.Identity;
@@ -743,7 +744,7 @@ namespace BowlingProject
 
         Vector3 BallOrigin()
         {
-            return new Vector3(_lateral, LaneGeometry.ReleaseY, LaneGeometry.DeckZ + LaneGeometry.BallRadius + 0.012f);
+            return new Vector3(_lateral, LaneGeometry.ReleaseY, LaneGeometry.DeckZ + LaneGeometry.BallRadius);
         }
 
         void PlaceAimBall()
@@ -770,10 +771,15 @@ namespace BowlingProject
             for (int lane = 0; lane < LaneGeometry.LaneCount; lane++)
             {
                 float ox = LaneGeometry.LaneOrigin(lane);
-                // Centre is half a thickness under the wood, so the top face is Z = 0.
-                AddBox(
-                    new Vector3(ox, midY, -thick * 0.5f),
-                    new Vector3(LaneGeometry.LaneHalf * 2f, length, thick));
+                float y = y0;
+                while (y < y1 - 0.01f)
+                {
+                    float yb = MathF.Min(y + 2f, y1);
+                    AddBox(
+                        new Vector3(ox, (y + yb) * 0.5f, -thick * 0.5f),
+                        new Vector3(LaneGeometry.LaneHalf * 2f, yb - y, thick));
+                    y = yb;
+                }
 
                 // Kickbacks sit outside the pin boxes. No gutter volume: a gutter
                 // box that shares the deck edge was swallowing the rack.
@@ -883,34 +889,33 @@ namespace BowlingProject
 
         void SpawnLane(Pin[] pins, float laneX)
         {
-            var box = PinBoxSize;
+            var mesh = PinMesh();
             for (int i = 0; i < pins.Length; i++)
             {
                 var spot = LaneGeometry.PinSpot(i, laneX);
-                spot.Z = PinCenterZ;
+                spot.Z = LaneGeometry.DeckZ + 0.004f;
                 var e = new Entity();
                 var body = new PhysicsComponent();
                 body.UseBoneHitboxes = false;
                 body.KeepUpright = false;
-                body.Friction = 0.48f;
-                body.KineticFriction = 0.36f;
-                body.StaticFriction = 0.45f;
-                body.Restitution = 0.08f;
-                body.RollingResistance = 0.08f;
-                body.LinearDamping = 0.12f;
-                body.AngularDamping = 0.22f;
-                body.SleepThreshold = 0.08f;
+                body.Friction = 0.55f;
+                body.KineticFriction = 0.42f;
+                body.StaticFriction = 0.62f;
+                body.Restitution = 0.04f;
+                body.RollingResistance = 0.04f;
+                body.LinearDamping = 0.08f;
+                body.AngularDamping = 0.35f;
+                body.SleepThreshold = 0.06f;
                 body.Mass = LaneGeometry.PinMass;
-                StampBox(body, box);
                 body.BodyType = BodyType.Dynamic;
-                Rebuild(body);
+                body.RebuildShape(mesh);
                 body.Position = spot;
                 body.RenderPosition = spot;
                 body.Rotation = Quaternion.Identity;
                 body.Velocity = Vector3.Zero;
                 body.AngularVelocity = Vector3.Zero;
                 body.CollisionEnabled = true;
-                body.Wake();
+                body.IsSleeping = true;
                 e.AddComponent(body);
                 _server.AddEntity(e);
                 pins[i] = new Pin { Entity = e, Body = body, Live = true, Loose = false };
@@ -922,8 +927,6 @@ namespace BowlingProject
             if (_ball != null) _server.RemoveEntity(_ball.Id);
             var e = new Entity();
             var body = new PhysicsComponent();
-            float d = LaneGeometry.BallRadius * 2f;
-            body.Size = new Vector3(d, d, d);
             body.UseBoneHitboxes = false;
             body.KeepUpright = false;
             var o = BallOrigin();
@@ -938,11 +941,10 @@ namespace BowlingProject
             body.AngularDamping = 0.06f;
             body.SleepThreshold = 0.05f;
             body.Mass = LaneGeometry.BallMass;
-            StampBox(body, new Vector3(d, d, d));
+            body.BodyType = BodyType.Dynamic;
+            SetSphere(body, LaneGeometry.BallRadius);
+            body.RecomputeMassProperties();
             body.BodyType = BodyType.Kinematic;
-            Rebuild(body);
-            if (!TrySetSphere(body, LaneGeometry.BallRadius))
-                Rebuild(body);
             body.Position = o;
             body.RenderPosition = o;
             body.Velocity = Vector3.Zero;
@@ -954,28 +956,61 @@ namespace BowlingProject
             _ballBody = body;
         }
 
-        void KeepBallSphere()
+        FBXModel PinMesh()
         {
-            if (_ballBody == null || _ballLeftLane) return;
-            if (_ballBody.Shape is SphereShape) return;
-            TrySetSphere(_ballBody, LaneGeometry.BallRadius);
+            if (_pinMesh == null) _pinMesh = LoadAsset("pin.fbx");
+            return _pinMesh;
         }
 
-        static bool TrySetSphere(PhysicsComponent body, float radius)
+        static void SetSphere(PhysicsComponent body, float radius)
         {
+            var prop = typeof(PhysicsComponent).GetProperty("Shape");
+            var setter = prop?.GetSetMethod(true);
+            if (setter == null) return;
+            setter.Invoke(body, new object[] { new SphereShape(radius) });
+        }
+
+        static FBXModel LoadAsset(string file)
+        {
+            string root = ProjectRoot();
+            string path = root == null ? file : Path.Combine(root, "Assets", file);
+            return FBXParser.BuildModelFromForest(FBXParser.Load(path));
+        }
+
+        static string ProjectRoot()
+        {
+            string hit = WalkAssets(Directory.GetCurrentDirectory());
+            if (hit != null) return hit;
+            hit = WalkAssets(AppContext.BaseDirectory);
+            if (hit != null) return hit;
             try
             {
-                PropertyInfo prop = typeof(PhysicsComponent).GetProperty("Shape");
-                MethodInfo setter = prop?.GetSetMethod(true);
-                if (setter == null) return false;
-                setter.Invoke(body, new object[] { new SphereShape(radius) });
-                body.RecomputeMassProperties();
-                return body.Shape is SphereShape;
+                string loc = typeof(BowlingScene).Assembly.Location;
+                if (!string.IsNullOrEmpty(loc))
+                    hit = WalkAssets(Path.GetDirectoryName(loc));
             }
             catch
             {
-                return false;
+                hit = null;
             }
+            return hit;
+        }
+
+        static string WalkAssets(string start)
+        {
+            var dir = start;
+            for (int i = 0; i < 8 && !string.IsNullOrEmpty(dir); i++)
+            {
+                if (File.Exists(Path.Combine(dir, "project.json"))
+                    && File.Exists(Path.Combine(dir, "Assets", "pin.fbx")))
+                    return dir;
+                string nested = Path.Combine(dir, "bowling");
+                if (File.Exists(Path.Combine(nested, "project.json"))
+                    && File.Exists(Path.Combine(nested, "Assets", "pin.fbx")))
+                    return nested;
+                dir = Path.GetDirectoryName(dir);
+            }
+            return null;
         }
 
         void SweepDead()
@@ -1049,9 +1084,10 @@ namespace BowlingProject
         static bool Standing(PhysicsComponent body)
         {
             if (!body.CollisionEnabled) return false;
-            if (MathF.Abs(body.Position.X) > LaneGeometry.LaneHalf - 0.02f) return false;
-            if (body.Position.Y < 16.6f || body.Position.Y > LaneGeometry.DeckEndY + 0.05f) return false;
-            if (body.Position.Z < LaneGeometry.DeckZ + 0.05f) return false;
+            Vector3 center = body.Position + Vector3.Transform(new Vector3(0f, 0f, LaneGeometry.PinHeight * 0.5f), body.Rotation);
+            if (MathF.Abs(center.X) > LaneGeometry.LaneHalf - 0.02f) return false;
+            if (center.Y < 16.6f || center.Y > LaneGeometry.DeckEndY + 0.05f) return false;
+            if (center.Z < LaneGeometry.DeckZ + LaneGeometry.PinHeight * 0.35f) return false;
             Vector3 up = Vector3.Transform(Vector3.UnitZ, body.Rotation);
             return up.Z > 0.68f;
         }
@@ -1103,21 +1139,24 @@ namespace BowlingProject
             }
         }
 
+        static Vector3 DrawnCenter(PhysicsComponent body, float lift)
+        {
+            var origin = body.RenderPosition;
+            return origin + Vector3.Transform(new Vector3(0f, 0f, lift), body.Rotation);
+        }
+
         void DrawRack(Pin[] pins)
         {
             for (int i = 0; i < pins.Length; i++)
             {
                 var b = pins[i].Body;
                 if (b == null) continue;
-                var pos = b.Position;
-                var spot = b.RenderPosition;
-                if (float.IsNaN(spot.X) || float.IsNaN(spot.Y) || float.IsNaN(spot.Z)
-                    || (spot - pos).LengthSquared() > 0.16f)
-                    spot = pos;
-                if (MathF.Abs(pos.X) > 12f && MathF.Abs(spot.X) > 12f) continue;
-                if (pos.Y < -8f && spot.Y < -8f) continue;
-                if (pos.Y > 26f && spot.Y > 26f) continue;
-                if (pos.Z < -2.2f && spot.Z < -2.2f) continue;
+                var spot = DrawnCenter(b, LaneGeometry.PinHeight * 0.5f);
+                if (float.IsNaN(spot.X) || float.IsNaN(spot.Y) || float.IsNaN(spot.Z))
+                    continue;
+                if (MathF.Abs(spot.X) > 12f) continue;
+                if (spot.Y < -8f || spot.Y > 26f) continue;
+                if (spot.Z < -2.2f) continue;
                 LaneGeometry.AddCastShadow(_live, spot, 0.09f);
                 LaneGeometry.AddPin(_live, spot, b.Rotation);
             }
