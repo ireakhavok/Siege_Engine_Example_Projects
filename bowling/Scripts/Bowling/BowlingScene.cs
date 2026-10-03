@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection;
+using SiegeEngine.Core.AssetParsing.Model;
 using SiegeEngine.Core.Definitions;
 using SiegeEngine.Core.GPU;
 using SiegeEngine.Core.GPU.ContextManagement;
@@ -784,9 +785,6 @@ namespace BowlingProject
             if (_staticBodies.Count > 0) return;
             float y0 = LaneGeometry.ApproachY;
             float y1 = LaneGeometry.DeckEndY;
-            float length = y1 - y0;
-            float midY = (y0 + y1) * 0.5f;
-            const float thick = 0.06f;
             for (int lane = 0; lane < LaneGeometry.LaneCount; lane++)
             {
                 float ox = LaneGeometry.LaneOrigin(lane);
@@ -796,73 +794,78 @@ namespace BowlingProject
                     float yb = MathF.Min(y + 2f, y1);
                     float mid = (y + yb) * 0.5f;
                     LaneGeometry.DeckFriction(mid, out float kinetic, out float stat);
-                    AddBox(
-                        new Vector3(ox, mid, -thick * 0.5f),
-                        new Vector3(LaneGeometry.LaneHalf * 2f, yb - y, thick),
-                        kinetic, stat);
+                    float yStart = y > y0 + 0.001f ? y - 0.05f : y;
+                    float yEnd = yb < y1 - 0.001f ? yb + 0.05f : yb;
+                    float x0 = ox - LaneGeometry.LaneHalf;
+                    float x1 = ox + LaneGeometry.LaneHalf;
+                    float z = LaneGeometry.DeckZ;
+                    AddSurface(LaneGeometry.Sheet(
+                        new Vector3(x0, yStart, z),
+                        new Vector3(x1, yStart, z),
+                        new Vector3(x1, yEnd, z),
+                        new Vector3(x0, yEnd, z)), kinetic, stat);
                     y = yb;
                 }
-
-                // Kickbacks sit outside the pin boxes. No gutter volume: a gutter
-                // box that shares the deck edge was swallowing the rack.
-                float inner = LaneGeometry.LaneHalf + 0.06f;
-                float railW = 0.08f;
-                float railY0 = 16.6f;
-                float railY1 = LaneGeometry.PitY;
-                float railZ0 = -0.10f;
-                float railZ1 = 0.55f;
-                var rail = new Vector3(railW, railY1 - railY0, railZ1 - railZ0);
-                float railY = (railY0 + railY1) * 0.5f;
-                float railZ = (railZ0 + railZ1) * 0.5f;
-                AddBox(new Vector3(ox - inner - railW * 0.5f, railY, railZ), rail);
-                AddBox(new Vector3(ox + inner + railW * 0.5f, railY, railZ), rail);
-                AddGutterFloor(ox, -1);
-                AddGutterFloor(ox, 1);
+                AddGutterMesh(ox, -1);
+                AddGutterMesh(ox, 1);
+                AddKickback(ox, -1);
+                AddKickback(ox, 1);
             }
 
-            float backT = 0.22f;
             float spanL = LaneGeometry.LaneOrigin(0) - 1.2f;
             float spanR = LaneGeometry.LaneOrigin(LaneGeometry.LaneCount - 1) + 1.2f;
-            AddBox(
-                new Vector3((spanL + spanR) * 0.5f, LaneGeometry.PitY + backT * 0.5f, 0.45f),
-                new Vector3(spanR - spanL, backT, 1.4f));
+            float pit = LaneGeometry.PitY;
+            AddSurface(LaneGeometry.Sheet(
+                new Vector3(spanL, pit, -0.2f),
+                new Vector3(spanR, pit, -0.2f),
+                new Vector3(spanR, pit, 1.4f),
+                new Vector3(spanL, pit, 1.4f)), 0.28f, 0.38f);
         }
 
-        void AddGutterFloor(float ox, int side)
+        void AddGutterMesh(float ox, int side)
         {
             float sign = side < 0 ? -1f : 1f;
-            float inner = LaneGeometry.LaneHalf + 0.012f;
-            float outer = LaneGeometry.LaneHalf + LaneGeometry.GutterWidth;
+            float inner = ox + sign * LaneGeometry.LaneHalf;
+            float outer = ox + sign * (LaneGeometry.LaneHalf + LaneGeometry.GutterWidth);
             float y0 = LaneGeometry.FoulY;
             float y1 = LaneGeometry.DeckEndY;
-            float midY = (y0 + y1) * 0.5f;
-            float floorTop = -0.14f;
-            float floorThick = 0.05f;
-            AddBox(
-                new Vector3(ox + sign * (inner + outer) * 0.5f, midY, floorTop - floorThick * 0.5f),
-                new Vector3(outer - inner, y1 - y0, floorThick),
-                0.14f, 0.18f);
-            AddBox(
-                new Vector3(ox + sign * (outer + 0.03f), midY, -0.02f),
-                new Vector3(0.04f, y1 - y0, 0.28f),
-                0.35f, 0.45f);
+            float zFloor = LaneGeometry.DeckZ - LaneGeometry.GutterDepth;
+            AddSurface(LaneGeometry.Sheet(
+                new Vector3(inner, y0, LaneGeometry.DeckZ),
+                new Vector3(inner, y1, LaneGeometry.DeckZ),
+                new Vector3(inner, y1, zFloor),
+                new Vector3(inner, y0, zFloor),
+                new Vector3(inner, y0, zFloor),
+                new Vector3(inner, y1, zFloor),
+                new Vector3(outer, y1, zFloor),
+                new Vector3(outer, y0, zFloor),
+                new Vector3(outer, y0, zFloor),
+                new Vector3(outer, y1, zFloor),
+                new Vector3(outer, y1, LaneGeometry.DeckZ + 0.02f),
+                new Vector3(outer, y0, LaneGeometry.DeckZ + 0.02f)), 0.20f, 0.28f);
         }
 
-        void AddBox(Vector3 center, Vector3 fullSize)
+        void AddKickback(float ox, int side)
         {
-            AddBox(center, fullSize, 0.28f, 0.38f);
+            float sign = side < 0 ? -1f : 1f;
+            float x = ox + sign * (LaneGeometry.LaneHalf + LaneGeometry.GutterWidth + 0.04f);
+            float y0 = 16.6f;
+            float y1 = LaneGeometry.PitY;
+            AddSurface(LaneGeometry.Sheet(
+                new Vector3(x, y0, -0.05f),
+                new Vector3(x, y1, -0.05f),
+                new Vector3(x, y1, 0.55f),
+                new Vector3(x, y0, 0.55f)), 0.35f, 0.45f);
         }
 
-        void AddBox(Vector3 center, Vector3 fullSize, float kinetic, float stat)
+        void AddSurface(FBXModel model, float kinetic, float stat)
         {
-            Vector3 h = fullSize * 0.5f;
-            var model = LaneGeometry.BoxCollider(-h.X, h.X, -h.Y, h.Y, -h.Z, h.Z);
             var e = new Entity();
             var body = new PhysicsComponent();
             body.UseBoneHitboxes = false;
             body.KeepUpright = false;
-            body.Position = center;
-            body.RenderPosition = center;
+            body.Position = Vector3.Zero;
+            body.RenderPosition = Vector3.Zero;
             body.Rotation = Quaternion.Identity;
             body.Friction = kinetic;
             body.KineticFriction = kinetic;
@@ -877,53 +880,6 @@ namespace BowlingProject
             _staticBodies.Add(e);
         }
 
-        static Vector3 PinBoxSize => new Vector3(0.072f, 0.072f, LaneGeometry.PinHeight);
-
-        static float PinCenterZ => LaneGeometry.DeckZ + LaneGeometry.PinHeight * 0.5f + 0.008f;
-
-        /// <summary>
-        /// RebuildShape treats LocalBoundsMinCm / MaxCm as metres, despite the name.
-        /// Writing centimetres built a lane and pins tens of metres across.
-        /// </summary>
-        static void StampBox(PhysicsComponent body, Vector3 fullSize)
-        {
-            if (fullSize.X < 0.02f) fullSize.X = 0.02f;
-            if (fullSize.Y < 0.02f) fullSize.Y = 0.02f;
-            if (fullSize.Z < 0.02f) fullSize.Z = 0.02f;
-            body.Size = fullSize;
-            Vector3 half = fullSize * 0.5f;
-            try
-            {
-                const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-                var t = body.GetType();
-                SetVec(t, body, "LocalBoundsMinCm", -half, flags);
-                SetVec(t, body, "LocalBoundsMaxCm", half, flags);
-            }
-            catch
-            {
-            }
-        }
-
-        static void SetVec(Type t, object body, string name, Vector3 value, BindingFlags flags)
-        {
-            var prop = t.GetProperty(name, flags);
-            if (prop != null && prop.CanWrite)
-            {
-                prop.SetValue(body, value);
-                return;
-            }
-            var field = t.GetField(name, flags);
-            if (field != null) field.SetValue(body, value);
-        }
-
-        static void Rebuild(PhysicsComponent body)
-        {
-            try { body.RebuildShape(null); }
-            catch { }
-            try { body.RecomputeMassProperties(); }
-            catch { }
-        }
-
         void SpawnRack()
         {
             ClearPins();
@@ -935,11 +891,11 @@ namespace BowlingProject
 
         void SpawnLane(Pin[] pins, float laneX)
         {
-            var box = PinBoxSize;
+            var mesh = PinAssets.Pin;
             for (int i = 0; i < pins.Length; i++)
             {
                 var spot = LaneGeometry.PinSpot(i, laneX);
-                spot.Z = PinCenterZ;
+                spot.Z = LaneGeometry.DeckZ;
                 var e = new Entity();
                 var body = new PhysicsComponent();
                 body.UseBoneHitboxes = false;
@@ -953,9 +909,9 @@ namespace BowlingProject
                 body.AngularDamping = 0.18f;
                 body.SleepThreshold = 0.08f;
                 body.Mass = LaneGeometry.PinMass;
-                StampBox(body, box);
+                body.Size = new Vector3(0.122f, 0.122f, LaneGeometry.PinHeight);
                 body.BodyType = BodyType.Dynamic;
-                Rebuild(body);
+                body.RebuildShape(mesh);
                 body.Position = spot;
                 body.RenderPosition = spot;
                 body.Rotation = Quaternion.Identity;
@@ -1150,7 +1106,8 @@ namespace BowlingProject
                 if (spot.Y < -8f || spot.Y > 26f) continue;
                 if (spot.Z < -2.2f) continue;
                 LaneGeometry.AddCastShadow(_live, spot, 0.09f);
-                LaneGeometry.AddPin(_live, spot, b.Rotation);
+                var up = Vector3.Transform(Vector3.UnitZ, b.Rotation);
+                LaneGeometry.AddPin(_live, spot + up * (LaneGeometry.PinHeight * 0.5f), b.Rotation);
             }
         }
 

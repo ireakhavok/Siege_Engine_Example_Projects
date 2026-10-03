@@ -154,6 +154,7 @@ namespace BowlingProject
         public const float PitY = 21.15f;
         public const int LaneCount = 5;
         public const float GutterWidth = 0.24f;
+        public const float GutterDepth = 0.26f;
         public const float LanePitch = 1.66f;
         public const float ReleaseY = -2.35f;
         public const float OilEndY = 6f;
@@ -401,30 +402,29 @@ namespace BowlingProject
 
         static void AddGutter(BowlMesh m, int side, float ox)
         {
-            float inner = ox + (side < 0 ? -LaneHalf - 0.012f : LaneHalf + 0.012f);
-            float outer = ox + (side < 0 ? -(LaneHalf + GutterWidth) : LaneHalf + GutterWidth);
-            float xL = MathF.Min(inner, outer);
-            float xR = MathF.Max(inner, outer);
-            float zTop = DeckZ - 0.008f;
-            float zBot = DeckZ - 0.14f;
-            float far = side < 0 ? xL : xR;
+            float sign = side < 0 ? -1f : 1f;
+            float inner = ox + sign * LaneHalf;
+            float outer = ox + sign * (LaneHalf + GutterWidth);
+            float y0 = FoulY;
+            float y1 = DeckEndY;
+            float zFloor = DeckZ - GutterDepth;
             m.Quad(
-                new Vector3(inner, FoulY, zTop),
-                new Vector3(inner, DeckEndY, zTop),
-                new Vector3(far, DeckEndY, zBot),
-                new Vector3(far, FoulY, zBot),
+                new Vector3(inner, y0, DeckZ),
+                new Vector3(inner, y1, DeckZ),
+                new Vector3(inner, y1, zFloor),
+                new Vector3(inner, y0, zFloor),
                 Gutter);
             m.Quad(
-                new Vector3(xL, FoulY, zBot),
-                new Vector3(xR, FoulY, zBot),
-                new Vector3(xR, DeckEndY, zBot),
-                new Vector3(xL, DeckEndY, zBot),
+                new Vector3(inner, y0, zFloor),
+                new Vector3(inner, y1, zFloor),
+                new Vector3(outer, y1, zFloor),
+                new Vector3(outer, y0, zFloor),
                 Gutter * 0.75f);
             m.Quad(
-                new Vector3(far, FoulY, zBot),
-                new Vector3(far, DeckEndY, zBot),
-                new Vector3(far, DeckEndY, DeckZ + 0.02f),
-                new Vector3(far, FoulY, DeckZ + 0.02f),
+                new Vector3(outer, y0, zFloor),
+                new Vector3(outer, y1, zFloor),
+                new Vector3(outer, y1, DeckZ + 0.02f),
+                new Vector3(outer, y0, DeckZ + 0.02f),
                 Gutter * 1.35f);
         }
 
@@ -753,24 +753,46 @@ namespace BowlingProject
             }
         }
 
+        public static FBXModel Sheet(params Vector3[] corners)
+        {
+            var model = new FBXModel { UnitToMeters = 1f, Skeleton = null };
+            var mesh = new MeshData { Name = "Surface" };
+            for (int i = 0; i + 3 < corners.Length; i += 4)
+            {
+                uint b = (uint)mesh.Vertices.Count;
+                for (int k = 0; k < 4; k++)
+                {
+                    var p = corners[i + k];
+                    mesh.Vertices.Add(new FBXVertex(p.X, p.Y, p.Z, 0f, 0f, 1f, 0f, 0f, 0f));
+                }
+                mesh.Indices.Add(b);
+                mesh.Indices.Add(b + 1);
+                mesh.Indices.Add(b + 3);
+                mesh.Indices.Add(b + 1);
+                mesh.Indices.Add(b + 2);
+                mesh.Indices.Add(b + 3);
+            }
+            model.Meshes.Add(mesh);
+            return model;
+        }
+
         public static FBXModel PinCollider()
         {
-            const int slices = 12;
-            const int rings = 8;
+            const int slices = 10;
             var model = new FBXModel { UnitToMeters = 1f, Skeleton = null };
             var mesh = new MeshData { Name = "Pin" };
-            for (int r = 0; r <= rings; r++)
+            for (int r = 0; r < ProfileT.Length; r++)
             {
-                float t = r / (float)rings;
-                float z = -PinHeight * 0.5f + PinHeight * t;
-                float rad = PinRadiusAt(t);
+                float z = PinHeight * ProfileT[r];
+                float rad = r == ProfileT.Length - 1 ? 0.022f : ProfileR[r];
                 for (int s = 0; s < slices; s++)
                 {
                     float a = s * (MathF.PI * 2f) / slices;
                     mesh.Vertices.Add(new FBXVertex(MathF.Cos(a) * rad, MathF.Sin(a) * rad, z, 0f, 0f, 1f, 0f, 0f, 0f));
                 }
             }
-            for (int r = 0; r < rings; r++)
+            int last = ProfileT.Length - 1;
+            for (int r = 0; r < last; r++)
             {
                 for (int s = 0; s < slices; s++)
                 {
@@ -782,6 +804,16 @@ namespace BowlingProject
                     mesh.Indices.Add(a); mesh.Indices.Add(c); mesh.Indices.Add(b);
                     mesh.Indices.Add(b); mesh.Indices.Add(c); mesh.Indices.Add(d);
                 }
+            }
+            uint cap = (uint)(last * slices);
+            for (int s = 1; s < slices - 1; s++)
+            {
+                mesh.Indices.Add(0);
+                mesh.Indices.Add((uint)(s + 1));
+                mesh.Indices.Add((uint)s);
+                mesh.Indices.Add(cap);
+                mesh.Indices.Add(cap + (uint)s);
+                mesh.Indices.Add(cap + (uint)(s + 1));
             }
             model.Meshes.Add(mesh);
             return model;
