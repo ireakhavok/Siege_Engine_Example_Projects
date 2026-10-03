@@ -8,21 +8,24 @@ This is a project, not an engine change. Load it the same way as chess. Pins and
 
 1. Copy this folder to `Documents/CastleBuilder/Projects/bowling`.
 2. In the IDE, Load Project and open that folder.
-3. Press Play. The scene editor can show the alley before Play; the game runs on Play (and in Play Host).
+3. Press Play. An HTML panel opens over the alley. Pick 1–4 players, then Step onto the lane.
+4. That panel is `UI/menu.html`. Hover styles live in its CSS. The buttons are Siege `data-hook` controls (`menu.start` starts the lane). Put your background at `UI/MenuBackground.png`, next to `menu.html`.
 
-## Controls
+The setup screen and the scoreboard are HTML panels. The setup panel is only there before the first ball. The scoreboard replaces it and shows the card and the power bar. Neither panel lists controls.
+
+Players share the center lane. Each player finishes the frame they are in, then the next player bowls that same frame. A fresh rack is set between players.
 
 | Input | Action |
 |---|---|
+| Menu: 1–4, the panel, or Enter | Players, then bowl |
 | A / D or Left / Right | Move your feet on the approach |
-| Mouse left / right | Aim. The gold dots on the lane are the shot |
+| Mouse left / right | Aim. Gold dots are the shot |
 | Q / E | Straighten the path, or bend it left. Red dots are a gutter |
 | Hold Space or left mouse, then release | Set power and throw |
-| R | New game |
+| R | Rematch with the same players |
+| Enter on the final card | Back to the menu |
 
-The center lane is the one you bowl. Four more lanes sit beside it. Pins on your lane and the two next to it are real dynamic bodies. A ball that leaves the lane drops into the gutter and cannot hit the rack.
-
-Gold dots on the lane are the ball path. Q straightens it, E bends it left. If the dots turn red, that shot is a gutter. The same curve is drawn in the small lane at the bottom left.
+The center lane is the one you bowl. Four more lanes sit beside it. Pins are dynamic bodies the whole time. A ball that leaves the lane drops into the gutter and cannot hit the rack.
 
 The ball starts on the approach, in front of the feet marks, on the board you chose with A and D.
 

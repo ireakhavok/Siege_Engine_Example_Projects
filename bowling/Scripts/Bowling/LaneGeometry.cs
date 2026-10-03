@@ -49,6 +49,12 @@ namespace BowlingProject
             Tri(a, c, d, albedo);
         }
 
+        public void QuadUnlit(Vector3 a, Vector3 b, Vector3 c, Vector3 d, Vector3 albedo)
+        {
+            TriUnlit(a, b, c, albedo);
+            TriUnlit(a, c, d, albedo);
+        }
+
         public void Box(Vector3 min, Vector3 max, Vector3 albedo)
         {
             var p000 = new Vector3(min.X, min.Y, min.Z);
@@ -90,6 +96,30 @@ namespace BowlingProject
                     0f);
                 Tri(c, p0, p1, albedo);
             }
+        }
+
+        void TriUnlit(Vector3 a, Vector3 b, Vector3 c, Vector3 albedo)
+        {
+            uint i = (uint)(Vertices.Count / 9);
+            AddRaw(a, albedo);
+            AddRaw(b, albedo);
+            AddRaw(c, albedo);
+            Indices.Add(i);
+            Indices.Add(i + 1);
+            Indices.Add(i + 2);
+        }
+
+        void AddRaw(Vector3 p, Vector3 albedo)
+        {
+            Vertices.Add(p.X);
+            Vertices.Add(p.Y);
+            Vertices.Add(p.Z);
+            Vertices.Add(Clamp01(albedo.X));
+            Vertices.Add(Clamp01(albedo.Y));
+            Vertices.Add(Clamp01(albedo.Z));
+            Vertices.Add(1f);
+            Vertices.Add(0f);
+            Vertices.Add(0f);
         }
 
         static float Shade(Vector3 n)

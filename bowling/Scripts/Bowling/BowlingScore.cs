@@ -130,6 +130,29 @@ namespace BowlingProject
             return Math.Min(2, _count - start);
         }
 
+        public int BallsInFrame(int frame)
+        {
+            if (frame < 0 || frame > 9) return 0;
+            int i = FrameStart(frame);
+            if (i >= _count) return 0;
+            if (frame < 9) return IsStrike(i) ? 1 : Math.Min(2, _count - i);
+            return TenthRolls();
+        }
+
+        public bool FrameClosed(int frame)
+        {
+            if (frame < 0 || frame > 9) return false;
+            int i = FrameStart(frame);
+            if (i >= _count) return false;
+            if (frame < 9)
+            {
+                if (IsStrike(i)) return true;
+                return i + 1 < _count;
+            }
+            return BonusSatisfied();
+        }
+
         bool IsStrike(int index) => index < _count && _rolls[index] == 10;
     }
 }
+
