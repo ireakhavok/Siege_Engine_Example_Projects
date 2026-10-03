@@ -168,7 +168,7 @@ namespace BowlingProject
         public const float BallLinearDamping = 0.01f;
         public const float BallAngularDamping = 0.02f;
         public const float BallRollingResistance = 0.012f;
-        public const float BallRestitution = 0.03f;
+        public const float BallRestitution = 0.40f;
         public const float LaneRestitution = 0.02f;
 
         public static float LaneOrigin(int lane) => (lane - 2) * LanePitch;

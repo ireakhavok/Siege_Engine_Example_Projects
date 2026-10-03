@@ -902,10 +902,10 @@ namespace BowlingProject
                 body.Friction = 0.48f;
                 body.KineticFriction = 0.36f;
                 body.StaticFriction = 0.50f;
-                body.Restitution = 0.05f;
-                body.RollingResistance = 0.06f;
-                body.LinearDamping = 0.08f;
-                body.AngularDamping = 0.18f;
+                body.Restitution = 0.45f;
+                body.RollingResistance = 0.04f;
+                body.LinearDamping = 0.03f;
+                body.AngularDamping = 0.05f;
                 body.SleepThreshold = 0.08f;
                 body.Mass = LaneGeometry.PinMass;
                 body.Size = new Vector3(0.122f, 0.122f, LaneGeometry.PinHeight);
