@@ -794,9 +794,12 @@ namespace BowlingProject
                     float yb = MathF.Min(y + 2f, y1);
                     float mid = (y + yb) * 0.5f;
                     LaneGeometry.DeckFriction(mid, out float kinetic, out float stat);
-                    float x0 = ox - LaneGeometry.LaneHalf;
-                    float x1 = ox + LaneGeometry.LaneHalf;
-                    AddSurface(LaneGeometry.LaneSlab(x0, x1, y, yb, LaneGeometry.DeckZ), kinetic, stat);
+                    const float thick = 0.06f;
+                    float halfY = (yb - y) * 0.5f;
+                    AddSurface(
+                        LaneGeometry.CenteredDeck(LaneGeometry.LaneHalf, halfY, thick * 0.5f, false),
+                        new Vector3(ox, (y + yb) * 0.5f, LaneGeometry.DeckZ - thick * 0.5f),
+                        kinetic, stat);
                     y = yb;
                 }
                 AddGutterMesh(ox, -1);
@@ -808,11 +811,10 @@ namespace BowlingProject
             float spanL = LaneGeometry.LaneOrigin(0) - 1.2f;
             float spanR = LaneGeometry.LaneOrigin(LaneGeometry.LaneCount - 1) + 1.2f;
             float pit = LaneGeometry.PitY;
-            AddSurface(LaneGeometry.Sheet(
-                new Vector3(spanL, pit, -0.2f),
-                new Vector3(spanR, pit, -0.2f),
-                new Vector3(spanR, pit, 1.4f),
-                new Vector3(spanL, pit, 1.4f)), 0.28f, 0.38f);
+            AddSurface(
+                LaneGeometry.CenteredDeck((spanR - spanL) * 0.5f, 0.11f, 0.80f, true),
+                new Vector3((spanL + spanR) * 0.5f, pit + 0.11f, 0.60f),
+                0.28f, 0.38f);
         }
 
         void AddGutterMesh(float ox, int side)
@@ -825,12 +827,22 @@ namespace BowlingProject
             float zFloor = LaneGeometry.DeckZ - LaneGeometry.GutterDepth;
             float x0 = MathF.Min(inner, outer);
             float x1 = MathF.Max(inner, outer);
-            AddSurface(LaneGeometry.LaneSlab(x0, x1, y0, y1, zFloor), 0.20f, 0.28f);
-            AddSurface(LaneGeometry.Sheet(
-                new Vector3(outer, y0, zFloor),
-                new Vector3(outer, y1, zFloor),
-                new Vector3(outer, y1, LaneGeometry.DeckZ),
-                new Vector3(outer, y0, LaneGeometry.DeckZ)), 0.35f, 0.45f);
+            float midX = (x0 + x1) * 0.5f;
+            float midY = (y0 + y1) * 0.5f;
+            float halfX = (x1 - x0) * 0.5f;
+            float halfY = (y1 - y0) * 0.5f;
+            const float floorThick = 0.06f;
+            AddSurface(
+                LaneGeometry.CenteredDeck(halfX, halfY, floorThick * 0.5f, false),
+                new Vector3(midX, midY, zFloor - floorThick * 0.5f),
+                0.20f, 0.28f);
+            float wallTop = LaneGeometry.DeckZ + LaneGeometry.BallRadius + 0.04f;
+            float wallHz = (wallTop - zFloor) * 0.5f;
+            float wallHx = 0.02f;
+            AddSurface(
+                LaneGeometry.CenteredDeck(wallHx, halfY, wallHz, true),
+                new Vector3(outer + sign * wallHx, midY, (wallTop + zFloor) * 0.5f),
+                0.35f, 0.45f);
         }
 
         void AddKickback(float ox, int side)
@@ -839,21 +851,20 @@ namespace BowlingProject
             float x = ox + sign * (LaneGeometry.LaneHalf + LaneGeometry.GutterWidth + 0.04f);
             float y0 = 16.6f;
             float y1 = LaneGeometry.PitY;
-            AddSurface(LaneGeometry.Sheet(
-                new Vector3(x, y0, -0.05f),
-                new Vector3(x, y1, -0.05f),
-                new Vector3(x, y1, 0.55f),
-                new Vector3(x, y0, 0.55f)), 0.35f, 0.45f);
+            AddSurface(
+                LaneGeometry.CenteredDeck(0.02f, (y1 - y0) * 0.5f, 0.30f, true),
+                new Vector3(x, (y0 + y1) * 0.5f, 0.25f),
+                0.35f, 0.45f);
         }
 
-        void AddSurface(FBXModel model, float kinetic, float stat)
+        void AddSurface(FBXModel model, Vector3 position, float kinetic, float stat)
         {
             var e = new Entity();
             var body = new PhysicsComponent();
             body.UseBoneHitboxes = false;
             body.KeepUpright = false;
-            body.Position = Vector3.Zero;
-            body.RenderPosition = Vector3.Zero;
+            body.Position = position;
+            body.RenderPosition = position;
             body.Rotation = Quaternion.Identity;
             body.Friction = kinetic;
             body.KineticFriction = kinetic;

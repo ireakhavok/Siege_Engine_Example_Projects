@@ -753,15 +753,15 @@ namespace BowlingProject
             }
         }
 
-        public static FBXModel LaneSlab(float x0, float x1, float y0, float y1, float z)
+        public static FBXModel CenteredDeck(float halfX, float halfY, float halfZ, bool sides)
         {
-            float zb = z - 0.02f;
+            float x0 = -halfX, x1 = halfX, y0 = -halfY, y1 = halfY, z0 = -halfZ, z1 = halfZ;
             var model = new FBXModel { UnitToMeters = 1f, Skeleton = null };
-            var mesh = new MeshData { Name = "Lane" };
-            void V(float x, float y, float zz) =>
-                mesh.Vertices.Add(new FBXVertex(x, y, zz, 0f, 0f, 1f, 0f, 0f, 0f));
-            V(x0, y0, z); V(x1, y0, z); V(x1, y1, z); V(x0, y1, z);
-            V(x0, y0, zb); V(x1, y0, zb); V(x1, y1, zb); V(x0, y1, zb);
+            var mesh = new MeshData { Name = "Deck" };
+            void V(float x, float y, float z) =>
+                mesh.Vertices.Add(new FBXVertex(x, y, z, 0f, 0f, 1f, 0f, 0f, 0f));
+            V(x0, y0, z1); V(x1, y0, z1); V(x1, y1, z1); V(x0, y1, z1);
+            V(x0, y0, z0); V(x1, y0, z0); V(x1, y1, z0); V(x0, y1, z0);
             void Face(uint a, uint b, uint c, uint d)
             {
                 mesh.Indices.Add(a); mesh.Indices.Add(b); mesh.Indices.Add(c);
@@ -769,6 +769,13 @@ namespace BowlingProject
             }
             Face(0, 1, 2, 3);
             Face(4, 7, 6, 5);
+            if (sides)
+            {
+                Face(0, 4, 5, 1);
+                Face(1, 5, 6, 2);
+                Face(2, 6, 7, 3);
+                Face(3, 7, 4, 0);
+            }
             model.Meshes.Add(mesh);
             return model;
         }
