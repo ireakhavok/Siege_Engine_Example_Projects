@@ -156,9 +156,19 @@ namespace BowlingProject
         public const float GutterWidth = 0.24f;
         public const float LanePitch = 1.66f;
         public const float ReleaseY = -2.35f;
-        public const float BreakStartY = 7.0f;
-        public const float BreakEndY = 16.0f;
-        public const float HookAccel = 1.15f;
+        public const float OilEndY = 6f;
+        public const float DryStartY = 10f;
+        public const float OilKinetic = 0.040f;
+        public const float DryKinetic = 0.30f;
+        public const float RollFraction = 0.58f;
+        public const float SideRev = 20f;
+        public const float BallKinetic = 0.90f;
+        public const float BallStatic = 1.05f;
+        public const float BallLinearDamping = 0.01f;
+        public const float BallAngularDamping = 0.02f;
+        public const float BallRollingResistance = 0.012f;
+        public const float BallRestitution = 0.03f;
+        public const float LaneRestitution = 0.02f;
 
         public static float LaneOrigin(int lane) => (lane - 2) * LanePitch;
 
@@ -469,14 +479,78 @@ namespace BowlingProject
             m.Disc(new Vector3(lateral + 0.08f, y + 0.06f, z), 0.05f, shoe * 0.85f, 8);
         }
 
+        public static void DeckFriction(float y, out float kinetic, out float stat)
+        {
+            float span = 2f;
+            float slab = MathF.Floor((y - ApproachY) / span);
+            float center = ApproachY + (slab + 0.5f) * span;
+            float t = (center - OilEndY) / (DryStartY - OilEndY);
+            if (t < 0f) t = 0f;
+            else if (t > 1f) t = 1f;
+            t = t * t * (3f - 2f * t);
+            kinetic = OilKinetic + (DryKinetic - OilKinetic) * t;
+            stat = kinetic * 1.25f;
+        }
+
+        public static void ReleaseSpin(float aim, float hook, float speed, out Vector3 velocity, out Vector3 omega)
+        {
+            if (hook < -1f) hook = -1f;
+            else if (hook > 1f) hook = 1f;
+            float dirX = MathF.Sin(aim);
+            float dirY = MathF.Cos(aim);
+            velocity = new Vector3(dirX * speed, dirY * speed, 0f);
+            float roll = speed / BallRadius * RollFraction;
+            float side = -hook * SideRev;
+            float rightX = dirY;
+            float rightY = -dirX;
+            omega = new Vector3(
+                -rightX * roll - dirX * side,
+                -rightY * roll - dirY * side,
+                0f);
+        }
+
+        public static void ApplySkid(ref Vector3 vel, ref Vector3 omega, float y, float dt)
+        {
+            float sx = vel.X - omega.Y * BallRadius;
+            float sy = vel.Y + omega.X * BallRadius;
+            float sp = MathF.Sqrt(sx * sx + sy * sy);
+            if (sp < 1e-5f) return;
+            DeckFriction(y, out float kinetic, out float stat);
+            float mu = sp < 0.06f ? MathF.Min(stat, BallStatic) : MathF.Min(kinetic, BallKinetic);
+            float jtMax = mu * BallMass * 9.81f * dt * (1f + MathF.Min(BallRestitution, LaneRestitution));
+            float invI = 1f / (0.4f * BallMass * BallRadius * BallRadius);
+            float invEff = 1f / BallMass + BallRadius * BallRadius * invI;
+            float impulse = MathF.Min(sp / invEff, jtMax);
+            float ix = -sx / sp * impulse;
+            float iy = -sy / sp * impulse;
+            vel.X += ix / BallMass;
+            vel.Y += iy / BallMass;
+            omega.X += BallRadius * iy * invI;
+            omega.Y += -BallRadius * ix * invI;
+        }
+
+        public static void StepSkid(ref Vector3 pos, ref Vector3 vel, ref Vector3 omega, float dt)
+        {
+            float damp = MathF.Max(0f, 1f - BallLinearDamping * dt);
+            vel.X *= damp;
+            vel.Y *= damp;
+            float ad = MathF.Max(0f, 1f - BallAngularDamping * dt);
+            omega.X *= ad;
+            omega.Y *= ad;
+            pos.X += vel.X * dt;
+            pos.Y += vel.Y * dt;
+            if (MathF.Abs(pos.X) > LaneHalf) return;
+            ApplySkid(ref vel, ref omega, pos.Y, dt);
+        }
+
         public static void AddHookPath(BowlMesh m, Vector3 origin, float aim, float hook, float speed)
         {
-            float dt = 0.045f;
+            ReleaseSpin(aim, hook, MathF.Max(4.5f, speed), out Vector3 vel, out Vector3 omega);
             var pos = origin;
-            var vel = new Vector3(MathF.Sin(aim), MathF.Cos(aim), 0f) * MathF.Max(4.5f, speed);
             bool gutter = false;
             float gutterX = 0f;
-            for (int i = 1; i <= 48; i++)
+            const float dt = 1f / 60f;
+            for (int i = 1; i <= 240; i++)
             {
                 if (!gutter && MathF.Abs(pos.X) > LaneHalf - 0.02f)
                 {
@@ -484,21 +558,19 @@ namespace BowlingProject
                     gutterX = MathF.Sign(pos.X) * (LaneHalf + GutterWidth * 0.55f);
                     vel.X = 0f;
                 }
-                if (!gutter && pos.Y > BreakStartY && pos.Y < BreakEndY)
+                if (gutter)
                 {
-                    float along = Math.Clamp((pos.Y - BreakStartY) / 8f, 0f, 1f);
-                    Vector3 fwd = Vector3.Normalize(vel);
-                    Vector3 right = Vector3.Cross(fwd, Vector3.UnitZ);
-                    vel -= right * (HookAccel * hook * along) * dt;
+                    pos.X = gutterX;
+                    pos.Y += vel.Y * dt;
                 }
-                if (gutter) pos.X = gutterX;
-                pos += new Vector3(vel.X, vel.Y, 0f) * dt;
+                else
+                    StepSkid(ref pos, ref vel, ref omega, dt);
                 if (pos.Y > HeadPinY + 0.4f) break;
+                if ((i % 6) != 0) continue;
                 var ink = gutter
                     ? new Vector3(0.75f, 0.12f, 0.10f)
                     : new Vector3(0.97f, 0.84f, 0.36f);
-                if ((i & 1) == 0)
-                    m.Disc(new Vector3(pos.X, pos.Y, DeckZ + 0.016f), gutter ? 0.028f : 0.02f, ink * (1f - i / 70f), 6);
+                m.Disc(new Vector3(pos.X, pos.Y, DeckZ + 0.016f), gutter ? 0.028f : 0.02f, ink * (1f - i / 280f), 6);
             }
         }
 

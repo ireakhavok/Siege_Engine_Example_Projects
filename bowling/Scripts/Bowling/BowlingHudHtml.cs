@@ -57,7 +57,7 @@ namespace BowlingProject
             sb.Append(".meter{margin-top:6px;height:8px;background:#100e0c;border:1px solid #3a3428;border-radius:4px;overflow:hidden;}");
             sb.Append("#power{height:100%;background:linear-gradient(90deg,#8a5a18,#f2d48a);}");
             sb.Append("</style></head><body><div id=\"board\">");
-            sb.Append("<div class=\"top\"><div id=\"status\">").Append(Esc(Status(players, turn, frame, ball, phase))).Append("</div>");
+            sb.Append("<div class=\"top\"><div id=\"status\">").Append(Esc(Status(players, turn, frame, ball, phase, hook))).Append("</div>");
             sb.Append("<div id=\"banner\">").Append(Esc(banner ?? "")).Append("</div></div>");
             for (int p = 0; p < players; p++)
             {
@@ -128,12 +128,14 @@ namespace BowlingProject
             return null;
         }
 
-        static string Status(int players, int turn, int frame, int ball, PhaseLabel phase)
+        static string Status(int players, int turn, int frame, int ball, PhaseLabel phase, float hook)
         {
             if (phase == PhaseLabel.Over)
                 return players == 1 ? "Game over" : "Game over · " + players + " players";
             string ballName = ball <= 0 ? "Ball 1" : "Ball " + (ball + 1);
-            return "Player " + (turn + 1) + "  ·  Frame " + (frame + 1) + "  ·  " + ballName;
+            int pct = (int)Math.Round(Math.Abs(hook) * 20f) * 5;
+            string hookText = pct == 0 ? "Hook straight" : (hook < 0f ? "Hook " + pct + "% left" : "Hook " + pct + "% right");
+            return "Player " + (turn + 1) + "  ·  Frame " + (frame + 1) + "  ·  " + ballName + "  ·  " + hookText;
         }
 
         static string Esc(string text)
