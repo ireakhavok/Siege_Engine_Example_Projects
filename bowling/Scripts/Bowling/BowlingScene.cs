@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
 using System.Reflection;
-using SiegeEngine.Core.AssetParsing;
-using SiegeEngine.Core.AssetParsing.Model;
 using SiegeEngine.Core.Definitions;
 using SiegeEngine.Core.GPU;
 using SiegeEngine.Core.GPU.ContextManagement;
@@ -51,7 +48,6 @@ namespace BowlingProject
         readonly Pin[] _rightPins = new Pin[10];
         Entity _ball;
         PhysicsComponent _ballBody;
-        FBXModel _pinMesh;
 
         BowlingScore[] _scores = { new BowlingScore(), new BowlingScore(), new BowlingScore(), new BowlingScore() };
         int _players = 1;
@@ -195,8 +191,6 @@ namespace BowlingProject
                     _liveBuf.UpdateCustomWithUV(_live.Vertices, _live.Indices);
                     Draw(_liveBuf);
                 }
-                if (_phase != Phase.Menu)
-                    DrawScoreboard();
             }
         }
 
@@ -241,57 +235,6 @@ namespace BowlingProject
             {
                 // The alley still draws if the menu mesh fails.
             }
-        }
-
-        void DrawScoreboard()
-        {
-            try
-            {
-                RememberView();
-                float w = _viewW > 2f ? _viewW : 1280f;
-                float h = _viewH > 2f ? _viewH : 720f;
-                _ui.Clear();
-                float barH = 22f + _players * 18f;
-                BowlingHud.Panel(_ui, 12f, 10f, MathF.Min(w - 24f, 980f), barH, new Vector3(0.05f, 0.05f, 0.06f));
-                var ink = new Vector3(0.96f, 0.91f, 0.82f);
-                var dim = new Vector3(0.62f, 0.58f, 0.50f);
-                string head = "F" + (_frame + 1) + "  B" + (_ballInFrame + 1);
-                if (_phase == Phase.Over) head = "FINAL";
-                BowlingHud.Text(_ui, head, 22f, 16f, 2.2f, new Vector3(0.95f, 0.82f, 0.45f));
-                for (int p = 0; p < _players; p++)
-                {
-                    string line = ScoreLine(p);
-                    BowlingHud.Text(_ui, line, 22f, 34f + p * 16f, 2.1f, p == _turn ? ink : dim);
-                }
-                PlaceMenuInView(_ui, w, h);
-                if (_ui.Indices.Count == 0) return;
-                _renderContext.SetCull(GpuCullMode.None);
-                _renderContext.SetDepthTest(false);
-                _renderContext.SetDepthWrite(false);
-                _uiBuf.UpdateCustomWithUV(_ui.Vertices, _ui.Indices);
-                Draw(_uiBuf);
-                _renderContext.SetDepthTest(true);
-                _renderContext.SetDepthWrite(true);
-            }
-            catch
-            {
-            }
-        }
-
-        string ScoreLine(int player)
-        {
-            var score = _scores[player];
-            var text = "P" + (player + 1) + " ";
-            for (int f = 0; f < 10; f++)
-            {
-                string mark = BowlingHud.Marks(score, f);
-                if (mark.Length == 0) mark = "--";
-                if (mark.Length > 3) mark = mark.Substring(0, 3);
-                while (mark.Length < 3) mark += " ";
-                text += mark + " ";
-            }
-            text += score.Total().ToString();
-            return text;
         }
 
         void PlaceMenuInView(BowlMesh mesh, float w, float h)
@@ -860,16 +803,13 @@ namespace BowlingProject
         void AddBox(Vector3 center, Vector3 fullSize)
         {
             Vector3 h = fullSize * 0.5f;
-            var model = LaneGeometry.BoxCollider(
-                center.X - h.X, center.X + h.X,
-                center.Y - h.Y, center.Y + h.Y,
-                center.Z - h.Z, center.Z + h.Z);
+            var model = LaneGeometry.BoxCollider(-h.X, h.X, -h.Y, h.Y, -h.Z, h.Z);
             var e = new Entity();
             var body = new PhysicsComponent();
             body.UseBoneHitboxes = false;
             body.KeepUpright = false;
-            body.Position = Vector3.Zero;
-            body.RenderPosition = Vector3.Zero;
+            body.Position = center;
+            body.RenderPosition = center;
             body.Rotation = Quaternion.Identity;
             body.Friction = 0.42f;
             body.KineticFriction = 0.28f;
@@ -942,26 +882,27 @@ namespace BowlingProject
 
         void SpawnLane(Pin[] pins, float laneX)
         {
-            var mesh = PinMesh();
+            var box = PinBoxSize;
             for (int i = 0; i < pins.Length; i++)
             {
                 var spot = LaneGeometry.PinSpot(i, laneX);
-                spot.Z = LaneGeometry.DeckZ + 0.004f;
+                spot.Z = PinCenterZ;
                 var e = new Entity();
                 var body = new PhysicsComponent();
                 body.UseBoneHitboxes = false;
                 body.KeepUpright = false;
-                body.Friction = 0.55f;
-                body.KineticFriction = 0.42f;
-                body.StaticFriction = 0.62f;
-                body.Restitution = 0.04f;
-                body.RollingResistance = 0.04f;
+                body.Friction = 0.48f;
+                body.KineticFriction = 0.36f;
+                body.StaticFriction = 0.50f;
+                body.Restitution = 0.05f;
+                body.RollingResistance = 0.06f;
                 body.LinearDamping = 0.08f;
-                body.AngularDamping = 0.35f;
-                body.SleepThreshold = 0.06f;
+                body.AngularDamping = 0.18f;
+                body.SleepThreshold = 0.08f;
                 body.Mass = LaneGeometry.PinMass;
+                StampBox(body, box);
                 body.BodyType = BodyType.Dynamic;
-                body.RebuildShape(mesh);
+                Rebuild(body);
                 body.Position = spot;
                 body.RenderPosition = spot;
                 body.Rotation = Quaternion.Identity;
@@ -1009,61 +950,12 @@ namespace BowlingProject
             _ballBody = body;
         }
 
-        FBXModel PinMesh()
-        {
-            if (_pinMesh == null) _pinMesh = LoadAsset("pin.fbx");
-            return _pinMesh;
-        }
-
         static void SetSphere(PhysicsComponent body, float radius)
         {
             var prop = typeof(PhysicsComponent).GetProperty("Shape");
             var setter = prop?.GetSetMethod(true);
             if (setter == null) return;
             setter.Invoke(body, new object[] { new SphereShape(radius) });
-        }
-
-        static FBXModel LoadAsset(string file)
-        {
-            string root = ProjectRoot();
-            string path = root == null ? file : Path.Combine(root, "Assets", file);
-            return FBXParser.BuildModelFromForest(FBXParser.Load(path));
-        }
-
-        static string ProjectRoot()
-        {
-            string hit = WalkAssets(Directory.GetCurrentDirectory());
-            if (hit != null) return hit;
-            hit = WalkAssets(AppContext.BaseDirectory);
-            if (hit != null) return hit;
-            try
-            {
-                string loc = typeof(BowlingScene).Assembly.Location;
-                if (!string.IsNullOrEmpty(loc))
-                    hit = WalkAssets(Path.GetDirectoryName(loc));
-            }
-            catch
-            {
-                hit = null;
-            }
-            return hit;
-        }
-
-        static string WalkAssets(string start)
-        {
-            var dir = start;
-            for (int i = 0; i < 8 && !string.IsNullOrEmpty(dir); i++)
-            {
-                if (File.Exists(Path.Combine(dir, "project.json"))
-                    && File.Exists(Path.Combine(dir, "Assets", "pin.fbx")))
-                    return dir;
-                string nested = Path.Combine(dir, "bowling");
-                if (File.Exists(Path.Combine(nested, "project.json"))
-                    && File.Exists(Path.Combine(nested, "Assets", "pin.fbx")))
-                    return nested;
-                dir = Path.GetDirectoryName(dir);
-            }
-            return null;
         }
 
         void SweepDead()
@@ -1192,19 +1084,13 @@ namespace BowlingProject
             }
         }
 
-        static Vector3 DrawnCenter(PhysicsComponent body, float lift)
-        {
-            var origin = body.RenderPosition;
-            return origin + Vector3.Transform(new Vector3(0f, 0f, lift), body.Rotation);
-        }
-
         void DrawRack(Pin[] pins)
         {
             for (int i = 0; i < pins.Length; i++)
             {
                 var b = pins[i].Body;
                 if (b == null) continue;
-                var spot = DrawnCenter(b, LaneGeometry.PinHeight * 0.5f);
+                var spot = b.RenderPosition;
                 if (float.IsNaN(spot.X) || float.IsNaN(spot.Y) || float.IsNaN(spot.Z))
                     continue;
                 if (MathF.Abs(spot.X) > 12f) continue;
