@@ -36,7 +36,21 @@ namespace BowlingProject
 
         public static void Arm(object scene, SceneContext ctx)
         {
-            // Do not walk the IDE and stamp its overlays. The menu is its own panel.
+            EventBus bus = ctx?.EventBus;
+            if (bus == null) return;
+            Listen(bus);
+            try
+            {
+                _seenObjects.Clear();
+                Consider(ctx, bus, 0);
+                Consider(scene, bus, 0);
+                StampStatics(bus);
+                PullHooks();
+            }
+            catch
+            {
+                // A missed overlay just means Enter still starts the game.
+            }
         }
 
         public static void Apply(string hook)
@@ -280,8 +294,8 @@ namespace BowlingProject
 
         const string Fallback =
             "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><style>" +
-            "html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background-color:#070605;background-image:url(\"MenuBackground.png\");background-repeat:no-repeat;background-position:center center;background-size:cover;color:#f4efe4;font-family:'Segoe UI',sans-serif;}" +
-            "#card{width:420px;margin:120px auto 0;background:#12100e;border:1px solid #c6a15b;padding:22px 26px 18px;}" +
+            "html,body{margin:0;padding:0;background-color:#0b0a09;background-image:url(\"MenuBackground.png\");color:#f4efe4;font-family:'Segoe UI',sans-serif;}" +
+            "#card{background:#12100e;border:1px solid #c6a15b;padding:22px 26px 18px;}" +
             ".kicker{color:#8d7d62;font-size:12px;letter-spacing:3px;}" +
             "h1{margin:2px 0 0;color:#e7c56a;font-size:30px;letter-spacing:6px;font-weight:700;}" +
             ".rule{height:1px;background:#c6a15b;margin:14px 0 12px;}" +
@@ -408,14 +422,12 @@ namespace BowlingProject
     {
         static string _openPath = BowlingMenuContent.PanelKey;
 
-        public static void Push(SceneContext context, int players, float width, float height)
+        public static void Push(SceneContext context, int players)
         {
             if (context?.EventBus == null) return;
             string file = BowlingMenuContent.WriteLive(players);
             string html = string.IsNullOrEmpty(file) ? BowlingMenuContent.Build(players) : null;
             _openPath = string.IsNullOrEmpty(file) ? BowlingMenuContent.PanelKey : file;
-            if (width < 640f) width = 1280f;
-            if (height < 360f) height = 720f;
             var evt = new OpenGameHudEvent
             {
                 Key = BowlingMenuContent.PanelKey,
@@ -423,20 +435,14 @@ namespace BowlingProject
                 Title = "Bowling",
                 HtmlContent = html,
                 Open = true,
-                Width = width,
-                Height = height,
-                PosX = 0f,
-                PosY = 0f,
+                Width = 400f,
+                Height = 308f,
                 AllowMove = false
             };
             SetEnum(evt, "Chrome", "Bare");
-            if (!SetEnum(evt, "Docking", "Fill"))
-                if (!SetEnum(evt, "Docking", "Overlay"))
-                    if (!SetEnum(evt, "Docking", "Fullscreen"))
-                        SetEnum(evt, "Docking", "Desktop");
-            if (!SetEnum(evt, "Anchor", "TopLeft"))
-                if (!SetEnum(evt, "Anchor", "None"))
-                    SetEnum(evt, "Anchor", "Center");
+            SetEnum(evt, "Docking", "Desktop");
+            if (!SetEnum(evt, "Anchor", "Center"))
+                SetEnum(evt, "Anchor", "Middle");
             context.EventBus.Publish(evt);
         }
 

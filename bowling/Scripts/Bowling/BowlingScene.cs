@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection;
-using SiegeEngine.Core.AssetParsing.Model;
 using SiegeEngine.Core.Definitions;
-using SiegeEngine.Core.Events;
 using SiegeEngine.Core.GPU;
 using SiegeEngine.Core.GPU.ContextManagement;
 using SiegeEngine.Core.GPU.Shaders;
@@ -57,7 +55,6 @@ namespace BowlingProject
         bool _hudOpened;
         string _hudSig = "";
         bool _menuOpened;
-        BowlingMenuPanel _menuPanel;
         int _menuPlayers;
         readonly bool[] _digitWas = new bool[4];
         readonly Key[] _playerKeys = new Key[4];
@@ -77,7 +74,7 @@ namespace BowlingProject
         float _quiet;
         float _bannerUntil;
         float _lateral = 0.20f;
-        float _aim = -0.055f;
+        float _aim;
         float _hook = 0.42f;
         float _power;
         bool _charging;
@@ -122,19 +119,21 @@ namespace BowlingProject
         {
             if (deltaTime < 0f) deltaTime = 0f;
             if (deltaTime > 0.05f) deltaTime = 0.05f;
-            TrackSize();
+            MenuBus.Arm(this, _context);
             KeepBallSphere();
             base.Update(deltaTime);
             _time += deltaTime;
             _renderContext.ClearColor(0.025f, 0.03f, 0.038f, 1f);
             if (!_houseReady) return;
             RememberView();
+            MenuBus.Listen(_context?.EventBus);
+            MenuBus.Arm(this, _context);
             if (_phase == Phase.Menu)
                 PollMenu();
             SyncMenu();
+            MenuBus.Arm(this, _context);
             if (_preview) return;
             if (!_started) EnsureWorld();
-            SeatWildPins();
 
             if (_phase != Phase.Menu)
             {
@@ -149,32 +148,9 @@ namespace BowlingProject
             SyncHud();
         }
 
-        public override void Resize(int width, int height)
-        {
-            base.Resize(width, height);
-            if (width > 2) _viewW = width;
-            if (height > 2) _viewH = height;
-        }
-
-        void TrackSize()
-        {
-            try
-            {
-                _controlContext.GetWindowSize(_window, out int ww, out int hh);
-                if (ww > 2 && hh > 2 && (ww != _width || hh != _height))
-                    Resize(ww, hh);
-            }
-            catch
-            {
-                // Resize from the engine still updates the frustum.
-            }
-        }
-
         protected override void GetViewProjection(out Matrix4x4 view, out Matrix4x4 projection)
         {
             float aspect = _viewH > 2f ? _viewW / _viewH : (AspectRatio > 0.01f ? AspectRatio : 16f / 9f);
-            if (_width > 2 && _height > 2)
-                aspect = (float)_width / _height;
             if (_preview)
             {
                 _camEye = new Vector3(0.85f, -4.35f, 1.72f);
@@ -221,7 +197,7 @@ namespace BowlingProject
 
         public override void Dispose()
         {
-            if (_menuOpened) CloseMenu();
+            if (_menuOpened) BowlingMenuHost.Close(_context);
             if (_hudOpened) BowlingHudHost.Close(_context);
             _shader?.Dispose();
             _houseBuf?.Dispose();
@@ -322,10 +298,7 @@ namespace BowlingProject
         void PollMenu()
         {
             EnsurePlayerKeys();
-            if (BowlingMenuPanel.Players >= 1 && BowlingMenuPanel.Players <= 4)
-                _players = BowlingMenuPanel.Players;
-            bool start = BowlingMenuPanel.Start;
-            BowlingMenuPanel.Start = false;
+            MenuBus.Drain(ref _players, out bool start);
             for (int i = 0; i < 4; i++)
             {
                 if (!_playerKeyOk[i]) continue;
@@ -376,24 +349,19 @@ namespace BowlingProject
 
         void RememberView()
         {
-            if (_width > 2 && _height > 2)
-            {
-                _viewW = _width;
-                _viewH = _height;
-                return;
-            }
+            if (_width > 2f) _viewW = _width;
             try
             {
                 Viewport vp = _controlContext.GetCurrentViewport();
-                if (vp.Width > 2f && vp.Height > 2f)
+                if (vp.Width > 2f)
                 {
                     _viewW = vp.Width;
-                    _viewH = vp.Height;
+                    _viewH = vp.Height > 2f ? vp.Height : _viewW * 9f / 16f;
                 }
             }
             catch
             {
-                // Keep the size from Initialize.
+                if (_viewH < 2f) _viewH = _viewW * 9f / 16f;
             }
         }
 
@@ -466,7 +434,7 @@ namespace BowlingProject
                 if (w > 2f)
                 {
                     float n = Math.Clamp(x / w * 2f - 1f, -1f, 1f);
-                    _aim = n * 0.30f;
+                    _aim = n * 0.14f;
                 }
             }
             catch
@@ -535,30 +503,25 @@ namespace BowlingProject
 
         BowlingScore Score => _scores[_turn];
 
-        void CloseMenu()
-        {
-            if (_menuPanel != null && _eventBus != null)
-                _eventBus.Publish(new ClosePanelEvent(_menuPanel));
-            _menuPanel = null;
-            _menuOpened = false;
-            _menuPlayers = 0;
-        }
-
         void SyncMenu()
         {
-            if (_preview || _eventBus == null) return;
+            if (_context == null) return;
             if (_phase != Phase.Menu)
             {
-                if (_menuOpened) CloseMenu();
+                if (_menuOpened)
+                {
+                    BowlingMenuHost.Close(_context);
+                    _menuOpened = false;
+                    _menuPlayers = 0;
+                }
                 return;
             }
-            if (_menuOpened) return;
-            BowlingMenuPanel.Players = _players;
-            BowlingMenuPanel.Start = false;
-            _menuPanel = new BowlingMenuPanel(_renderContext, _controlContext, _window, _eventBus, _players, _viewW, _viewH);
-            _eventBus.Publish(new OpenPanelEvent(_menuPanel) { Mode = OpenMode.Overlay });
-            _menuOpened = true;
+            if (_menuOpened && _players == _menuPlayers) return;
+            if (_menuOpened)
+                BowlingMenuHost.Close(_context);
             _menuPlayers = _players;
+            BowlingMenuHost.Push(_context, _players);
+            _menuOpened = true;
         }
 
         void SyncHud()
@@ -618,58 +581,15 @@ namespace BowlingProject
 
         void KeepBallHonest(float dt)
         {
-            if (dt < 0f) dt = 0f;
             var p = _ballBody;
-            if (_ballLeftLane)
-            {
-                var pos = p.Position;
-                pos.X = _gutterX;
-                pos.Z = LaneGeometry.DeckZ - 0.09f + LaneGeometry.BallRadius;
-                p.Position = pos;
-                p.RenderPosition = pos;
-                var v = p.Velocity;
-                v.X = 0f;
-                v.Z = 0f;
-                if (v.Y < 1.5f) v.Y = 1.5f;
-                p.Velocity = v;
-                p.CollisionEnabled = false;
-                if (p.BodyType != BodyType.Kinematic)
-                    p.BodyType = BodyType.Kinematic;
-                return;
-            }
-
-            float edge = LaneGeometry.LaneHalf + 0.01f;
-            if (MathF.Abs(p.Position.X) > edge && p.Position.Y < LaneGeometry.HeadPinY - 0.4f)
+            if (p == null || _ballLeftLane) return;
+            if (MathF.Abs(p.Position.X) > LaneGeometry.LaneHalf + 0.01f
+                && p.Position.Y < LaneGeometry.HeadPinY - 0.4f)
             {
                 _ballLeftLane = true;
                 _gutterX = MathF.Sign(p.Position.X) * (LaneGeometry.LaneHalf + LaneGeometry.GutterWidth * 0.55f);
-                p.CollisionEnabled = false;
-                p.BodyType = BodyType.Kinematic;
-                var pos = p.Position;
-                pos.X = _gutterX;
-                pos.Z = LaneGeometry.DeckZ - 0.09f + LaneGeometry.BallRadius;
-                p.Position = pos;
-                p.RenderPosition = pos;
-                float speed = MathF.Sqrt(p.Velocity.X * p.Velocity.X + p.Velocity.Y * p.Velocity.Y);
-                p.Velocity = new Vector3(0f, MathF.Max(speed, 3.5f), 0f);
-                p.AngularVelocity = Vector3.UnitX * -(p.Velocity.Y / LaneGeometry.BallRadius);
                 return;
             }
-
-            if (p.Position.Y > LaneGeometry.DeckEndY)
-                return;
-
-            float floor = LaneGeometry.DeckZ + LaneGeometry.BallRadius;
-            if (p.Position.Z < floor - 0.02f)
-            {
-                var pos = p.Position;
-                pos.Z = floor;
-                p.Position = pos;
-                p.RenderPosition = pos;
-                if (p.Velocity.Z < 0f)
-                    p.Velocity = new Vector3(p.Velocity.X, p.Velocity.Y, 0f);
-            }
-
             ApplyHook(p, dt);
         }
 
@@ -880,21 +800,25 @@ namespace BowlingProject
 
         void AddBox(Vector3 center, Vector3 fullSize)
         {
+            Vector3 h = fullSize * 0.5f;
+            var model = LaneGeometry.BoxCollider(
+                center.X - h.X, center.X + h.X,
+                center.Y - h.Y, center.Y + h.Y,
+                center.Z - h.Z, center.Z + h.Z);
             var e = new Entity();
             var body = new PhysicsComponent();
             body.UseBoneHitboxes = false;
             body.KeepUpright = false;
-            body.Position = center;
-            body.RenderPosition = center;
+            body.Position = Vector3.Zero;
+            body.RenderPosition = Vector3.Zero;
             body.Rotation = Quaternion.Identity;
             body.Friction = 0.42f;
             body.KineticFriction = 0.28f;
             body.StaticFriction = 0.38f;
             body.Restitution = 0.02f;
             body.RollingResistance = 0.02f;
-            StampBox(body, fullSize);
+            body.RebuildShape(model);
             body.BodyType = BodyType.Static;
-            Rebuild(body);
             body.CollisionEnabled = true;
             e.AddComponent(body);
             _server.AddEntity(e);
@@ -906,11 +830,8 @@ namespace BowlingProject
         static float PinCenterZ => LaneGeometry.DeckZ + LaneGeometry.PinHeight * 0.5f + 0.008f;
 
         /// <summary>
-        /// Size is the full box in metres. Local bounds are the same box in
-        /// centimetres, symmetric about the origin, so RebuildShape's
-        /// ObbShape(size * 0.5) and its centimetre path agree and CenterOffset
-        /// stays 0. Unset bounds are (0,0,0), which this engine accepts as a
-        /// real box — that degenerate shape is what fired the pins off the spots.
+        /// RebuildShape treats LocalBoundsMinCm / MaxCm as metres, despite the name.
+        /// Writing centimetres built a lane and pins tens of metres across.
         /// </summary>
         static void StampBox(PhysicsComponent body, Vector3 fullSize)
         {
@@ -918,17 +839,16 @@ namespace BowlingProject
             if (fullSize.Y < 0.02f) fullSize.Y = 0.02f;
             if (fullSize.Z < 0.02f) fullSize.Z = 0.02f;
             body.Size = fullSize;
-            Vector3 halfCm = fullSize * 50f;
+            Vector3 half = fullSize * 0.5f;
             try
             {
                 const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
                 var t = body.GetType();
-                SetVec(t, body, "LocalBoundsMinCm", -halfCm, flags);
-                SetVec(t, body, "LocalBoundsMaxCm", halfCm, flags);
+                SetVec(t, body, "LocalBoundsMinCm", -half, flags);
+                SetVec(t, body, "LocalBoundsMaxCm", half, flags);
             }
             catch
             {
-                // Builds without authored bounds still honour Size.
             }
         }
 
@@ -954,134 +874,21 @@ namespace BowlingProject
 
         void SpawnRack()
         {
-            LoadPinPack();
-            if (!AdoptScenePins())
-            {
-                ClearPins();
-                SpawnLane(_pins, 0f);
-                SpawnLane(_leftPins, -LaneGeometry.LanePitch);
-                SpawnLane(_rightPins, LaneGeometry.LanePitch);
-            }
-            else
-            {
-                ResetLane(_pins, 0f);
-                ResetLane(_leftPins, -LaneGeometry.LanePitch);
-                ResetLane(_rightPins, LaneGeometry.LanePitch);
-            }
+            ClearPins();
+            SpawnLane(_pins, 0f);
+            SpawnLane(_leftPins, -LaneGeometry.LanePitch);
+            SpawnLane(_rightPins, LaneGeometry.LanePitch);
             _freshRack = true;
-        }
-
-        void LoadPinPack()
-        {
-            try
-            {
-                if (ModelManager.Instance == null) return;
-                string path = PinAssets.PackPath("pin_pack");
-                if (!string.IsNullOrEmpty(path))
-                {
-                    var load = ModelManager.Instance.GetType().GetMethod("LoadAnimationPack");
-                    if (load != null) load.Invoke(ModelManager.Instance, new object[] { path });
-                }
-            }
-            catch
-            {
-                // The scene loader already registers packs that are in project.json.
-            }
-        }
-
-        bool AdoptScenePins()
-        {
-            var found = new System.Collections.Generic.List<(Entity e, PhysicsComponent b, float x, float y)>();
-            var entities = GetEntities();
-            if (entities == null) return false;
-            for (int i = 0; i < entities.Count; i++)
-            {
-                Entity e = entities[i] as Entity;
-                if (e == null) continue;
-                ModelComponent model = e.GetComponent<ModelComponent>();
-                if (model == null || model.Key != "pin_pack") continue;
-                PhysicsComponent body = e.GetComponent<PhysicsComponent>();
-                if (body == null) continue;
-                found.Add((e, body, body.Position.X, body.Position.Y));
-            }
-            if (found.Count < 10) return false;
-            found.Sort((a, b) =>
-            {
-                int c = a.x.CompareTo(b.x);
-                return c != 0 ? c : a.y.CompareTo(b.y);
-            });
-            FillAdopted(_leftPins, found, -LaneGeometry.LanePitch);
-            FillAdopted(_pins, found, 0f);
-            FillAdopted(_rightPins, found, LaneGeometry.LanePitch);
-            return _pins[0].Body != null;
-        }
-
-        static void FillAdopted(Pin[] pins, System.Collections.Generic.List<(Entity e, PhysicsComponent b, float x, float y)> found, float laneX)
-        {
-            var used = new bool[found.Count];
-            for (int i = 0; i < pins.Length; i++)
-            {
-                var spot = LaneGeometry.PinSpot(i, laneX);
-                int best = -1;
-                float bestD = 0.6f;
-                for (int k = 0; k < found.Count; k++)
-                {
-                    if (used[k]) continue;
-                    float dx = found[k].x - spot.X;
-                    float dy = found[k].y - spot.Y;
-                    float d = dx * dx + dy * dy;
-                    if (d < bestD) { bestD = d; best = k; }
-                }
-                if (best < 0) continue;
-                used[best] = true;
-                pins[i] = new Pin { Entity = found[best].e, Body = found[best].b, Live = true, Loose = false };
-            }
-        }
-
-        static void ResetLane(Pin[] pins, float laneX)
-        {
-            for (int i = 0; i < pins.Length; i++)
-            {
-                var b = pins[i].Body;
-                if (b == null) continue;
-                var spot = LaneGeometry.PinSpot(i, laneX);
-                spot.Z = PinCenterZ;
-                b.Position = spot;
-                b.RenderPosition = spot;
-                b.Rotation = Quaternion.Identity;
-                b.Velocity = Vector3.Zero;
-                b.AngularVelocity = Vector3.Zero;
-                b.CollisionEnabled = true;
-                b.Wake();
-            }
         }
 
         void SpawnLane(Pin[] pins, float laneX)
         {
             var box = PinBoxSize;
-            FBXModel mesh = null;
-            try
-            {
-                if (ModelManager.Instance != null && ModelManager.Instance.TryGetModel("pin_pack", out FBXModel loaded))
-                    mesh = loaded;
-            }
-            catch
-            {
-                mesh = null;
-            }
-            if (mesh == null) mesh = PinAssets.Pin;
             for (int i = 0; i < pins.Length; i++)
             {
                 var spot = LaneGeometry.PinSpot(i, laneX);
                 spot.Z = PinCenterZ;
-                var e = new Entity { Type = "FBX" };
-                e.AddComponent(new ModelComponent
-                {
-                    Model = mesh,
-                    Key = "pin_pack",
-                    CastShadows = true,
-                    ReceiveShadows = true
-                });
+                var e = new Entity();
                 var body = new PhysicsComponent();
                 body.UseBoneHitboxes = false;
                 body.KeepUpright = false;
@@ -1096,8 +903,7 @@ namespace BowlingProject
                 body.Mass = LaneGeometry.PinMass;
                 StampBox(body, box);
                 body.BodyType = BodyType.Dynamic;
-                try { body.RebuildShape(mesh); }
-                catch { Rebuild(body); }
+                Rebuild(body);
                 body.Position = spot;
                 body.RenderPosition = spot;
                 body.Rotation = Quaternion.Identity;
@@ -1108,40 +914,6 @@ namespace BowlingProject
                 e.AddComponent(body);
                 _server.AddEntity(e);
                 pins[i] = new Pin { Entity = e, Body = body, Live = true, Loose = false };
-            }
-        }
-
-        void SeatWildPins()
-        {
-            bool ballAtDeck = _phase == Phase.Rolling
-                && _ballBody != null
-                && _ballBody.Position.Y > LaneGeometry.HeadPinY - 2.2f;
-            if (ballAtDeck) return;
-            Seat(_pins, 0f);
-            Seat(_leftPins, -LaneGeometry.LanePitch);
-            Seat(_rightPins, LaneGeometry.LanePitch);
-        }
-
-        static void Seat(Pin[] pins, float laneX)
-        {
-            for (int i = 0; i < pins.Length; i++)
-            {
-                var b = pins[i].Body;
-                if (b == null || !pins[i].Live) continue;
-                var spot = LaneGeometry.PinSpot(i, laneX);
-                spot.Z = PinCenterZ;
-                Vector3 p = b.Position;
-                Vector3 d = p - spot;
-                bool wild = float.IsNaN(p.X) || p.Z < LaneGeometry.DeckZ - 0.02f || p.Z > 1.4f
-                    || d.X * d.X + d.Y * d.Y > 0.35f;
-                if (!wild) continue;
-                b.Position = spot;
-                b.RenderPosition = spot;
-                b.Rotation = Quaternion.Identity;
-                b.Velocity = Vector3.Zero;
-                b.AngularVelocity = Vector3.Zero;
-                b.CollisionEnabled = true;
-                b.Wake();
             }
         }
 
@@ -1171,6 +943,8 @@ namespace BowlingProject
             Rebuild(body);
             if (!TrySetSphere(body, LaneGeometry.BallRadius))
                 Rebuild(body);
+            body.Position = o;
+            body.RenderPosition = o;
             body.Velocity = Vector3.Zero;
             body.AngularVelocity = Vector3.Zero;
             body.CollisionEnabled = true;
@@ -1312,9 +1086,9 @@ namespace BowlingProject
         void BuildLive()
         {
             _live.Clear();
-            DrawRack(_pins, 0f);
-            DrawRack(_leftPins, -LaneGeometry.LanePitch);
-            DrawRack(_rightPins, LaneGeometry.LanePitch);
+            DrawRack(_pins);
+            DrawRack(_leftPins);
+            DrawRack(_rightPins);
             if (_ballBody != null)
             {
                 var ball = _ballBody.RenderPosition;
@@ -1329,32 +1103,23 @@ namespace BowlingProject
             }
         }
 
-        void DrawRack(Pin[] pins, float laneX)
+        void DrawRack(Pin[] pins)
         {
             for (int i = 0; i < pins.Length; i++)
             {
-                var spot = LaneGeometry.PinSpot(i, laneX);
-                spot.Z = PinCenterZ;
                 var b = pins[i].Body;
-                Vector3 pos = spot;
-                Quaternion rot = Quaternion.Identity;
-                if (b != null)
-                {
-                    Vector3 p = b.Position;
-                    Vector3 d = p - spot;
-                    bool sane = !float.IsNaN(p.X) && !float.IsNaN(p.Y) && !float.IsNaN(p.Z)
-                        && p.Z > -0.05f && p.Z < 2.5f
-                        && d.X * d.X + d.Y * d.Y < 4f;
-                    if (sane)
-                    {
-                        pos = b.RenderPosition;
-                        if (float.IsNaN(pos.X) || (pos - p).LengthSquared() > 0.25f)
-                            pos = p;
-                        rot = b.Rotation;
-                    }
-                }
-                LaneGeometry.AddCastShadow(_live, pos, 0.09f);
-                LaneGeometry.AddPin(_live, pos, rot);
+                if (b == null) continue;
+                var pos = b.Position;
+                var spot = b.RenderPosition;
+                if (float.IsNaN(spot.X) || float.IsNaN(spot.Y) || float.IsNaN(spot.Z)
+                    || (spot - pos).LengthSquared() > 0.16f)
+                    spot = pos;
+                if (MathF.Abs(pos.X) > 12f && MathF.Abs(spot.X) > 12f) continue;
+                if (pos.Y < -8f && spot.Y < -8f) continue;
+                if (pos.Y > 26f && spot.Y > 26f) continue;
+                if (pos.Z < -2.2f && spot.Z < -2.2f) continue;
+                LaneGeometry.AddCastShadow(_live, spot, 0.09f);
+                LaneGeometry.AddPin(_live, spot, b.Rotation);
             }
         }
 

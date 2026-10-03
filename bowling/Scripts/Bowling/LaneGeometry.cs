@@ -709,6 +709,55 @@ namespace BowlingProject
             return model;
         }
 
+        public static FBXModel BallCollider()
+        {
+            const int slices = 12;
+            const int rings = 8;
+            var model = new FBXModel { UnitToMeters = 1f, Skeleton = null };
+            var mesh = new MeshData { Name = "Ball" };
+            mesh.Vertices.Add(new FBXVertex(0f, 0f, BallRadius, 0f, 0f, 1f, 0f, 0f, 0f));
+            for (int r = 1; r < rings; r++)
+            {
+                float v = r * MathF.PI / rings;
+                float z = MathF.Cos(v) * BallRadius;
+                float ring = MathF.Sin(v) * BallRadius;
+                for (int s = 0; s < slices; s++)
+                {
+                    float a = s * (MathF.PI * 2f) / slices;
+                    mesh.Vertices.Add(new FBXVertex(MathF.Cos(a) * ring, MathF.Sin(a) * ring, z, 0f, 0f, 1f, 0f, 0f, 0f));
+                }
+            }
+            mesh.Vertices.Add(new FBXVertex(0f, 0f, -BallRadius, 0f, 0f, 1f, 0f, 0f, 0f));
+            int south = 1 + (rings - 1) * slices;
+            for (int s = 0; s < slices; s++)
+            {
+                int s1 = (s + 1) % slices;
+                mesh.Indices.Add(0);
+                mesh.Indices.Add((uint)(1 + s1));
+                mesh.Indices.Add((uint)(1 + s));
+                uint b0 = (uint)(1 + (rings - 2) * slices + s);
+                uint b1 = (uint)(1 + (rings - 2) * slices + s1);
+                mesh.Indices.Add(b0);
+                mesh.Indices.Add(b1);
+                mesh.Indices.Add((uint)south);
+            }
+            for (int r = 0; r < rings - 2; r++)
+            {
+                for (int s = 0; s < slices; s++)
+                {
+                    int s1 = (s + 1) % slices;
+                    uint a = (uint)(1 + r * slices + s);
+                    uint b = (uint)(1 + r * slices + s1);
+                    uint c = (uint)(1 + (r + 1) * slices + s);
+                    uint d = (uint)(1 + (r + 1) * slices + s1);
+                    mesh.Indices.Add(a); mesh.Indices.Add(b); mesh.Indices.Add(c);
+                    mesh.Indices.Add(b); mesh.Indices.Add(d); mesh.Indices.Add(c);
+                }
+            }
+            model.Meshes.Add(mesh);
+            return model;
+        }
+
         public static FBXModel BoxCollider(float x0, float x1, float y0, float y1, float z0, float z1)
         {
             var model = new FBXModel { UnitToMeters = 1f, Skeleton = null };
@@ -728,40 +777,6 @@ namespace BowlingProject
             Face(5, 1, 2, 6);
             Face(0, 1, 5, 4);
             Face(3, 7, 6, 2);
-            model.Meshes.Add(mesh);
-            return model;
-        }
-
-        public static FBXModel BallCollider()
-        {
-            const int slices = 12;
-            const int rings = 8;
-            var model = new FBXModel { UnitToMeters = 1f, Skeleton = null };
-            var mesh = new MeshData { Name = "Ball" };
-            for (int r = 0; r <= rings; r++)
-            {
-                float v = r * MathF.PI / rings;
-                float z = MathF.Cos(v) * BallRadius;
-                float rad = MathF.Sin(v) * BallRadius;
-                for (int s = 0; s < slices; s++)
-                {
-                    float a = s * (MathF.PI * 2f) / slices;
-                    mesh.Vertices.Add(new FBXVertex(MathF.Cos(a) * rad, MathF.Sin(a) * rad, z, 0f, 0f, 1f, 0f, 0f, 0f));
-                }
-            }
-            for (int r = 0; r < rings; r++)
-            {
-                for (int s = 0; s < slices; s++)
-                {
-                    int s1 = (s + 1) % slices;
-                    uint a = (uint)(r * slices + s);
-                    uint b = (uint)(r * slices + s1);
-                    uint c = (uint)((r + 1) * slices + s);
-                    uint d = (uint)((r + 1) * slices + s1);
-                    mesh.Indices.Add(a); mesh.Indices.Add(c); mesh.Indices.Add(b);
-                    mesh.Indices.Add(b); mesh.Indices.Add(c); mesh.Indices.Add(d);
-                }
-            }
             model.Meshes.Add(mesh);
             return model;
         }
