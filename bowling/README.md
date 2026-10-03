@@ -2,7 +2,7 @@
 
 Ten-pin bowling for Castle. Real lane length, a 60-foot pin deck, USBC pin spacing, a 14 lb ball, and a full ten-frame card including the tenth-frame fill balls.
 
-This is a project, not an engine change. Load it the same way as chess. Pins and the ball are generated when the scene draws. You do not create a pin asset.
+Pins and the ball are `Assets/pin.fbx` and `Assets/ball.fbx`. The rack is that pin mesh on a dynamic body. You do not model another pin.
 
 ## Play
 

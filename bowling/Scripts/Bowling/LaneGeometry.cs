@@ -731,5 +731,39 @@ namespace BowlingProject
             model.Meshes.Add(mesh);
             return model;
         }
+
+        public static FBXModel BallCollider()
+        {
+            const int slices = 12;
+            const int rings = 8;
+            var model = new FBXModel { UnitToMeters = 1f, Skeleton = null };
+            var mesh = new MeshData { Name = "Ball" };
+            for (int r = 0; r <= rings; r++)
+            {
+                float v = r * MathF.PI / rings;
+                float z = MathF.Cos(v) * BallRadius;
+                float rad = MathF.Sin(v) * BallRadius;
+                for (int s = 0; s < slices; s++)
+                {
+                    float a = s * (MathF.PI * 2f) / slices;
+                    mesh.Vertices.Add(new FBXVertex(MathF.Cos(a) * rad, MathF.Sin(a) * rad, z, 0f, 0f, 1f, 0f, 0f, 0f));
+                }
+            }
+            for (int r = 0; r < rings; r++)
+            {
+                for (int s = 0; s < slices; s++)
+                {
+                    int s1 = (s + 1) % slices;
+                    uint a = (uint)(r * slices + s);
+                    uint b = (uint)(r * slices + s1);
+                    uint c = (uint)((r + 1) * slices + s);
+                    uint d = (uint)((r + 1) * slices + s1);
+                    mesh.Indices.Add(a); mesh.Indices.Add(c); mesh.Indices.Add(b);
+                    mesh.Indices.Add(b); mesh.Indices.Add(c); mesh.Indices.Add(d);
+                }
+            }
+            model.Meshes.Add(mesh);
+            return model;
+        }
     }
 }

@@ -120,6 +120,7 @@ namespace BowlingProject
             if (deltaTime < 0f) deltaTime = 0f;
             if (deltaTime > 0.05f) deltaTime = 0.05f;
             MenuBus.Arm(this, _context);
+            TrackSize();
             KeepBallSphere();
             base.Update(deltaTime);
             _time += deltaTime;
@@ -134,6 +135,7 @@ namespace BowlingProject
             MenuBus.Arm(this, _context);
             if (_preview) return;
             if (!_started) EnsureWorld();
+            SeatWildPins();
 
             if (_phase != Phase.Menu)
             {
@@ -148,9 +150,32 @@ namespace BowlingProject
             SyncHud();
         }
 
+        public override void Resize(int width, int height)
+        {
+            base.Resize(width, height);
+            if (width > 2) _viewW = width;
+            if (height > 2) _viewH = height;
+        }
+
+        void TrackSize()
+        {
+            try
+            {
+                _controlContext.GetWindowSize(_window, out int ww, out int hh);
+                if (ww > 2 && hh > 2 && (ww != _width || hh != _height))
+                    Resize(ww, hh);
+            }
+            catch
+            {
+                // Resize from the engine still updates the frustum.
+            }
+        }
+
         protected override void GetViewProjection(out Matrix4x4 view, out Matrix4x4 projection)
         {
             float aspect = _viewH > 2f ? _viewW / _viewH : (AspectRatio > 0.01f ? AspectRatio : 16f / 9f);
+            if (_width > 2 && _height > 2)
+                aspect = (float)_width / _height;
             if (_preview)
             {
                 _camEye = new Vector3(0.85f, -4.35f, 1.72f);
@@ -349,19 +374,24 @@ namespace BowlingProject
 
         void RememberView()
         {
-            if (_width > 2f) _viewW = _width;
+            if (_width > 2 && _height > 2)
+            {
+                _viewW = _width;
+                _viewH = _height;
+                return;
+            }
             try
             {
                 Viewport vp = _controlContext.GetCurrentViewport();
-                if (vp.Width > 2f)
+                if (vp.Width > 2f && vp.Height > 2f)
                 {
                     _viewW = vp.Width;
-                    _viewH = vp.Height > 2f ? vp.Height : _viewW * 9f / 16f;
+                    _viewH = vp.Height;
                 }
             }
             catch
             {
-                if (_viewH < 2f) _viewH = _viewW * 9f / 16f;
+                // Keep the size from Initialize.
             }
         }
 
@@ -946,7 +976,14 @@ namespace BowlingProject
                 body.Mass = LaneGeometry.PinMass;
                 StampBox(body, box);
                 body.BodyType = BodyType.Dynamic;
-                Rebuild(body);
+                e.AddComponent(new ModelComponent
+                {
+                    Model = PinAssets.Pin,
+                    Key = "pin.fbx",
+                    CastShadows = true,
+                    ReceiveShadows = true
+                });
+                PinAssets.Rebuild(body, PinAssets.Pin);
                 body.Position = spot;
                 body.RenderPosition = spot;
                 body.Rotation = Quaternion.Identity;
@@ -957,6 +994,40 @@ namespace BowlingProject
                 e.AddComponent(body);
                 _server.AddEntity(e);
                 pins[i] = new Pin { Entity = e, Body = body, Live = true, Loose = false };
+            }
+        }
+
+        void SeatWildPins()
+        {
+            bool ballAtDeck = _phase == Phase.Rolling
+                && _ballBody != null
+                && _ballBody.Position.Y > LaneGeometry.HeadPinY - 2.2f;
+            if (ballAtDeck) return;
+            Seat(_pins, 0f);
+            Seat(_leftPins, -LaneGeometry.LanePitch);
+            Seat(_rightPins, LaneGeometry.LanePitch);
+        }
+
+        static void Seat(Pin[] pins, float laneX)
+        {
+            for (int i = 0; i < pins.Length; i++)
+            {
+                var b = pins[i].Body;
+                if (b == null || !pins[i].Live) continue;
+                var spot = LaneGeometry.PinSpot(i, laneX);
+                spot.Z = PinCenterZ;
+                Vector3 p = b.Position;
+                Vector3 d = p - spot;
+                bool wild = float.IsNaN(p.X) || p.Z < LaneGeometry.DeckZ - 0.02f || p.Z > 1.4f
+                    || d.X * d.X + d.Y * d.Y > 0.35f;
+                if (!wild) continue;
+                b.Position = spot;
+                b.RenderPosition = spot;
+                b.Rotation = Quaternion.Identity;
+                b.Velocity = Vector3.Zero;
+                b.AngularVelocity = Vector3.Zero;
+                b.CollisionEnabled = true;
+                b.Wake();
             }
         }
 
@@ -1127,9 +1198,9 @@ namespace BowlingProject
         void BuildLive()
         {
             _live.Clear();
-            DrawRack(_pins);
-            DrawRack(_leftPins);
-            DrawRack(_rightPins);
+            DrawRack(_pins, 0f);
+            DrawRack(_leftPins, -LaneGeometry.LanePitch);
+            DrawRack(_rightPins, LaneGeometry.LanePitch);
             if (_ballBody != null)
             {
                 var ball = _ballBody.RenderPosition;
@@ -1144,23 +1215,32 @@ namespace BowlingProject
             }
         }
 
-        void DrawRack(Pin[] pins)
+        void DrawRack(Pin[] pins, float laneX)
         {
             for (int i = 0; i < pins.Length; i++)
             {
+                var spot = LaneGeometry.PinSpot(i, laneX);
+                spot.Z = PinCenterZ;
                 var b = pins[i].Body;
-                if (b == null) continue;
-                var pos = b.Position;
-                var spot = b.RenderPosition;
-                if (float.IsNaN(spot.X) || float.IsNaN(spot.Y) || float.IsNaN(spot.Z)
-                    || (spot - pos).LengthSquared() > 0.16f)
-                    spot = pos;
-                if (MathF.Abs(pos.X) > 12f && MathF.Abs(spot.X) > 12f) continue;
-                if (pos.Y < -8f && spot.Y < -8f) continue;
-                if (pos.Y > 26f && spot.Y > 26f) continue;
-                if (pos.Z < -2.2f && spot.Z < -2.2f) continue;
-                LaneGeometry.AddCastShadow(_live, spot, 0.09f);
-                LaneGeometry.AddPin(_live, spot, b.Rotation);
+                Vector3 pos = spot;
+                Quaternion rot = Quaternion.Identity;
+                if (b != null)
+                {
+                    Vector3 p = b.Position;
+                    Vector3 d = p - spot;
+                    bool sane = !float.IsNaN(p.X) && !float.IsNaN(p.Y) && !float.IsNaN(p.Z)
+                        && p.Z > -0.05f && p.Z < 2.5f
+                        && d.X * d.X + d.Y * d.Y < 4f;
+                    if (sane)
+                    {
+                        pos = b.RenderPosition;
+                        if (float.IsNaN(pos.X) || (pos - p).LengthSquared() > 0.25f)
+                            pos = p;
+                        rot = b.Rotation;
+                    }
+                }
+                LaneGeometry.AddCastShadow(_live, pos, 0.09f);
+                LaneGeometry.AddPin(_live, pos, rot);
             }
         }
 
