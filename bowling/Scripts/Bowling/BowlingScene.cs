@@ -828,21 +828,29 @@ namespace BowlingProject
             float x0 = MathF.Min(inner, outer);
             float x1 = MathF.Max(inner, outer);
             float midX = (x0 + x1) * 0.5f;
-            float midY = (y0 + y1) * 0.5f;
             float halfX = (x1 - x0) * 0.5f;
-            float halfY = (y1 - y0) * 0.5f;
-            const float floorThick = 0.06f;
-            AddSurface(
-                LaneGeometry.CenteredDeck(halfX, halfY, floorThick * 0.5f, false),
-                new Vector3(midX, midY, zFloor - floorThick * 0.5f),
-                0.20f, 0.28f);
-            float wallTop = LaneGeometry.DeckZ + LaneGeometry.BallRadius + 0.04f;
-            float wallHz = (wallTop - zFloor) * 0.5f;
-            float wallHx = 0.02f;
-            AddSurface(
-                LaneGeometry.CenteredDeck(wallHx, halfY, wallHz, true),
-                new Vector3(outer + sign * wallHx, midY, (wallTop + zFloor) * 0.5f),
-                0.35f, 0.45f);
+            // One 19m triangle. First overlap uses a contact far down the sheet
+            // and the ball leaves the camera in one frame. Lane boxes are 2m.
+            const float floorThick = 0.10f;
+            float y = y0;
+            while (y < y1 - 0.01f)
+            {
+                float yb = MathF.Min(y + 2f, y1);
+                float halfY = (yb - y) * 0.5f;
+                float midY = (y + yb) * 0.5f;
+                AddSurface(
+                    LaneGeometry.CenteredDeck(halfX, halfY, floorThick * 0.5f, true),
+                    new Vector3(midX, midY, zFloor - floorThick * 0.5f),
+                    0.20f, 0.28f);
+                float wallTop = LaneGeometry.DeckZ + LaneGeometry.BallRadius + 0.04f;
+                float wallHx = 0.06f;
+                float wallHz = (wallTop - zFloor) * 0.5f;
+                AddSurface(
+                    LaneGeometry.CenteredDeck(wallHx, halfY, wallHz, true),
+                    new Vector3(outer + sign * wallHx, midY, (wallTop + zFloor) * 0.5f),
+                    0.35f, 0.45f);
+                y = yb;
+            }
         }
 
         void AddKickback(float ox, int side)
