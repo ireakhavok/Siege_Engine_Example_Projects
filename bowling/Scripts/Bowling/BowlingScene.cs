@@ -833,27 +833,24 @@ namespace BowlingProject
             float midX = (x0 + x1) * 0.5f;
             float halfX = (x1 - x0) * 0.5f;
             // Visual gutter floor is zFloor. Top of this box is that surface.
-            // 16cm so a frame cannot step through it. Same 2m pieces as the lane.
-            const float floorThick = 0.16f;
-            float y = y0;
-            while (y < y1 - 0.01f)
-            {
-                float yb = MathF.Min(y + 2f, y1);
-                float halfY = (yb - y) * 0.5f;
-                float midY = (y + yb) * 0.5f;
-                AddSurface(
-                    LaneGeometry.CenteredDeck(halfX, halfY, floorThick * 0.5f, true),
-                    new Vector3(midX, midY, zFloor - floorThick * 0.5f),
-                    0.20f, 0.28f);
-                float wallTop = LaneGeometry.DeckZ + LaneGeometry.BallRadius + 0.04f;
-                float wallHx = 0.06f;
-                float wallHz = (wallTop - zFloor) * 0.5f;
-                AddSurface(
-                    LaneGeometry.CenteredDeck(wallHx, halfY, wallHz, true),
-                    new Vector3(outer + sign * wallHx, midY, (wallTop + zFloor) * 0.5f),
-                    0.35f, 0.45f);
-                y = yb;
-            }
+            // Sphere-vs-sheet uses the first overlapping triangle; a long sheet
+            // witnesses far down the lane and the ball never rests. A box uses
+            // the closest face, so the floor stays at zFloor and the wall stays
+            // on the outer channel edge.
+            const float floorThick = 0.40f;
+            float halfY = (y1 - y0) * 0.5f;
+            float midY = (y0 + y1) * 0.5f;
+            AddBox(
+                new Vector3(halfX, halfY, floorThick * 0.5f),
+                new Vector3(midX, midY, zFloor - floorThick * 0.5f),
+                0.20f, 0.28f);
+            float wallTop = LaneGeometry.DeckZ + LaneGeometry.BallRadius + 0.04f;
+            float wallHx = 0.08f;
+            float wallHz = (wallTop - zFloor) * 0.5f;
+            AddBox(
+                new Vector3(wallHx, halfY, wallHz),
+                new Vector3(outer + sign * wallHx, midY, (wallTop + zFloor) * 0.5f),
+                0.35f, 0.45f);
         }
 
         void AddKickback(float ox, int side)
@@ -888,6 +885,40 @@ namespace BowlingProject
             e.AddComponent(body);
             _server.AddEntity(e);
             _staticBodies.Add(e);
+        }
+
+        void AddBox(Vector3 half, Vector3 position, float kinetic, float stat)
+        {
+            var e = new Entity();
+            var body = new PhysicsComponent();
+            body.UseBoneHitboxes = false;
+            body.KeepUpright = false;
+            body.Position = position;
+            body.RenderPosition = position;
+            body.Rotation = Quaternion.Identity;
+            body.Friction = kinetic;
+            body.KineticFriction = kinetic;
+            body.StaticFriction = stat;
+            body.Restitution = LaneGeometry.LaneRestitution;
+            body.RollingResistance = 0.02f;
+            body.Size = half * 2f;
+            body.LocalBoundsMinCm = -half;
+            body.LocalBoundsMaxCm = half;
+            body.BodyType = BodyType.Static;
+            SetShape(body, new ObbShape(half));
+            body.RecomputeMassProperties();
+            body.CollisionEnabled = true;
+            e.AddComponent(body);
+            _server.AddEntity(e);
+            _staticBodies.Add(e);
+        }
+
+        static void SetShape(PhysicsComponent body, ColliderShape shape)
+        {
+            var prop = typeof(PhysicsComponent).GetProperty("Shape");
+            var setter = prop?.GetSetMethod(true);
+            if (setter == null) return;
+            setter.Invoke(body, new object[] { shape });
         }
 
         void SpawnRack()
@@ -971,10 +1002,7 @@ namespace BowlingProject
 
         static void SetSphere(PhysicsComponent body, float radius)
         {
-            var prop = typeof(PhysicsComponent).GetProperty("Shape");
-            var setter = prop?.GetSetMethod(true);
-            if (setter == null) return;
-            setter.Invoke(body, new object[] { new SphereShape(radius) });
+            SetShape(body, new SphereShape(radius));
         }
 
         void SweepDead()
