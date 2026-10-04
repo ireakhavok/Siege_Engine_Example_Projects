@@ -18,7 +18,6 @@ namespace PoolProject
 
         readonly SceneContext _context;
         readonly bool _panel;
-        ModelRenderer _renderer;
         readonly List<Entity> _static = new List<Entity>();
         readonly List<PoolBall> _rack = new List<PoolBall>();
         readonly BallGroup[] _groups = new BallGroup[4];
@@ -62,7 +61,6 @@ namespace PoolProject
             base.Initialize(width, height);
             _viewW = width;
             _viewH = height;
-            _renderer = new ModelRenderer(_renderContext);
             string root = PoolAssets.Find(_context);
             PoolMenu.Root = root;
             PoolUi.Root = root;
@@ -109,12 +107,12 @@ namespace PoolProject
 
         protected override void RenderContent(IReadOnlyList<Entity> entities, Matrix4x4 view, Matrix4x4 projection)
         {
-            if (_renderer == null) return;
+            if (_modelRenderer == null) return;
             IReadOnlyList<Entity> list = entities;
             if ((list == null || list.Count == 0) && _server != null)
                 list = _server.GetEntities();
             if (list == null || list.Count == 0) return;
-            ModelInstanceBatch.RenderAll(_renderer, _renderContext, list, view, projection, _eye);
+            ModelInstanceBatch.RenderAll(_modelRenderer, _renderContext, list, view, projection, _eye);
         }
 
         void PollMenu()
