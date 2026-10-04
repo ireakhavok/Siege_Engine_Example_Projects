@@ -820,18 +820,21 @@ namespace BowlingProject
         void AddGutterMesh(float ox, int side)
         {
             float sign = side < 0 ? -1f : 1f;
-            float inner = ox + sign * LaneGeometry.LaneHalf;
+            // Floor starts a ball radius under the lane. The channel is 24cm and
+            // the ball is 21.7cm, so a floor that starts at the lane edge leaves
+            // the centre over the empty gap under the deck.
+            float inner = ox + sign * (LaneGeometry.LaneHalf - LaneGeometry.BallRadius);
             float outer = ox + sign * (LaneGeometry.LaneHalf + LaneGeometry.GutterWidth);
-            float y0 = LaneGeometry.FoulY;
+            float y0 = LaneGeometry.ApproachY;
             float y1 = LaneGeometry.DeckEndY;
             float zFloor = LaneGeometry.DeckZ - LaneGeometry.GutterDepth;
             float x0 = MathF.Min(inner, outer);
             float x1 = MathF.Max(inner, outer);
             float midX = (x0 + x1) * 0.5f;
             float halfX = (x1 - x0) * 0.5f;
-            // One 19m triangle. First overlap uses a contact far down the sheet
-            // and the ball leaves the camera in one frame. Lane boxes are 2m.
-            const float floorThick = 0.10f;
+            // Visual gutter floor is zFloor. Top of this box is that surface.
+            // 16cm so a frame cannot step through it. Same 2m pieces as the lane.
+            const float floorThick = 0.16f;
             float y = y0;
             while (y < y1 - 0.01f)
             {
