@@ -24,7 +24,6 @@ namespace BowlingProject
             public Entity Entity;
             public PhysicsComponent Body;
             public bool Live;
-            public bool Loose;
         }
 
         readonly bool _preview;
@@ -34,10 +33,8 @@ namespace BowlingProject
         ShaderProgram _shader;
         VertexBuffer _houseBuf;
         VertexBuffer _liveBuf;
-        VertexBuffer _uiBuf;
         BowlMesh _house;
         BowlMesh _live;
-        BowlMesh _ui;
         bool _houseReady;
         bool _started;
         float _viewW = 1280f;
@@ -101,10 +98,8 @@ namespace BowlingProject
             _shader = ShaderProgram.FromId(_renderContext, ShaderId.Grid);
             _houseBuf = new VertexBuffer(_renderContext);
             _liveBuf = new VertexBuffer(_renderContext);
-            _uiBuf = new VertexBuffer(_renderContext);
             _house = new BowlMesh();
             _live = new BowlMesh();
-            _ui = new BowlMesh();
             LaneGeometry.BuildHouse(_house, _preview);
             _houseBuf.UpdateCustomWithUV(_house.Vertices, _house.Indices);
             _houseReady = true;
@@ -212,7 +207,6 @@ namespace BowlingProject
             _shader?.Dispose();
             _houseBuf?.Dispose();
             _liveBuf?.Dispose();
-            _uiBuf?.Dispose();
             base.Dispose();
         }
 
@@ -221,60 +215,6 @@ namespace BowlingProject
             if (_preview) return 58f;
             if (_phase == Phase.Menu) return 48f;
             return 52f;
-        }
-
-        void DrawMenuInWorld()
-        {
-            try
-            {
-                RememberView();
-                float w = _viewW > 2f ? _viewW : 1280f;
-                float h = _viewH > 2f ? _viewH : 720f;
-                _ui.Clear();
-                BowlingMenu.Draw(_ui, w, h, _players, MenuHover(), _time);
-                PlaceMenuInView(_ui, w, h);
-                if (_ui.Indices.Count == 0) return;
-                _renderContext.SetCull(GpuCullMode.None);
-                _renderContext.SetDepthTest(false);
-                _renderContext.SetDepthWrite(false);
-                _uiBuf.UpdateCustomWithUV(_ui.Vertices, _ui.Indices);
-                Draw(_uiBuf);
-                _renderContext.SetDepthTest(true);
-                _renderContext.SetDepthWrite(true);
-            }
-            catch
-            {
-                // The alley still draws if the menu mesh fails.
-            }
-        }
-
-        void PlaceMenuInView(BowlMesh mesh, float w, float h)
-        {
-            float fov = ActiveFov() * MathF.PI / 180f;
-            float aspect = w / MathF.Max(1f, h);
-            const float dist = 2.8f;
-            float halfH = dist * MathF.Tan(fov * 0.5f);
-            float halfW = halfH * aspect;
-            Vector3 fwd = _camTarget - _camEye;
-            if (fwd.LengthSquared() < 1e-6f) fwd = Vector3.UnitY;
-            fwd = Vector3.Normalize(fwd);
-            Vector3 right = Vector3.Cross(fwd, Vector3.UnitZ);
-            if (right.LengthSquared() < 1e-8f) right = Vector3.UnitX;
-            right = Vector3.Normalize(right);
-            Vector3 down = -Vector3.Normalize(Vector3.Cross(right, fwd));
-            Vector3 origin = _camEye + fwd * dist - right * halfW - down * halfH;
-            float sx = (halfW * 2f) / w;
-            float sy = (halfH * 2f) / h;
-            var verts = mesh.Vertices;
-            for (int i = 0; i + 8 < verts.Count; i += 9)
-            {
-                float px = verts[i];
-                float py = verts[i + 1];
-                Vector3 p = origin + right * (px * sx) + down * (py * sy);
-                verts[i] = p.X;
-                verts[i + 1] = p.Y;
-                verts[i + 2] = p.Z;
-            }
         }
 
         void Poll(float dt)
@@ -327,40 +267,6 @@ namespace BowlingProject
             if ((enter && !_enterWas) || start)
                 NewGame();
             _enterWas = enter;
-        }
-
-        int MenuHover()
-        {
-            if (!TryCursor(out float x, out float y)) return -1;
-            return BowlingMenu.Layout(_viewW, _viewH).Hit(x, y);
-        }
-
-        bool TryCursor(out float x, out float y)
-        {
-            x = 0f;
-            y = 0f;
-            try
-            {
-                _controlContext.GetCursorPos(_window, out double cx, out double cy);
-                x = (float)cx;
-                y = (float)cy;
-                Viewport vp = _controlContext.GetCurrentViewport();
-                if (vp.Width > 2f)
-                {
-                    _viewW = vp.Width;
-                    if (vp.Height > 2f) _viewH = vp.Height;
-                    if (_panel || MathF.Abs(vp.X) > 0.5f || MathF.Abs(vp.Y) > 0.5f)
-                    {
-                        x -= vp.X;
-                        y -= vp.Y;
-                    }
-                }
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
         }
 
         public override void Resize(int width, int height)
@@ -416,23 +322,6 @@ namespace BowlingProject
         {
             try { return _controlContext.GetKey(_window, key) == InputAction.Press; }
             catch { return false; }
-        }
-
-        void PollPlayers()
-        {
-            if (_phase != Phase.Aim && _phase != Phase.Over) return;
-            EnsurePlayerKeys();
-            for (int i = 0; i < 4; i++)
-            {
-                if (!_playerKeyOk[i]) continue;
-                bool down = Down(_playerKeys[i]);
-                if (down && !_digitWas[i] && _players != i + 1)
-                {
-                    _players = i + 1;
-                    NewGame();
-                }
-                _digitWas[i] = down;
-            }
         }
 
         void EnsurePlayerKeys()
@@ -962,7 +851,7 @@ namespace BowlingProject
                 body.IsSleeping = true;
                 e.AddComponent(body);
                 _server.AddEntity(e);
-                pins[i] = new Pin { Entity = e, Body = body, Live = true, Loose = false };
+                pins[i] = new Pin { Entity = e, Body = body, Live = true };
             }
         }
 
@@ -1014,38 +903,6 @@ namespace BowlingProject
                 if (Standing(_pins[i].Body)) continue;
                 Park(_pins[i].Body, slot++);
                 _pins[i].Live = false;
-            }
-        }
-
-        void BuryFallen()
-        {
-            BuryRack(_pins);
-            BuryRack(_leftPins);
-            BuryRack(_rightPins);
-            if (_ballBody != null && _ballBody.Position.Z < -1.2f)
-            {
-                _ballBody.CollisionEnabled = false;
-                _ballBody.Velocity = Vector3.Zero;
-                _ballBody.AngularVelocity = Vector3.Zero;
-                _ballBody.IsSleeping = true;
-            }
-        }
-
-        static void BuryRack(Pin[] pins)
-        {
-            for (int i = 0; i < pins.Length; i++)
-            {
-                var b = pins[i].Body;
-                if (b == null || !b.CollisionEnabled) continue;
-                if (b.Position.Z > -1.2f) continue;
-                b.CollisionEnabled = false;
-                b.Velocity = Vector3.Zero;
-                b.AngularVelocity = Vector3.Zero;
-                b.IsSleeping = true;
-                var p = b.Position;
-                p.Z = -0.55f;
-                b.Position = p;
-                b.RenderPosition = p;
             }
         }
 

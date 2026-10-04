@@ -9,8 +9,8 @@ using SiegeEngine.Scenes;
 namespace BowlingProject
 {
     /// <summary>
-    /// Setup overlay. UI/menu.html is written to UI/menu.live.html and opened by
-    /// path so images next to it (UI/MenuBackground.png) resolve. data-hook clicks
+    /// Setup overlay. Source is UI/menu.html. Push writes the substituted copy to
+    /// UI/menu.live.html and opens that path so MenuBackground.png resolves. data-hook clicks
     /// only arrive if the HUD overlay has an EventBus; GameHudPanel leaves that
     /// null, so Arm() fills it from the scene bus before the click is published.
     /// </summary>
@@ -317,7 +317,7 @@ namespace BowlingProject
             "<div class=\"button {{P2}}\" data-hook=\"menu.players2\">2</div>" +
             "<div class=\"button {{P3}}\" data-hook=\"menu.players3\">3</div>" +
             "<div class=\"button {{P4}}\" data-hook=\"menu.players4\">4</div>" +
-            "</div><div class=\"button start\" data-hook=\"menu.start\">STEP ONTO THE LANE</div>" +
+            "</div><div class=\"button start\" data-hook=\"menu.start\">START</div>" +
             "</div></body></html>";
 
         public static string Build(int players)

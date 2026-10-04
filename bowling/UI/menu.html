@@ -8,186 +8,77 @@ html, body {
   padding: 0;
   width: 400px;
   height: 308px;
-  background: #100e0c;
-  color: #f3ecdf;
+  overflow: hidden;
+  background: #120e0a url("MenuBackground.png") center center / cover no-repeat;
+  color: #f5eddb;
   font-family: "Segoe UI", sans-serif;
 }
-#hero {
-  width: 400px;
-  height: 96px;
-  background-color: #21180f;
-  background-image: url("MenuBackground.png");
-  background-position: center center;
-  background-size: cover;
-  overflow: hidden;
-}
-#body {
-  padding: 16px 18px 14px;
-}
-.kicker {
-  color: #c6a15b;
-  font-size: 11px;
-  letter-spacing: 4px;
-  line-height: 14px;
-  margin: 0 0 2px;
-}
+body { border: 3px solid #b88a3d; box-sizing: border-box; }
 h1 {
-  margin: 0 0 8px;
-  color: #f3ecdf;
+  margin: 14px 0 0;
+  color: #edc76b;
   font-size: 26px;
-  line-height: 30px;
   letter-spacing: 5px;
   font-weight: 700;
+  text-align: center;
 }
-.label {
-  color: #8d7d62;
+.sub, .label {
+  margin: 2px 0 0;
+  color: #9e8a66;
   font-size: 11px;
-  letter-spacing: 3px;
-  line-height: 14px;
-  margin: 0 0 8px;
-}
-.row { }
-.choice {
-  display: inline-block;
-  width: 84px;
-  height: 54px;
-  margin: 0 8px 0 0;
-  background: #1a1612;
-  border: 1px solid #3d3428;
-  color: #f3ecdf;
-  font-size: 20px;
-  font-weight: 650;
-  line-height: 54px;
+  letter-spacing: 4px;
   text-align: center;
-  cursor: pointer;
 }
-.choice:hover {
+.label { margin-top: 12px; }
+.rule { height: 2px; margin: 8px 18px 0; background: #b88a3d; }
+.row { margin-top: 12px; text-align: center; }
+.choice, .picked {
   display: inline-block;
-  width: 84px;
-  height: 54px;
-  margin: 0 8px 0 0;
-  background: #3a2c16;
-  border: 1px solid #e7c56a;
-  color: #ffe7a3;
+  width: 64px;
+  height: 64px;
+  margin: 0 6px;
+  box-sizing: border-box;
+  background: #29211a;
+  border: 1px solid #473824;
+  color: #f5eddb;
   font-size: 20px;
   font-weight: 700;
-  line-height: 54px;
+  line-height: 62px;
   text-align: center;
   cursor: pointer;
 }
-.choice:active {
-  display: inline-block;
-  width: 84px;
-  height: 54px;
-  margin: 0 8px 0 0;
-  background: #5a4018;
-  border: 1px solid #ffe7a3;
-  color: #fff6d8;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 54px;
-  text-align: center;
-  cursor: pointer;
-}
-.picked {
-  display: inline-block;
-  width: 84px;
-  height: 54px;
-  margin: 0 8px 0 0;
-  background: #c6a15b;
-  border: 1px solid #e7c56a;
-  color: #1a1208;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 54px;
-  text-align: center;
-  cursor: pointer;
-}
-.picked:hover {
-  display: inline-block;
-  width: 84px;
-  height: 54px;
-  margin: 0 8px 0 0;
-  background: #e7c56a;
-  border: 1px solid #ffe7a3;
-  color: #1a1208;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 54px;
-  text-align: center;
-  cursor: pointer;
-}
-.picked:active {
-  display: inline-block;
-  width: 84px;
-  height: 54px;
-  margin: 0 8px 0 0;
-  background: #ffe7a3;
-  border: 1px solid #fff6d8;
-  color: #1a1208;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 54px;
-  text-align: center;
-  cursor: pointer;
-}
+.choice:hover { background: #47331a; border: 2px solid #edc76b; }
+.picked, .picked:hover { background: #734d1a; border: 2px solid #edc76b; color: #edc76b; }
 .start {
   display: block;
-  margin: 12px 0 0;
-  background: #c6a15b;
-  border: 1px solid #e7c56a;
-  color: #1a1208;
+  width: 200px;
+  height: 40px;
+  margin: 14px auto 0;
+  box-sizing: border-box;
+  background: #38240f;
+  border: 2px solid #b88a3d;
+  color: #edc76b;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 2px;
-  line-height: 16px;
+  line-height: 36px;
   text-align: center;
-  padding: 12px 8px;
   cursor: pointer;
 }
-.start:hover {
-  display: block;
-  margin: 12px 0 0;
-  background: #e7c56a;
-  border: 1px solid #ffe7a3;
-  color: #1a1208;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  line-height: 16px;
-  text-align: center;
-  padding: 12px 8px;
-  cursor: pointer;
-}
-.start:active {
-  display: block;
-  margin: 12px 0 0;
-  background: #ffe7a3;
-  border: 1px solid #fff6d8;
-  color: #1a1208;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  line-height: 16px;
-  text-align: center;
-  padding: 12px 8px;
-  cursor: pointer;
-}
+.start:hover { background: #664214; border-color: #edc76b; }
 </style>
 </head>
 <body>
-<div id="hero"></div>
-<div id="body">
-  <div class="kicker">TEN PIN</div>
   <h1>BOWLING</h1>
+  <div class="sub">TEN PIN</div>
+  <div class="rule"></div>
   <div class="label">PLAYERS</div>
   <div class="row">
-    <div class="button {{P1}}" data-hook="menu.players1">1</div>
-    <div class="button {{P2}}" data-hook="menu.players2">2</div>
-    <div class="button {{P3}}" data-hook="menu.players3">3</div>
-    <div class="button {{P4}}" data-hook="menu.players4">4</div>
+    <div class="{{P1}}" data-hook="menu.players1">1</div>
+    <div class="{{P2}}" data-hook="menu.players2">2</div>
+    <div class="{{P3}}" data-hook="menu.players3">3</div>
+    <div class="{{P4}}" data-hook="menu.players4">4</div>
   </div>
-  <div class="button start" data-hook="menu.start">STEP ONTO THE LANE</div>
-</div>
+  <div class="start" data-hook="menu.start">START</div>
 </body>
 </html>
