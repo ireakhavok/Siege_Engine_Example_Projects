@@ -6,9 +6,7 @@ using SiegeEngine.Scenes;
 
 namespace PoolProject
 {
-    // The menu is UI/menu.html. Push writes the picked classes into UI/menu.live.html and opens
-    // that path with OpenGameHudEvent, the same host the scoreboard uses. The document is 400x308
-    // because that is the size this event opens. data-hook clicks come back as GenericEvent.
+    // UI/menu.html is the menu. It is opened by path. data-hook clicks come back as GenericEvent.
     public static class PoolMenu
     {
         public const string Key = "PoolMenu";
@@ -37,16 +35,15 @@ namespace PoolProject
         public static void Push(SceneContext context)
         {
             if (context?.EventBus == null) return;
-            string path = Write();
+            string path = Find();
             var evt = new OpenGameHudEvent
             {
                 Key = Key,
                 HtmlRelativePath = string.IsNullOrEmpty(path) ? Key : path,
-                HtmlContent = string.IsNullOrEmpty(path) ? Html() : null,
                 Title = "Pool",
                 Open = true,
-                Width = 400f,
-                Height = 308f,
+                Width = 420f,
+                Height = 390f,
                 AllowMove = false
             };
             SetEnum(evt, "Chrome", "Bare");
@@ -58,41 +55,25 @@ namespace PoolProject
         public static void Close(SceneContext context)
         {
             if (context?.EventBus == null) return;
-            context.EventBus.Publish(new OpenGameHudEvent { Key = Key, Open = false, Title = "Pool" });
+            context.EventBus.Publish(new OpenGameHudEvent
+            {
+                Key = Key,
+                HtmlRelativePath = Find() ?? Key,
+                Title = "Pool",
+                Open = false
+            });
         }
 
-        static string Write()
-        {
-            string dir = FindDir();
-            if (dir == null) return null;
-            string path = Path.Combine(dir, "menu.live.html");
-            File.WriteAllText(path, Html());
-            return path;
-        }
+        public static string Root;
 
-        static string Html()
+        public static string Find()
         {
-            string text = Load() ?? Fallback();
-            text = text.Replace("{{P1}}", Players == 1 ? "picked" : "choice");
-            text = text.Replace("{{P2}}", Players == 2 ? "picked" : "choice");
-            text = text.Replace("{{P3}}", Players == 3 ? "picked" : "choice");
-            text = text.Replace("{{P4}}", Players == 4 ? "picked" : "choice");
-            text = text.Replace("{{Eight}}", Game == PoolGame.Eight ? "picked" : "choice");
-            text = text.Replace("{{Nine}}", Game == PoolGame.Nine ? "picked" : "choice");
-            text = text.Replace("{{Cut}}", Game == PoolGame.Cutthroat ? "picked" : "choice");
-            return text;
-        }
-
-        static string Load()
-        {
-            string path = Find();
-            if (path == null) return null;
-            return File.ReadAllText(path);
-        }
-
-        static string Find()
-        {
-            var dir = Directory.GetCurrentDirectory();
+            if (!string.IsNullOrEmpty(Root))
+            {
+                string here = Path.Combine(Root, "UI", "menu.html");
+                if (File.Exists(here)) return here;
+            }
+            string dir = Directory.GetCurrentDirectory();
             for (int i = 0; i < 8 && !string.IsNullOrEmpty(dir); i++)
             {
                 string html = Path.Combine(dir, "UI", "menu.html");
@@ -102,17 +83,6 @@ namespace PoolProject
                 dir = Path.GetDirectoryName(dir);
             }
             return null;
-        }
-
-        static string FindDir()
-        {
-            string path = Find();
-            return path == null ? null : Path.GetDirectoryName(path);
-        }
-
-        static string Fallback()
-        {
-            return "<html><body><div class=\"{{P2}}\" data-hook=\"menu.players2\">2</div><div class=\"start\" data-hook=\"menu.start\">RACK</div></body></html>";
         }
 
         static void SetEnum(object target, string property, string member)

@@ -32,7 +32,19 @@ namespace PoolProject
             return BallGroup.Open;
         }
 
-        // Cutthroat: each player owns five balls. Pocketing your own ball removes it from you.
+        public static BallGroup Opposite(BallGroup group)
+        {
+            if (group == BallGroup.Solids) return BallGroup.Stripes;
+            if (group == BallGroup.Stripes) return BallGroup.Solids;
+            return BallGroup.Open;
+        }
+
+        public static bool IsStripe(int number)
+        {
+            return number >= 9 && number <= 15;
+        }
+
+        // Cutthroat: each player owns five balls. Pocketing an opponent's ball keeps the turn.
         // The last player with a ball still on the table wins.
         public static int CutthroatOwner(int number)
         {
@@ -55,7 +67,11 @@ namespace PoolProject
         public static bool CountsForShooter(PoolGame game, BallGroup mine, int pocketed, int shooter)
         {
             if (game == PoolGame.Nine) return pocketed != 9;
-            if (game == PoolGame.Cutthroat) return CutthroatOwner(pocketed) == shooter;
+            if (game == PoolGame.Cutthroat)
+            {
+                int owner = CutthroatOwner(pocketed);
+                return owner >= 0 && owner != shooter;
+            }
             if (pocketed == 8) return mine == BallGroup.Eight;
             if (mine == BallGroup.Open) return pocketed != 8;
             return GroupOf(pocketed) == mine;

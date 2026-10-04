@@ -6,32 +6,39 @@
 html, body {
   margin: 0;
   padding: 0;
-  width: 400px;
-  height: 308px;
+  width: 420px;
+  height: 390px;
   overflow: hidden;
-  background: #10140f;
+  background: #142018;
   color: #f4efe4;
   font-family: "Segoe UI", sans-serif;
 }
 body { border: 3px solid #c6a15b; box-sizing: border-box; }
 h1 {
-  margin: 12px 0 0;
+  margin: 18px 0 0;
   color: #e7c56a;
-  font-size: 24px;
-  letter-spacing: 4px;
+  font-size: 28px;
+  letter-spacing: 6px;
+  text-align: center;
+}
+.sub {
+  margin: 4px 0 0;
+  color: #8d9a86;
+  font-size: 12px;
+  letter-spacing: 2px;
   text-align: center;
 }
 .label {
-  margin: 10px 0 4px;
-  color: #8d7d62;
+  margin: 16px 0 6px;
+  color: #c6a15b;
   font-size: 11px;
   letter-spacing: 3px;
   text-align: center;
 }
 .row { text-align: center; }
-.choice, .picked {
+.choice {
   display: inline-block;
-  min-width: 72px;
+  min-width: 78px;
   height: 36px;
   margin: 0 4px;
   padding: 0 8px;
@@ -45,41 +52,48 @@ h1 {
   text-align: center;
   cursor: pointer;
 }
-.picked, .picked:hover { background: #4a3414; border: 2px solid #e7c56a; color: #ffe7a3; }
-.choice:hover { border-color: #e7c56a; }
+.choice:hover { border-color: #e7c56a; color: #ffe7a3; }
 .start {
   display: block;
-  width: 200px;
-  height: 36px;
-  margin: 12px auto 0;
+  width: 220px;
+  height: 40px;
+  margin: 18px auto 0;
   background: #241c12;
   border: 1px solid #c6a15b;
   color: #e7c56a;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 2px;
-  line-height: 34px;
+  letter-spacing: 3px;
+  line-height: 38px;
   text-align: center;
   cursor: pointer;
+}
+.keys {
+  margin: 14px 24px 0;
+  color: #8d9a86;
+  font-size: 12px;
+  line-height: 1.45;
+  text-align: center;
 }
 </style>
 </head>
 <body>
   <h1>POOL</h1>
+  <div class="sub">PASS AND PLAY</div>
   <div class="label">PLAYERS</div>
   <div class="row">
-    <div class="{{P1}}" data-hook="menu.players1">1</div>
-    <div class="{{P2}}" data-hook="menu.players2">2</div>
-    <div class="{{P3}}" data-hook="menu.players3">3</div>
-    <div class="{{P4}}" data-hook="menu.players4">4</div>
+    <div class="choice" data-hook="menu.players1">1</div>
+    <div class="choice" data-hook="menu.players2">2</div>
+    <div class="choice" data-hook="menu.players3">3</div>
+    <div class="choice" data-hook="menu.players4">4</div>
   </div>
   <div class="label">GAME</div>
   <div class="row">
-    <div class="{{Eight}}" data-hook="menu.eight">8-BALL</div>
-    <div class="{{Nine}}" data-hook="menu.nine">9-BALL</div>
-    <div class="{{Cut}}" data-hook="menu.cut">CUTTHROAT</div>
+    <div class="choice" data-hook="menu.eight">8-BALL</div>
+    <div class="choice" data-hook="menu.nine">9-BALL</div>
+    <div class="choice" data-hook="menu.cut">CUTTHROAT</div>
   </div>
-  <div class="start" data-hook="menu.start">ENTER TO RACK</div>
-  <div class="label">PRESS 2 THEN ENTER</div>
+  <div class="start" data-hook="menu.start">RACK</div>
+  <div class="keys">Keys 1-4 choose players. E, N, C choose the game. Enter racks.</div>
 </body>
 </html>

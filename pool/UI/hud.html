@@ -6,22 +6,58 @@
 html, body {
   margin: 0;
   padding: 0;
-  width: 360px;
-  height: 72px;
+  width: 560px;
+  height: 78px;
   overflow: hidden;
-  background: #12100e;
+  background: transparent;
   color: #f4efe4;
   font-family: "Segoe UI", sans-serif;
 }
-.body { padding: 8px 12px; }
-.title { color: #e7c56a; font-size: 12px; letter-spacing: 2px; }
-.line { margin-top: 4px; font-size: 14px; }
+.bar {
+  height: 70px;
+  margin: 4px 8px;
+  padding: 8px 14px 0;
+  box-sizing: border-box;
+  background: rgba(16, 24, 18, 0.92);
+  border: 2px solid #c6a15b;
+}
+.who {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #f4efe4;
+}
+.game {
+  float: right;
+  color: #e7c56a;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+.detail {
+  margin-top: 2px;
+  color: #b7c2ae;
+  font-size: 12px;
+}
+.track {
+  height: 8px;
+  margin-top: 8px;
+  background: #1c1814;
+  border: 1px solid #4a3d2a;
+}
+.fill {
+  height: 100%;
+  width: {{POWER}}%;
+  background: #e7c56a;
+}
 </style>
 </head>
 <body>
-  <div class="body">
-    <div class="title">{{Title}}</div>
-    <div class="line">{{Line}}</div>
+  <div class="bar">
+    <div class="game">{{GAME}}</div>
+    <div class="who">{{WHO}}</div>
+    <div class="detail">{{DETAIL}}</div>
+    <div class="track"><div class="fill"></div></div>
   </div>
 </body>
 </html>
