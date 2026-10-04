@@ -1,0 +1,17 @@
+{
+  "Name": "Pool",
+  "Type": "3D",
+  "CameraType": "Perspective",
+  "LastOpenedScene": "Table",
+  "LastContext": "Scene Editor",
+  "Scenes": {
+    "Table": {
+      "name": "Table",
+      "sceneType": "Gameplay",
+      "customSceneClass": "PoolScene",
+      "settings": { "cameraMode": "Perspective" },
+      "environment": {},
+      "entities": []
+    }
+  }
+}
