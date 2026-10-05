@@ -10,7 +10,7 @@
       "customSceneClass": null,
       "terrain": {
         "heightmapPath": "Assets/Terrain/Ashfen.tif",
-        "colorTexturePath": "Assets\\Terrain\\Ashfen.png",
+        "colorTexturePath": "Assets\\Terrain\\AshfenColor.png",
         "normalTexturePath": null,
         "splatMapPath": null,
         "materials": [],
