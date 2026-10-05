@@ -137,19 +137,38 @@ namespace ProjectScripts
             float dx = playerPos.X - pos.X;
             float dy = playerPos.Y - pos.Y;
             float dist = MathF.Sqrt(dx * dx + dy * dy);
-            if (dist < AggroRange && dist > 0.05f)
+            // Sphere radius is half of Size (~1). Capsule radius is about 0.45.
+            // Never write the player, and never place this body inside that gap.
+            // PhysicsWorld.Project.cs only refuses to move the capsule when the
+            // other body is Dynamic with InvMass > 0 (IsPlayerPush). A kinematic
+            // body has InvMass 0, so the whole correction lands on the player.
+            const float Separation = 1.7f;
+            Vector3 vel = body.Velocity;
+            if (dist < Separation && dist > 0.001f)
             {
-                float step = ChaseSpeed * deltaTime;
-                if (step > dist) step = dist;
                 float inv = 1f / dist;
-                pos.X += dx * inv * step;
-                pos.Y += dy * inv * step;
+                float push = Separation - dist;
+                pos.X -= dx * inv * push;
+                pos.Y -= dy * inv * push;
                 body.Position = pos;
-                body.Velocity = Vector3.Zero;
-                dist -= step;
+                vel.X = 0f;
+                vel.Y = 0f;
+                dist = Separation;
             }
+            else if (dist < AggroRange && dist > Separation)
+            {
+                float inv = 1f / dist;
+                vel.X = dx * inv * ChaseSpeed;
+                vel.Y = dy * inv * ChaseSpeed;
+            }
+            else
+            {
+                vel.X = 0f;
+                vel.Y = 0f;
+            }
+            body.Velocity = vel;
 
-            if (dist <= ContactRange)
+            if (dist <= Separation || dist <= ContactRange)
             {
                 if (!_contactReadyAt.TryGetValue(hostile.Id, out float ready) || _clock >= ready)
                 {

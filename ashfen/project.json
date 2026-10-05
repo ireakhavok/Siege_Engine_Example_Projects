@@ -3260,19 +3260,19 @@
                   "Y": 0,
                   "Z": 0
                 },
-                "BodyType": 1,
+                "BodyType": 2,
                 "AngularVelocity": {
                   "X": 0,
                   "Y": 0,
                   "Z": 0
                 },
-                "LinearDamping": 0.4,
+                "LinearDamping": 0.08,
                 "AngularDamping": 0.4,
                 "Friction": 1.8,
                 "Restitution": 0,
-                "KineticFriction": 0.6,
-                "StaticFriction": 0.85,
-                "RollingResistance": 0.2,
+                "KineticFriction": 0.08,
+                "StaticFriction": 0.12,
+                "RollingResistance": 0.03,
                 "IsSleeping": false,
                 "IslandId": -1,
                 "SleepThreshold": 0.05,
@@ -3281,21 +3281,21 @@
                 "KeepUpright": false,
                 "ReceiveFriction": true,
                 "ReceiveVerticalContact": true,
-                "UseBoneHitboxes": true,
+                "UseBoneHitboxes": false,
                 "RagdollSimulationEnabled": false,
                 "IsGrounded": false,
                 "SlopeLimitDegrees": 50,
                 "StepHeight": 0.35,
                 "LocalCentreOfMass": {
-                  "X": -5.973608E-08,
-                  "Y": -6.6153945E-08,
+                  "X": -5.973608e-08,
+                  "Y": -6.6153945e-08,
                   "Z": 0.9999998
                 },
-                "InvMass": 0,
+                "InvMass": 1,
                 "InvInertiaLocal": {
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0
+                  "X": 1.5,
+                  "Y": 1.5,
+                  "Z": 1.5
                 }
               }
             },
@@ -3382,19 +3382,19 @@
                   "Y": 0,
                   "Z": 0
                 },
-                "BodyType": 1,
+                "BodyType": 2,
                 "AngularVelocity": {
                   "X": 0,
                   "Y": 0,
                   "Z": 0
                 },
-                "LinearDamping": 0.4,
+                "LinearDamping": 0.08,
                 "AngularDamping": 0.4,
                 "Friction": 1.8,
                 "Restitution": 0,
-                "KineticFriction": 0.6,
-                "StaticFriction": 0.85,
-                "RollingResistance": 0.2,
+                "KineticFriction": 0.08,
+                "StaticFriction": 0.12,
+                "RollingResistance": 0.03,
                 "IsSleeping": false,
                 "IslandId": -1,
                 "SleepThreshold": 0.05,
@@ -3403,21 +3403,21 @@
                 "KeepUpright": false,
                 "ReceiveFriction": true,
                 "ReceiveVerticalContact": true,
-                "UseBoneHitboxes": true,
+                "UseBoneHitboxes": false,
                 "RagdollSimulationEnabled": false,
                 "IsGrounded": false,
                 "SlopeLimitDegrees": 50,
                 "StepHeight": 0.35,
                 "LocalCentreOfMass": {
-                  "X": -5.973608E-08,
-                  "Y": -6.6153945E-08,
+                  "X": -5.973608e-08,
+                  "Y": -6.6153945e-08,
                   "Z": 0.9999998
                 },
-                "InvMass": 0,
+                "InvMass": 1,
                 "InvInertiaLocal": {
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0
+                  "X": 1.5,
+                  "Y": 1.5,
+                  "Z": 1.5
                 }
               }
             },
@@ -3504,19 +3504,19 @@
                   "Y": 0,
                   "Z": 0
                 },
-                "BodyType": 1,
+                "BodyType": 2,
                 "AngularVelocity": {
                   "X": 0,
                   "Y": 0,
                   "Z": 0
                 },
-                "LinearDamping": 0.4,
+                "LinearDamping": 0.08,
                 "AngularDamping": 0.4,
                 "Friction": 1.8,
                 "Restitution": 0,
-                "KineticFriction": 0.6,
-                "StaticFriction": 0.85,
-                "RollingResistance": 0.2,
+                "KineticFriction": 0.08,
+                "StaticFriction": 0.12,
+                "RollingResistance": 0.03,
                 "IsSleeping": false,
                 "IslandId": -1,
                 "SleepThreshold": 0.05,
@@ -3525,21 +3525,21 @@
                 "KeepUpright": false,
                 "ReceiveFriction": true,
                 "ReceiveVerticalContact": true,
-                "UseBoneHitboxes": true,
+                "UseBoneHitboxes": false,
                 "RagdollSimulationEnabled": false,
                 "IsGrounded": false,
                 "SlopeLimitDegrees": 50,
                 "StepHeight": 0.35,
                 "LocalCentreOfMass": {
-                  "X": -5.973608E-08,
-                  "Y": -6.6153945E-08,
+                  "X": -5.973608e-08,
+                  "Y": -6.6153945e-08,
                   "Z": 0.9999998
                 },
-                "InvMass": 0,
+                "InvMass": 1,
                 "InvInertiaLocal": {
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0
+                  "X": 1.5,
+                  "Y": 1.5,
+                  "Z": 1.5
                 }
               }
             },
@@ -3653,8 +3653,8 @@
                 "SlopeLimitDegrees": 50,
                 "StepHeight": 0.35,
                 "LocalCentreOfMass": {
-                  "X": -5.973608E-08,
-                  "Y": -6.6153945E-08,
+                  "X": -5.973608e-08,
+                  "Y": -6.6153945e-08,
                   "Z": 0.9999998
                 },
                 "InvMass": 0,
@@ -3775,8 +3775,8 @@
                 "SlopeLimitDegrees": 50,
                 "StepHeight": 0.35,
                 "LocalCentreOfMass": {
-                  "X": -5.973608E-08,
-                  "Y": -6.6153945E-08,
+                  "X": -5.973608e-08,
+                  "Y": -6.6153945e-08,
                   "Z": 0.9999998
                 },
                 "InvMass": 0,
@@ -4023,7 +4023,7 @@
       "customData": {},
       "settings": {
         "avatarPackKey": "man_mesh_pack",
-        "animationPackKey": "blend_pack_all",
+        "animationPackKey": "man_mesh_pack",
         "controllerTypeName": "PlayerController",
         "preferredSpawnPointIds": [
           2
