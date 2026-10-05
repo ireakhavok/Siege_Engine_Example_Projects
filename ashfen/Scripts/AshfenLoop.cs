@@ -146,14 +146,11 @@ namespace ProjectScripts
             Vector3 vel = body.Velocity;
             if (dist < Separation && dist > 0.001f)
             {
-                float inv = 1f / dist;
-                float push = Separation - dist;
-                pos.X -= dx * inv * push;
-                pos.Y -= dy * inv * push;
-                body.Position = pos;
+                // Do not write Position. That teleport ignores sm_wall_pack contacts
+                // and pushes the dynamic body through static geometry. Stop the chase
+                // and let the solver hold the ball, the same way dynamic_balls rest.
                 vel.X = 0f;
                 vel.Y = 0f;
-                dist = Separation;
             }
             else if (dist < AggroRange && dist > Separation)
             {
@@ -173,12 +170,11 @@ namespace ProjectScripts
                 if (!_contactReadyAt.TryGetValue(hostile.Id, out float ready) || _clock >= ready)
                 {
                     _contactReadyAt[hostile.Id] = _clock + ContactCooldown;
-                    player.Physics.Health -= ContactDamage;
-                    if (player.Physics.Health <= 0f)
-                    {
-                        player.Physics.Health = 0f;
+                    float playerHp = player.Physics.Health - ContactDamage;
+                    if (playerHp < 0f) playerHp = 0f;
+                    player.Physics.Health = playerHp;
+                    if (playerHp <= 0f)
                         _dead = true;
-                    }
                 }
             }
 
@@ -297,8 +293,11 @@ namespace ProjectScripts
                 }
             }
             if (best == null) return;
-            best.Physics.Health -= _attackDamage;
-            if (best.Physics.Health < 0f) best.Physics.Health = 0f;
+            // Health rejects a negative value with ArgumentException, so a blow that
+            // would cross zero never lands and the hostile stays above 0.
+            float next = best.Physics.Health - _attackDamage;
+            if (next < 0f) next = 0f;
+            best.Physics.Health = next;
         }
 
         // Placed in AshfenCourtyard. Type stays FBX so the mesh loads; these ids are the markers.
