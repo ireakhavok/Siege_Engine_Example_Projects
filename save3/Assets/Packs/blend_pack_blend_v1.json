@@ -1,0 +1,143 @@
+{
+  "Id": "blend_pack_639268239422246378",
+  "Name": "New Blend Stack",
+  "Clips": [
+    {
+      "AnimationPath": "C:\\repos\\Castle\\Castle\\Launcher\\Foundation\\bin\\Debug\\net9.0\\Assets\\Characters\\man_mesh_loc.fbm\\idle.fbx",
+      "BlendCoordinate": {
+        "X": -0,
+        "Y": -0,
+        "Z": 0
+      },
+      "StartFrame": 0,
+      "EndFrame": -1,
+      "PlaybackSpeed": 1,
+      "Loop": true,
+      "LocalTime": 1.0512314
+    },
+    {
+      "AnimationPath": "C:\\repos\\Castle\\Castle\\Launcher\\Foundation\\bin\\Debug\\net9.0\\Assets\\Characters\\man_mesh_loc.fbm\\jog_f.fbx",
+      "BlendCoordinate": {
+        "X": -0,
+        "Y": -0.75,
+        "Z": 0
+      },
+      "StartFrame": 0,
+      "EndFrame": -1,
+      "PlaybackSpeed": 1,
+      "Loop": true,
+      "LocalTime": 1.2595901
+    },
+    {
+      "AnimationPath": "C:\\repos\\Castle\\Castle\\Launcher\\Foundation\\bin\\Debug\\net9.0\\Assets\\Characters\\man_mesh_loc.fbm\\jog_fl.fbx",
+      "BlendCoordinate": {
+        "X": -0.75,
+        "Y": -0.75,
+        "Z": 0
+      },
+      "StartFrame": 0,
+      "EndFrame": -1,
+      "PlaybackSpeed": 1,
+      "Loop": true,
+      "LocalTime": 1.4644547
+    },
+    {
+      "AnimationPath": "C:\\repos\\Castle\\Castle\\Launcher\\Foundation\\bin\\Debug\\net9.0\\Assets\\Characters\\man_mesh_loc.fbm\\jog_fr.fbx",
+      "BlendCoordinate": {
+        "X": 0.75,
+        "Y": -0.75,
+        "Z": 0
+      },
+      "StartFrame": 0,
+      "EndFrame": -1,
+      "PlaybackSpeed": 1,
+      "Loop": true,
+      "LocalTime": 0.17844391
+    },
+    {
+      "AnimationPath": "C:\\repos\\Castle\\Castle\\Launcher\\Foundation\\bin\\Debug\\net9.0\\Assets\\Characters\\man_mesh_loc.fbm\\jog_r.fbx",
+      "BlendCoordinate": {
+        "X": 0.75,
+        "Y": 0,
+        "Z": 0
+      },
+      "StartFrame": 0,
+      "EndFrame": -1,
+      "PlaybackSpeed": 1,
+      "Loop": true,
+      "LocalTime": 0.3464203
+    },
+    {
+      "AnimationPath": "C:\\repos\\Castle\\Castle\\Launcher\\Foundation\\bin\\Debug\\net9.0\\Assets\\Characters\\man_mesh_loc.fbm\\jog_l.fbx",
+      "BlendCoordinate": {
+        "X": -0.75,
+        "Y": -0,
+        "Z": 0
+      },
+      "StartFrame": 0,
+      "EndFrame": -1,
+      "PlaybackSpeed": 1,
+      "Loop": true,
+      "LocalTime": 0.56108093
+    },
+    {
+      "AnimationPath": "C:\\repos\\Castle\\Castle\\Launcher\\Foundation\\bin\\Debug\\net9.0\\Assets\\Characters\\man_mesh_loc.fbm\\jog_bl.fbx",
+      "BlendCoordinate": {
+        "X": -0.75,
+        "Y": 0.75,
+        "Z": 0
+      },
+      "StartFrame": 0,
+      "EndFrame": -1,
+      "PlaybackSpeed": 1,
+      "Loop": true,
+      "LocalTime": 0.9035492
+    },
+    {
+      "AnimationPath": "C:\\repos\\Castle\\Castle\\Launcher\\Foundation\\bin\\Debug\\net9.0\\Assets\\Characters\\man_mesh_loc.fbm\\jog_b.fbx",
+      "BlendCoordinate": {
+        "X": 0,
+        "Y": 0.75,
+        "Z": 0
+      },
+      "StartFrame": 0,
+      "EndFrame": -1,
+      "PlaybackSpeed": 1,
+      "Loop": true,
+      "LocalTime": 0.55610657
+    },
+    {
+      "AnimationPath": "C:\\repos\\Castle\\Castle\\Launcher\\Foundation\\bin\\Debug\\net9.0\\Assets\\Characters\\man_mesh_loc.fbm\\jog_br.fbx",
+      "BlendCoordinate": {
+        "X": 0.75,
+        "Y": 0.75,
+        "Z": 0
+      },
+      "StartFrame": 0,
+      "EndFrame": -1,
+      "PlaybackSpeed": 1,
+      "Loop": true,
+      "LocalTime": 0.726593
+    }
+  ],
+  "BoneNameToIndex": {},
+  "DefaultBlendParams": {
+    "X": 0,
+    "Y": 0,
+    "Z": 0
+  },
+  "BlendConfig": {
+    "XMin": -1,
+    "XMax": 1,
+    "YMin": -1,
+    "YMax": 1,
+    "ZMin": -2,
+    "ZMax": 2,
+    "DeadZone": 0.1,
+    "SnapStep": 0.25
+  },
+  "SourceFBXPath": null,
+  "SourceSkeletonPath": null,
+  "Material": null,
+  "MaterialOptions": null
+}

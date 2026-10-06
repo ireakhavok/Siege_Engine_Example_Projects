@@ -750,7 +750,7 @@
                 "IsSensitive": false,
                 "Loop": true,
                 "Volume": 1,
-                "AutoPlay": true
+                "AutoPlay": false
               }
             }
           ]
@@ -1708,7 +1708,8 @@
         "temperature": 0,
         "autoExposure": true,
         "adaptSeconds": 0.55,
-        "targetLuma": 0.26
+        "targetLuma": 0.26,
+        "acousticMode": "RayTraced"
       },
       "skybox": {
         "enabled": true,
@@ -1731,12 +1732,15 @@
           "Y": 0,
           "Z": 0,
           "W": -0.7071068
-        }
+        },
+        "faceRotations": null,
+        "faceFlipH": null,
+        "faceFlipV": null
       },
       "customData": {},
       "settings": {
         "avatarPackKey": "man_mesh_pack",
-        "animationPackKey": "blend_pack_all",
+        "animationPackKey": "blend_pack_straif",
         "controllerTypeName": "PlayerController",
         "preferredSpawnPointIds": [
           2

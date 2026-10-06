@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\repos\\Siege_Engine_Example_Projects\\save3\\Scripts\\SiegeScripts.csproj": {}
+    "C:\\Users\\ireak\\OneDrive\\Documents\\CastleBuilder\\Projects\\test_blend\\Scripts\\SiegeScripts.csproj": {}
   },
   "projects": {
-    "C:\\repos\\Siege_Engine_Example_Projects\\save3\\Scripts\\SiegeScripts.csproj": {
+    "C:\\Users\\ireak\\OneDrive\\Documents\\CastleBuilder\\Projects\\test_blend\\Scripts\\SiegeScripts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\repos\\Siege_Engine_Example_Projects\\save3\\Scripts\\SiegeScripts.csproj",
+        "projectUniqueName": "C:\\Users\\ireak\\OneDrive\\Documents\\CastleBuilder\\Projects\\test_blend\\Scripts\\SiegeScripts.csproj",
         "projectName": "SiegeScripts",
-        "projectPath": "C:\\repos\\Siege_Engine_Example_Projects\\save3\\Scripts\\SiegeScripts.csproj",
+        "projectPath": "C:\\Users\\ireak\\OneDrive\\Documents\\CastleBuilder\\Projects\\test_blend\\Scripts\\SiegeScripts.csproj",
         "packagesPath": "C:\\Users\\ireak\\.nuget\\packages\\",
-        "outputPath": "C:\\repos\\Siege_Engine_Example_Projects\\save3\\Scripts\\obj\\",
+        "outputPath": "C:\\Users\\ireak\\OneDrive\\Documents\\CastleBuilder\\Projects\\test_blend\\Scripts\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
