@@ -153,7 +153,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "man_mesh_pack",
+                "Key": "Assets/man_mesh_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [
@@ -293,7 +293,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_wall_pack",
+                "Key": "Assets/sm_wall_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -415,7 +415,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_wall_pack",
+                "Key": "Assets/sm_wall_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -537,7 +537,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_wall_pack",
+                "Key": "Assets/sm_wall_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -659,7 +659,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_wall_pack",
+                "Key": "Assets/sm_wall_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -781,7 +781,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_wall_pack",
+                "Key": "Assets/sm_wall_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -903,7 +903,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_wall_pack",
+                "Key": "Assets/sm_wall_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -1025,7 +1025,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_wall_pack",
+                "Key": "Assets/sm_wall_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -1147,7 +1147,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_wall_pack",
+                "Key": "Assets/sm_wall_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -1269,7 +1269,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_wall_pack",
+                "Key": "Assets/sm_wall_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -1391,7 +1391,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_wall_pack",
+                "Key": "Assets/sm_wall_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -1513,7 +1513,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_wall_pack",
+                "Key": "Assets/sm_wall_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -1635,7 +1635,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_wall_pack",
+                "Key": "Assets/sm_wall_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -1757,7 +1757,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_wall_pack",
+                "Key": "Assets/sm_wall_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -1879,7 +1879,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_wall_pack",
+                "Key": "Assets/sm_wall_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -2001,7 +2001,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_wall_pack",
+                "Key": "Assets/sm_wall_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -2123,7 +2123,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_wall_pack",
+                "Key": "Assets/sm_wall_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -2272,7 +2272,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_birch01_pack",
+                "Key": "Assets/sm_birch01_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [
@@ -2423,7 +2423,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_birch01_pack",
+                "Key": "Assets/sm_birch01_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [
@@ -2574,7 +2574,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_birch01_pack",
+                "Key": "Assets/sm_birch01_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [
@@ -2725,7 +2725,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_birch01_pack",
+                "Key": "Assets/sm_birch01_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [
@@ -2876,7 +2876,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_birch01_pack",
+                "Key": "Assets/sm_birch01_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [
@@ -3027,7 +3027,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_birch01_pack",
+                "Key": "Assets/sm_birch01_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [
@@ -3178,7 +3178,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "sm_birch01_pack",
+                "Key": "Assets/sm_birch01_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [
@@ -3302,7 +3302,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "greenball_pack",
+                "Key": "Assets/greenball_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -3424,7 +3424,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "greenball_pack",
+                "Key": "Assets/greenball_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -3546,7 +3546,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "greenball_pack",
+                "Key": "Assets/greenball_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -3668,7 +3668,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "greenball_pack",
+                "Key": "Assets/greenball_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -3790,7 +3790,7 @@
             {
               "type": "SiegeEngine.Core.Definitions.ModelComponent",
               "data": {
-                "Key": "greenball_pack",
+                "Key": "Assets/greenball_pack/assetpack.json",
                 "CastShadows": true,
                 "ReceiveShadows": true,
                 "HiddenMeshIndices": [],
@@ -4011,14 +4011,35 @@
         "verticalOffset": 29400,
         "orientation": {
           "IsIdentity": false,
-          "X": 0.7071068,
+          "X": -0.0042727888,
           "Y": 0,
           "Z": 0,
-          "W": -0.7071068
+          "W": -0.99999094
         },
-        "faceRotations": null,
-        "faceFlipH": null,
-        "faceFlipV": null
+        "faceRotations": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "faceFlipH": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "faceFlipV": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
       },
       "customData": {},
       "settings": {
