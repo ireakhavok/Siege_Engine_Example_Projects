@@ -25,16 +25,16 @@
         {
           "type": "FBX",
           "position": {
-            "X": 108,
-            "Y": 88,
+            "X": 108.0,
+            "Y": 88.0,
             "Z": 6.37
           },
           "rotation": {
             "IsIdentity": true,
-            "X": 0,
-            "Y": 0,
-            "Z": 0,
-            "W": 1
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "W": 1.0
           },
           "scale": {
             "X": 1,
@@ -46,41 +46,23 @@
           "height": 0,
           "material": null,
           "id": 2,
-          "hiddenMeshIndices": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16
-          ],
+          "hiddenMeshIndices": null,
           "materialOptions": null,
           "components": [
             {
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 108,
-                  "Y": 88,
+                  "X": 108.0,
+                  "Y": 88.0,
                   "Z": 6.37
                 },
                 "Rotation": {
                   "IsIdentity": true,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0,
-                  "W": 1
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.0,
+                  "W": 1.0
                 },
                 "Scale": {
                   "X": 1,
@@ -156,25 +138,7 @@
                 "Key": "man_mesh_pack",
                 "CastShadows": true,
                 "ReceiveShadows": true,
-                "HiddenMeshIndices": [
-                  0,
-                  1,
-                  2,
-                  3,
-                  4,
-                  5,
-                  6,
-                  7,
-                  8,
-                  9,
-                  10,
-                  11,
-                  12,
-                  13,
-                  14,
-                  15,
-                  16
-                ],
+                "HiddenMeshIndices": [],
                 "MaterialData": null
               }
             }
@@ -183,16 +147,16 @@
         {
           "type": "FBX",
           "position": {
-            "X": 94,
+            "X": 94.0,
             "Y": 79.5151,
             "Z": 6.35
           },
           "rotation": {
             "IsIdentity": true,
-            "X": 0,
-            "Y": 0,
-            "Z": 0,
-            "W": 1
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "W": 1.0
           },
           "scale": {
             "X": 1,
@@ -211,16 +175,16 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 94,
+                  "X": 94.0,
                   "Y": 79.5151,
                   "Z": 6.35
                 },
                 "Rotation": {
                   "IsIdentity": true,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0,
-                  "W": 1
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.0,
+                  "W": 1.0
                 },
                 "Scale": {
                   "X": 1,
@@ -305,16 +269,16 @@
         {
           "type": "FBX",
           "position": {
-            "X": 122,
+            "X": 122.0,
             "Y": 79.5151,
             "Z": 6.35
           },
           "rotation": {
             "IsIdentity": true,
-            "X": 0,
-            "Y": 0,
-            "Z": 0,
-            "W": 1
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "W": 1.0
           },
           "scale": {
             "X": 1,
@@ -333,16 +297,16 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 122,
+                  "X": 122.0,
                   "Y": 79.5151,
                   "Z": 6.35
                 },
                 "Rotation": {
                   "IsIdentity": true,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0,
-                  "W": 1
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.0,
+                  "W": 1.0
                 },
                 "Scale": {
                   "X": 1,
@@ -427,16 +391,16 @@
         {
           "type": "FBX",
           "position": {
-            "X": 94,
+            "X": 94.0,
             "Y": 86.5454,
             "Z": 6.35
           },
           "rotation": {
             "IsIdentity": true,
-            "X": 0,
-            "Y": 0,
-            "Z": 0,
-            "W": 1
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "W": 1.0
           },
           "scale": {
             "X": 1,
@@ -455,16 +419,16 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 94,
+                  "X": 94.0,
                   "Y": 86.5454,
                   "Z": 6.35
                 },
                 "Rotation": {
                   "IsIdentity": true,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0,
-                  "W": 1
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.0,
+                  "W": 1.0
                 },
                 "Scale": {
                   "X": 1,
@@ -549,16 +513,16 @@
         {
           "type": "FBX",
           "position": {
-            "X": 122,
+            "X": 122.0,
             "Y": 86.5454,
             "Z": 6.35
           },
           "rotation": {
             "IsIdentity": true,
-            "X": 0,
-            "Y": 0,
-            "Z": 0,
-            "W": 1
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "W": 1.0
           },
           "scale": {
             "X": 1,
@@ -577,16 +541,16 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 122,
+                  "X": 122.0,
                   "Y": 86.5454,
                   "Z": 6.35
                 },
                 "Rotation": {
                   "IsIdentity": true,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0,
-                  "W": 1
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.0,
+                  "W": 1.0
                 },
                 "Scale": {
                   "X": 1,
@@ -671,16 +635,16 @@
         {
           "type": "FBX",
           "position": {
-            "X": 94,
+            "X": 94.0,
             "Y": 93.5756,
             "Z": 6.35
           },
           "rotation": {
             "IsIdentity": true,
-            "X": 0,
-            "Y": 0,
-            "Z": 0,
-            "W": 1
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "W": 1.0
           },
           "scale": {
             "X": 1,
@@ -699,16 +663,16 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 94,
+                  "X": 94.0,
                   "Y": 93.5756,
                   "Z": 6.35
                 },
                 "Rotation": {
                   "IsIdentity": true,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0,
-                  "W": 1
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.0,
+                  "W": 1.0
                 },
                 "Scale": {
                   "X": 1,
@@ -793,16 +757,16 @@
         {
           "type": "FBX",
           "position": {
-            "X": 122,
+            "X": 122.0,
             "Y": 93.5756,
             "Z": 6.35
           },
           "rotation": {
             "IsIdentity": true,
-            "X": 0,
-            "Y": 0,
-            "Z": 0,
-            "W": 1
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "W": 1.0
           },
           "scale": {
             "X": 1,
@@ -821,16 +785,16 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 122,
+                  "X": 122.0,
                   "Y": 93.5756,
                   "Z": 6.35
                 },
                 "Rotation": {
                   "IsIdentity": true,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0,
-                  "W": 1
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.0,
+                  "W": 1.0
                 },
                 "Scale": {
                   "X": 1,
@@ -915,16 +879,16 @@
         {
           "type": "FBX",
           "position": {
-            "X": 94,
+            "X": 94.0,
             "Y": 100.6059,
             "Z": 6.35
           },
           "rotation": {
             "IsIdentity": true,
-            "X": 0,
-            "Y": 0,
-            "Z": 0,
-            "W": 1
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "W": 1.0
           },
           "scale": {
             "X": 1,
@@ -943,16 +907,16 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 94,
+                  "X": 94.0,
                   "Y": 100.6059,
                   "Z": 6.35
                 },
                 "Rotation": {
                   "IsIdentity": true,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0,
-                  "W": 1
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.0,
+                  "W": 1.0
                 },
                 "Scale": {
                   "X": 1,
@@ -1037,16 +1001,16 @@
         {
           "type": "FBX",
           "position": {
-            "X": 122,
+            "X": 122.0,
             "Y": 100.6059,
             "Z": 6.35
           },
           "rotation": {
             "IsIdentity": true,
-            "X": 0,
-            "Y": 0,
-            "Z": 0,
-            "W": 1
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "W": 1.0
           },
           "scale": {
             "X": 1,
@@ -1065,16 +1029,16 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 122,
+                  "X": 122.0,
                   "Y": 100.6059,
                   "Z": 6.35
                 },
                 "Rotation": {
                   "IsIdentity": true,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0,
-                  "W": 1
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.0,
+                  "W": 1.0
                 },
                 "Scale": {
                   "X": 1,
@@ -1160,15 +1124,15 @@
           "type": "FBX",
           "position": {
             "X": 97.5151,
-            "Y": 104,
+            "Y": 104.0,
             "Z": 6.35
           },
           "rotation": {
             "IsIdentity": false,
-            "X": 0,
-            "Y": 0,
-            "Z": 0.7071068,
-            "W": 0.7071068
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.7071067811865475,
+            "W": 0.7071067811865476
           },
           "scale": {
             "X": 1,
@@ -1188,15 +1152,15 @@
               "data": {
                 "Position": {
                   "X": 97.5151,
-                  "Y": 104,
+                  "Y": 104.0,
                   "Z": 6.35
                 },
                 "Rotation": {
                   "IsIdentity": false,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0.7071068,
-                  "W": 0.7071068
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.7071067811865475,
+                  "W": 0.7071067811865476
                 },
                 "Scale": {
                   "X": 1,
@@ -1282,15 +1246,15 @@
           "type": "FBX",
           "position": {
             "X": 104.5454,
-            "Y": 104,
+            "Y": 104.0,
             "Z": 6.35
           },
           "rotation": {
             "IsIdentity": false,
-            "X": 0,
-            "Y": 0,
-            "Z": 0.7071068,
-            "W": 0.7071068
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.7071067811865475,
+            "W": 0.7071067811865476
           },
           "scale": {
             "X": 1,
@@ -1310,15 +1274,15 @@
               "data": {
                 "Position": {
                   "X": 104.5454,
-                  "Y": 104,
+                  "Y": 104.0,
                   "Z": 6.35
                 },
                 "Rotation": {
                   "IsIdentity": false,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0.7071068,
-                  "W": 0.7071068
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.7071067811865475,
+                  "W": 0.7071067811865476
                 },
                 "Scale": {
                   "X": 1,
@@ -1404,15 +1368,15 @@
           "type": "FBX",
           "position": {
             "X": 111.5756,
-            "Y": 104,
+            "Y": 104.0,
             "Z": 6.35
           },
           "rotation": {
             "IsIdentity": false,
-            "X": 0,
-            "Y": 0,
-            "Z": 0.7071068,
-            "W": 0.7071068
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.7071067811865475,
+            "W": 0.7071067811865476
           },
           "scale": {
             "X": 1,
@@ -1432,15 +1396,15 @@
               "data": {
                 "Position": {
                   "X": 111.5756,
-                  "Y": 104,
+                  "Y": 104.0,
                   "Z": 6.35
                 },
                 "Rotation": {
                   "IsIdentity": false,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0.7071068,
-                  "W": 0.7071068
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.7071067811865475,
+                  "W": 0.7071067811865476
                 },
                 "Scale": {
                   "X": 1,
@@ -1526,15 +1490,15 @@
           "type": "FBX",
           "position": {
             "X": 118.6059,
-            "Y": 104,
+            "Y": 104.0,
             "Z": 6.35
           },
           "rotation": {
             "IsIdentity": false,
-            "X": 0,
-            "Y": 0,
-            "Z": 0.7071068,
-            "W": 0.7071068
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.7071067811865475,
+            "W": 0.7071067811865476
           },
           "scale": {
             "X": 1,
@@ -1554,15 +1518,15 @@
               "data": {
                 "Position": {
                   "X": 118.6059,
-                  "Y": 104,
+                  "Y": 104.0,
                   "Z": 6.35
                 },
                 "Rotation": {
                   "IsIdentity": false,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0.7071068,
-                  "W": 0.7071068
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.7071067811865475,
+                  "W": 0.7071067811865476
                 },
                 "Scale": {
                   "X": 1,
@@ -1648,15 +1612,15 @@
           "type": "FBX",
           "position": {
             "X": 97.5151,
-            "Y": 76,
+            "Y": 76.0,
             "Z": 6.35
           },
           "rotation": {
             "IsIdentity": false,
-            "X": 0,
-            "Y": 0,
-            "Z": 0.7071068,
-            "W": 0.7071068
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.7071067811865475,
+            "W": 0.7071067811865476
           },
           "scale": {
             "X": 1,
@@ -1676,15 +1640,15 @@
               "data": {
                 "Position": {
                   "X": 97.5151,
-                  "Y": 76,
+                  "Y": 76.0,
                   "Z": 6.35
                 },
                 "Rotation": {
                   "IsIdentity": false,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0.7071068,
-                  "W": 0.7071068
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.7071067811865475,
+                  "W": 0.7071067811865476
                 },
                 "Scale": {
                   "X": 1,
@@ -1770,15 +1734,15 @@
           "type": "FBX",
           "position": {
             "X": 118.6059,
-            "Y": 76,
+            "Y": 76.0,
             "Z": 6.35
           },
           "rotation": {
             "IsIdentity": false,
-            "X": 0,
-            "Y": 0,
-            "Z": 0.7071068,
-            "W": 0.7071068
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.7071067811865475,
+            "W": 0.7071067811865476
           },
           "scale": {
             "X": 1,
@@ -1798,15 +1762,15 @@
               "data": {
                 "Position": {
                   "X": 118.6059,
-                  "Y": 76,
+                  "Y": 76.0,
                   "Z": 6.35
                 },
                 "Rotation": {
                   "IsIdentity": false,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0.7071068,
-                  "W": 0.7071068
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.7071067811865475,
+                  "W": 0.7071067811865476
                 },
                 "Scale": {
                   "X": 1,
@@ -1891,7 +1855,7 @@
         {
           "type": "FBX",
           "position": {
-            "X": 108,
+            "X": 108.0,
             "Y": 78.2,
             "Z": 6.35
           },
@@ -1919,7 +1883,7 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 108,
+                  "X": 108.0,
                   "Y": 78.2,
                   "Z": 6.35
                 },
@@ -2135,8 +2099,8 @@
         {
           "type": "FBX",
           "position": {
-            "X": 74,
-            "Y": 128,
+            "X": 74.0,
+            "Y": 128.0,
             "Z": 5.2269
           },
           "rotation": {
@@ -2190,8 +2154,8 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 74,
-                  "Y": 128,
+                  "X": 74.0,
+                  "Y": 128.0,
                   "Z": 5.2269
                 },
                 "Rotation": {
@@ -2286,8 +2250,8 @@
         {
           "type": "FBX",
           "position": {
-            "X": 64,
-            "Y": 70,
+            "X": 64.0,
+            "Y": 70.0,
             "Z": 5.1317
           },
           "rotation": {
@@ -2341,8 +2305,8 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 64,
-                  "Y": 70,
+                  "X": 64.0,
+                  "Y": 70.0,
                   "Z": 5.1317
                 },
                 "Rotation": {
@@ -2437,8 +2401,8 @@
         {
           "type": "FBX",
           "position": {
-            "X": 142,
-            "Y": 72,
+            "X": 142.0,
+            "Y": 72.0,
             "Z": 5.1205
           },
           "rotation": {
@@ -2492,8 +2456,8 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 142,
-                  "Y": 72,
+                  "X": 142.0,
+                  "Y": 72.0,
                   "Z": 5.1205
                 },
                 "Rotation": {
@@ -2588,8 +2552,8 @@
         {
           "type": "FBX",
           "position": {
-            "X": 150,
-            "Y": 132,
+            "X": 150.0,
+            "Y": 132.0,
             "Z": 7.9965
           },
           "rotation": {
@@ -2643,8 +2607,8 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 150,
-                  "Y": 132,
+                  "X": 150.0,
+                  "Y": 132.0,
                   "Z": 7.9965
                 },
                 "Rotation": {
@@ -2739,8 +2703,8 @@
         {
           "type": "FBX",
           "position": {
-            "X": 86,
-            "Y": 48,
+            "X": 86.0,
+            "Y": 48.0,
             "Z": 5.1158
           },
           "rotation": {
@@ -2794,8 +2758,8 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 86,
-                  "Y": 48,
+                  "X": 86.0,
+                  "Y": 48.0,
                   "Z": 5.1158
                 },
                 "Rotation": {
@@ -2890,8 +2854,8 @@
         {
           "type": "FBX",
           "position": {
-            "X": 128,
-            "Y": 52,
+            "X": 128.0,
+            "Y": 52.0,
             "Z": 5.144
           },
           "rotation": {
@@ -2945,8 +2909,8 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 128,
-                  "Y": 52,
+                  "X": 128.0,
+                  "Y": 52.0,
                   "Z": 5.144
                 },
                 "Rotation": {
@@ -3041,8 +3005,8 @@
         {
           "type": "FBX",
           "position": {
-            "X": 100,
-            "Y": 140,
+            "X": 100.0,
+            "Y": 140.0,
             "Z": 5.1133
           },
           "rotation": {
@@ -3096,8 +3060,8 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 100,
-                  "Y": 140,
+                  "X": 100.0,
+                  "Y": 140.0,
                   "Z": 5.1133
                 },
                 "Rotation": {
@@ -3192,16 +3156,16 @@
         {
           "type": "FBX",
           "position": {
-            "X": 108,
-            "Y": 99,
+            "X": 108.0,
+            "Y": 99.0,
             "Z": 6.35
           },
           "rotation": {
             "IsIdentity": true,
-            "X": 0,
-            "Y": 0,
-            "Z": 0,
-            "W": 1
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "W": 1.0
           },
           "scale": {
             "X": 1,
@@ -3220,16 +3184,16 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 108,
-                  "Y": 99,
+                  "X": 108.0,
+                  "Y": 99.0,
                   "Z": 6.35
                 },
                 "Rotation": {
                   "IsIdentity": true,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0,
-                  "W": 1
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.0,
+                  "W": 1.0
                 },
                 "Scale": {
                   "X": 1,
@@ -3260,19 +3224,19 @@
                   "Y": 0,
                   "Z": 0
                 },
-                "BodyType": 2,
+                "BodyType": 1,
                 "AngularVelocity": {
                   "X": 0,
                   "Y": 0,
                   "Z": 0
                 },
-                "LinearDamping": 0.08,
+                "LinearDamping": 0.4,
                 "AngularDamping": 0.4,
                 "Friction": 1.8,
                 "Restitution": 0,
-                "KineticFriction": 0.08,
-                "StaticFriction": 0.12,
-                "RollingResistance": 0.03,
+                "KineticFriction": 0.6,
+                "StaticFriction": 0.85,
+                "RollingResistance": 0.2,
                 "IsSleeping": false,
                 "IslandId": -1,
                 "SleepThreshold": 0.05,
@@ -3281,7 +3245,7 @@
                 "KeepUpright": false,
                 "ReceiveFriction": true,
                 "ReceiveVerticalContact": true,
-                "UseBoneHitboxes": false,
+                "UseBoneHitboxes": true,
                 "RagdollSimulationEnabled": false,
                 "IsGrounded": false,
                 "SlopeLimitDegrees": 50,
@@ -3293,9 +3257,9 @@
                 },
                 "InvMass": 1,
                 "InvInertiaLocal": {
-                  "X": 1.5,
-                  "Y": 1.5,
-                  "Z": 1.5
+                  "X": 1.5000005,
+                  "Y": 1.500001,
+                  "Z": 1.5000014
                 }
               }
             },
@@ -3320,10 +3284,10 @@
           },
           "rotation": {
             "IsIdentity": true,
-            "X": 0,
-            "Y": 0,
-            "Z": 0,
-            "W": 1
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "W": 1.0
           },
           "scale": {
             "X": 1,
@@ -3348,10 +3312,10 @@
                 },
                 "Rotation": {
                   "IsIdentity": true,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0,
-                  "W": 1
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.0,
+                  "W": 1.0
                 },
                 "Scale": {
                   "X": 1,
@@ -3382,19 +3346,19 @@
                   "Y": 0,
                   "Z": 0
                 },
-                "BodyType": 2,
+                "BodyType": 1,
                 "AngularVelocity": {
                   "X": 0,
                   "Y": 0,
                   "Z": 0
                 },
-                "LinearDamping": 0.08,
+                "LinearDamping": 0.4,
                 "AngularDamping": 0.4,
                 "Friction": 1.8,
                 "Restitution": 0,
-                "KineticFriction": 0.08,
-                "StaticFriction": 0.12,
-                "RollingResistance": 0.03,
+                "KineticFriction": 0.6,
+                "StaticFriction": 0.85,
+                "RollingResistance": 0.2,
                 "IsSleeping": false,
                 "IslandId": -1,
                 "SleepThreshold": 0.05,
@@ -3403,7 +3367,7 @@
                 "KeepUpright": false,
                 "ReceiveFriction": true,
                 "ReceiveVerticalContact": true,
-                "UseBoneHitboxes": false,
+                "UseBoneHitboxes": true,
                 "RagdollSimulationEnabled": false,
                 "IsGrounded": false,
                 "SlopeLimitDegrees": 50,
@@ -3415,9 +3379,9 @@
                 },
                 "InvMass": 1,
                 "InvInertiaLocal": {
-                  "X": 1.5,
-                  "Y": 1.5,
-                  "Z": 1.5
+                  "X": 1.5000005,
+                  "Y": 1.500001,
+                  "Z": 1.5000014
                 }
               }
             },
@@ -3442,10 +3406,10 @@
           },
           "rotation": {
             "IsIdentity": true,
-            "X": 0,
-            "Y": 0,
-            "Z": 0,
-            "W": 1
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "W": 1.0
           },
           "scale": {
             "X": 1,
@@ -3470,10 +3434,10 @@
                 },
                 "Rotation": {
                   "IsIdentity": true,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0,
-                  "W": 1
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.0,
+                  "W": 1.0
                 },
                 "Scale": {
                   "X": 1,
@@ -3504,19 +3468,19 @@
                   "Y": 0,
                   "Z": 0
                 },
-                "BodyType": 2,
+                "BodyType": 1,
                 "AngularVelocity": {
                   "X": 0,
                   "Y": 0,
                   "Z": 0
                 },
-                "LinearDamping": 0.08,
+                "LinearDamping": 0.4,
                 "AngularDamping": 0.4,
                 "Friction": 1.8,
                 "Restitution": 0,
-                "KineticFriction": 0.08,
-                "StaticFriction": 0.12,
-                "RollingResistance": 0.03,
+                "KineticFriction": 0.6,
+                "StaticFriction": 0.85,
+                "RollingResistance": 0.2,
                 "IsSleeping": false,
                 "IslandId": -1,
                 "SleepThreshold": 0.05,
@@ -3525,7 +3489,7 @@
                 "KeepUpright": false,
                 "ReceiveFriction": true,
                 "ReceiveVerticalContact": true,
-                "UseBoneHitboxes": false,
+                "UseBoneHitboxes": true,
                 "RagdollSimulationEnabled": false,
                 "IsGrounded": false,
                 "SlopeLimitDegrees": 50,
@@ -3537,9 +3501,9 @@
                 },
                 "InvMass": 1,
                 "InvInertiaLocal": {
-                  "X": 1.5,
-                  "Y": 1.5,
-                  "Z": 1.5
+                  "X": 1.5000005,
+                  "Y": 1.500001,
+                  "Z": 1.5000014
                 }
               }
             },
@@ -3564,10 +3528,10 @@
           },
           "rotation": {
             "IsIdentity": true,
-            "X": 0,
-            "Y": 0,
-            "Z": 0,
-            "W": 1
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "W": 1.0
           },
           "scale": {
             "X": 1,
@@ -3592,10 +3556,10 @@
                 },
                 "Rotation": {
                   "IsIdentity": true,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0,
-                  "W": 1
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.0,
+                  "W": 1.0
                 },
                 "Scale": {
                   "X": 1,
@@ -3657,11 +3621,11 @@
                   "Y": -6.6153945e-08,
                   "Z": 0.9999998
                 },
-                "InvMass": 0,
+                "InvMass": 1,
                 "InvInertiaLocal": {
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0
+                  "X": 1.5000005,
+                  "Y": 1.500001,
+                  "Z": 1.5000014
                 }
               }
             },
@@ -3686,10 +3650,10 @@
           },
           "rotation": {
             "IsIdentity": true,
-            "X": 0,
-            "Y": 0,
-            "Z": 0,
-            "W": 1
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "W": 1.0
           },
           "scale": {
             "X": 1,
@@ -3714,10 +3678,10 @@
                 },
                 "Rotation": {
                   "IsIdentity": true,
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0,
-                  "W": 1
+                  "X": 0.0,
+                  "Y": 0.0,
+                  "Z": 0.0,
+                  "W": 1.0
                 },
                 "Scale": {
                   "X": 1,
@@ -3779,11 +3743,11 @@
                   "Y": -6.6153945e-08,
                   "Z": 0.9999998
                 },
-                "InvMass": 0,
+                "InvMass": 1,
                 "InvInertiaLocal": {
-                  "X": 0,
-                  "Y": 0,
-                  "Z": 0
+                  "X": 1.5000005,
+                  "Y": 1.500001,
+                  "Z": 1.5000014
                 }
               }
             },
@@ -3802,8 +3766,8 @@
         {
           "type": "Light",
           "position": {
-            "X": 108,
-            "Y": 90,
+            "X": 108.0,
+            "Y": 90.0,
             "Z": 17.35
           },
           "rotation": {
@@ -3830,8 +3794,8 @@
               "type": "SiegeEngine.Core.Definitions.PhysicsComponent",
               "data": {
                 "Position": {
-                  "X": 108,
-                  "Y": 90,
+                  "X": 108.0,
+                  "Y": 90.0,
                   "Z": 17.35
                 },
                 "Rotation": {
@@ -3914,14 +3878,14 @@
               "data": {
                 "Type": 1,
                 "Color": {
-                  "X": 1,
+                  "X": 1.0,
                   "Y": 0.72,
                   "Z": 0.42
                 },
                 "Intensity": 1.15,
                 "Position": {
-                  "X": 108,
-                  "Y": 90,
+                  "X": 108.0,
+                  "Y": 90.0,
                   "Z": 17.35
                 },
                 "Direction": {
@@ -3975,7 +3939,7 @@
           "Z": -0.22
         },
         "sunColor": {
-          "X": 1,
+          "X": 1.0,
           "Y": 0.62,
           "Z": 0.36
         },
@@ -3991,20 +3955,19 @@
         "temperature": 0,
         "autoExposure": true,
         "adaptSeconds": 0.55,
-        "targetLuma": 0.26,
-        "acousticMode": "RayTraced"
+        "targetLuma": 0.26
       },
       "skybox": {
         "enabled": true,
         "type": "Cubemap",
         "cubemapPath": "",
         "faces": [
-          "Assets/Skyboxes/AshfenCourtyard/xpos.png",
-          "Assets/Skyboxes/AshfenCourtyard/xneg.png",
-          "Assets/Skyboxes/AshfenCourtyard/ypos.png",
-          "Assets/Skyboxes/AshfenCourtyard/yneg.png",
-          "Assets/Skyboxes/AshfenCourtyard/zpos.png",
-          "Assets/Skyboxes/AshfenCourtyard/zneg.png"
+          "Assets/Skyboxes/Ashfen/xpos.png",
+          "Assets/Skyboxes/Ashfen/xneg.png",
+          "Assets/Skyboxes/Ashfen/ypos.png",
+          "Assets/Skyboxes/Ashfen/yneg.png",
+          "Assets/Skyboxes/Ashfen/zpos.png",
+          "Assets/Skyboxes/Ashfen/zneg.png"
         ],
         "rotationSpeed": 0.05,
         "intensity": 1,
@@ -4015,10 +3978,7 @@
           "Y": 0,
           "Z": 0,
           "W": -0.7071068
-        },
-        "faceRotations": null,
-        "faceFlipH": null,
-        "faceFlipV": null
+        }
       },
       "customData": {},
       "settings": {

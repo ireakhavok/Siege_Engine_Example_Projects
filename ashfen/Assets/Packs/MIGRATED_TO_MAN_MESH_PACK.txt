@@ -1,0 +1,3 @@
+Clips from blend_pack_all.json were merged into Assets/man_mesh_pack/assetpack.json.
+These Packs/*.json files are leftovers; safe to delete after verifying playback.
+Engine still accepts legacy Packs/ keys as a thin fallback.
