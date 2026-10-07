@@ -41,7 +41,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "man_mesh_pack",
+          "assetPackKey": "Assets/man_mesh_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -199,7 +199,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_wall_pack",
+          "assetPackKey": "Assets/sm_wall_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -321,7 +321,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_wall_pack",
+          "assetPackKey": "Assets/sm_wall_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -443,7 +443,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_wall_pack",
+          "assetPackKey": "Assets/sm_wall_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -565,7 +565,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_wall_pack",
+          "assetPackKey": "Assets/sm_wall_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -687,7 +687,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_wall_pack",
+          "assetPackKey": "Assets/sm_wall_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -809,7 +809,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_wall_pack",
+          "assetPackKey": "Assets/sm_wall_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -931,7 +931,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_wall_pack",
+          "assetPackKey": "Assets/sm_wall_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -1053,7 +1053,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_wall_pack",
+          "assetPackKey": "Assets/sm_wall_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -1175,7 +1175,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_wall_pack",
+          "assetPackKey": "Assets/sm_wall_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -1297,7 +1297,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_wall_pack",
+          "assetPackKey": "Assets/sm_wall_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -1419,7 +1419,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_wall_pack",
+          "assetPackKey": "Assets/sm_wall_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -1541,7 +1541,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_wall_pack",
+          "assetPackKey": "Assets/sm_wall_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -1663,7 +1663,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_wall_pack",
+          "assetPackKey": "Assets/sm_wall_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -1785,7 +1785,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_wall_pack",
+          "assetPackKey": "Assets/sm_wall_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -1907,7 +1907,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_wall_pack",
+          "assetPackKey": "Assets/sm_wall_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -2029,7 +2029,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_wall_pack",
+          "assetPackKey": "Assets/sm_wall_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -2151,7 +2151,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_birch01_pack",
+          "assetPackKey": "Assets/sm_birch01_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -2302,7 +2302,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_birch01_pack",
+          "assetPackKey": "Assets/sm_birch01_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -2453,7 +2453,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_birch01_pack",
+          "assetPackKey": "Assets/sm_birch01_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -2604,7 +2604,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_birch01_pack",
+          "assetPackKey": "Assets/sm_birch01_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -2755,7 +2755,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_birch01_pack",
+          "assetPackKey": "Assets/sm_birch01_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -2906,7 +2906,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_birch01_pack",
+          "assetPackKey": "Assets/sm_birch01_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -3057,7 +3057,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "sm_birch01_pack",
+          "assetPackKey": "Assets/sm_birch01_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -3208,7 +3208,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "greenball_pack",
+          "assetPackKey": "Assets/greenball_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -3287,8 +3287,8 @@
                 "SlopeLimitDegrees": 50,
                 "StepHeight": 0.35,
                 "LocalCentreOfMass": {
-                  "X": -5.973608e-08,
-                  "Y": -6.6153945e-08,
+                  "X": -5.973608E-08,
+                  "Y": -6.6153945E-08,
                   "Z": 0.9999998
                 },
                 "InvMass": 0,
@@ -3330,7 +3330,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "greenball_pack",
+          "assetPackKey": "Assets/greenball_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -3409,8 +3409,8 @@
                 "SlopeLimitDegrees": 50,
                 "StepHeight": 0.35,
                 "LocalCentreOfMass": {
-                  "X": -5.973608e-08,
-                  "Y": -6.6153945e-08,
+                  "X": -5.973608E-08,
+                  "Y": -6.6153945E-08,
                   "Z": 0.9999998
                 },
                 "InvMass": 0,
@@ -3452,7 +3452,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "greenball_pack",
+          "assetPackKey": "Assets/greenball_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -3531,8 +3531,8 @@
                 "SlopeLimitDegrees": 50,
                 "StepHeight": 0.35,
                 "LocalCentreOfMass": {
-                  "X": -5.973608e-08,
-                  "Y": -6.6153945e-08,
+                  "X": -5.973608E-08,
+                  "Y": -6.6153945E-08,
                   "Z": 0.9999998
                 },
                 "InvMass": 0,
@@ -3574,7 +3574,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "greenball_pack",
+          "assetPackKey": "Assets/greenball_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -3653,8 +3653,8 @@
                 "SlopeLimitDegrees": 50,
                 "StepHeight": 0.35,
                 "LocalCentreOfMass": {
-                  "X": -5.973608e-08,
-                  "Y": -6.6153945e-08,
+                  "X": -5.973608E-08,
+                  "Y": -6.6153945E-08,
                   "Z": 0.9999998
                 },
                 "InvMass": 0,
@@ -3696,7 +3696,7 @@
             "Y": 1,
             "Z": 1
           },
-          "assetPackKey": "greenball_pack",
+          "assetPackKey": "Assets/greenball_pack/assetpack.json",
           "textureId": 0,
           "height": 0,
           "material": null,
@@ -3775,8 +3775,8 @@
                 "SlopeLimitDegrees": 50,
                 "StepHeight": 0.35,
                 "LocalCentreOfMass": {
-                  "X": -5.973608e-08,
-                  "Y": -6.6153945e-08,
+                  "X": -5.973608E-08,
+                  "Y": -6.6153945E-08,
                   "Z": 0.9999998
                 },
                 "InvMass": 0,
@@ -3999,16 +3999,16 @@
         "type": "Cubemap",
         "cubemapPath": "",
         "faces": [
-          "Assets/Skyboxes/Ashfen/xpos.png",
-          "Assets/Skyboxes/Ashfen/xneg.png",
-          "Assets/Skyboxes/Ashfen/ypos.png",
-          "Assets/Skyboxes/Ashfen/yneg.png",
-          "Assets/Skyboxes/Ashfen/zpos.png",
-          "Assets/Skyboxes/Ashfen/zneg.png"
+          "Assets/Skyboxes/AshfenCourtyard/xpos.png",
+          "Assets/Skyboxes/AshfenCourtyard/xneg.png",
+          "Assets/Skyboxes/AshfenCourtyard/ypos.png",
+          "Assets/Skyboxes/AshfenCourtyard/yneg.png",
+          "Assets/Skyboxes/AshfenCourtyard/zpos.png",
+          "Assets/Skyboxes/AshfenCourtyard/zneg.png"
         ],
         "rotationSpeed": 0.05,
         "intensity": 1,
-        "verticalOffset": 20000,
+        "verticalOffset": 29400,
         "orientation": {
           "IsIdentity": false,
           "X": 0.7071068,
@@ -4026,21 +4026,27 @@
           2
         ],
         "playerPresence": "Avatar",
-        "avatarPackKey": "man_mesh_pack",
-        "animationPackKey": "man_mesh_pack",
-        "controllerTypeName": "PlayerController",
-        "cameraMode": "ThirdPerson",
-        "playerCollisionType": "Capsule",
-        "playerMass": 1,
-        "playerFriction": 1.8,
-        "playerRestitution": 0,
-        "playerLinearDamping": 0.4,
-        "playerAngularDamping": 0.4,
-        "playerKineticFriction": 0.6,
-        "playerStaticFriction": 0.85,
-        "playerReceiveFriction": true,
-        "playerReceiveVerticalContact": true,
-        "playerKeepUpright": true
+        "player": {
+          "avatarPackKey": "Assets/man_mesh_pack/assetpack.json",
+          "animation": {
+            "packKey": "Assets/man_mesh_pack/assetpack.json"
+          },
+          "controllerTypeName": "PlayerController",
+          "cameraMode": "ThirdPerson",
+          "collisionType": "Capsule",
+          "physics": {
+            "mass": 1,
+            "friction": 1.8,
+            "kineticFriction": 0.6,
+            "staticFriction": 0.85,
+            "restitution": 0,
+            "linearDamping": 0.4,
+            "angularDamping": 0.4,
+            "receiveFriction": true,
+            "receiveVerticalContact": true,
+            "keepUpright": true
+          }
+        }
       }
     }
   },
