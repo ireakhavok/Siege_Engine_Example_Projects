@@ -1739,25 +1739,28 @@
       },
       "customData": {},
       "settings": {
-        "avatarPackKey": "man_mesh_pack",
-        "animationPackKey": "blend_pack_straif",
-        "controllerTypeName": "PlayerController",
         "preferredSpawnPointIds": [
           2
         ],
-        "cameraMode": "ThirdPerson",
         "playerPresence": "Avatar",
-        "playerCollisionType": "Capsule",
-        "playerMass": 1,
-        "playerFriction": 1.8,
-        "playerRestitution": 0,
-        "playerLinearDamping": 0.4,
-        "playerAngularDamping": 0.4,
-        "playerKineticFriction": 0.6,
-        "playerStaticFriction": 0.85,
-        "playerReceiveFriction": true,
-        "playerReceiveVerticalContact": true,
-        "playerKeepUpright": true
+        "player": {
+          "avatarPackKey": "Assets/man_mesh_pack/assetpack.json",
+          "controllerTypeName": "PlayerController",
+          "cameraMode": "ThirdPerson",
+          "collisionType": "Capsule",
+          "physics": {
+            "mass": 1,
+            "friction": 1.8,
+            "kineticFriction": 0.6,
+            "staticFriction": 0.85,
+            "restitution": 0,
+            "linearDamping": 0.4,
+            "angularDamping": 0.4,
+            "receiveFriction": true,
+            "receiveVerticalContact": true,
+            "keepUpright": true
+          }
+        }
       }
     }
   },

@@ -305217,7 +305217,6 @@
       "customData": {},
       "settings": {
         "avatarPackKey": "man_mesh_pack",
-        "animationPackKey": "blend_pack_all",
         "controllerTypeName": "PlayerController",
         "preferredSpawnPointIds": [
           2501

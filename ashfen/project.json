@@ -4049,9 +4049,6 @@
         "playerPresence": "Avatar",
         "player": {
           "avatarPackKey": "Assets/man_mesh_pack/assetpack.json",
-          "animation": {
-            "packKey": "Assets/man_mesh_pack/assetpack.json"
-          },
           "controllerTypeName": "PlayerController",
           "cameraMode": "ThirdPerson",
           "collisionType": "Capsule",

@@ -94,7 +94,6 @@
       "customData": {},
       "settings": {
         "avatarPackKey": null,
-        "animationPackKey": null,
         "controllerTypeName": null,
         "preferredSpawnPointIds": [],
         "cameraMode": "Perspective",
